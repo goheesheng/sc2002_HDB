@@ -1,3 +1,6 @@
+<!-- Uncomment below for local VSC usage, else paste to https://www.plantuml.com/ -->
+<!-- ```plantuml -->
+
 @startuml
 ' Abstract base class for all users
 abstract class User {
@@ -101,6 +104,23 @@ enum RegistrationStatus {
   REJECTED
 }
 
+' Receipt class for flat booking details
+class Receipt {
+  - applicantName : String
+  - nric : String
+  - age : int
+  - maritalStatus : String
+  - flatType : FlatType
+  - projectDetails : String
+  + generate() : String
+}
+
+' Report class for generating project reports
+class Report {
+  - reportData : String
+  + generate() : String
+}
+
 ' Inheritance relationships
 User <|-- Applicant
 Applicant <|-- HDBOfficer
@@ -114,5 +134,8 @@ Applicant "1" --> "*" Enquiry : submits
 HDBManager "1" --> "*" Project : creates
 HDBOfficer "1" --> "*" Registration : registers
 Project "1" --> "*" Registration : associated with
+HDBOfficer "1" --> "*" Receipt : generates
+HDBManager "1" --> "*" Report : generates
 
 @enduml
+```
