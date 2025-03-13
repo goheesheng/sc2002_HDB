@@ -138,4 +138,3 @@ HDBOfficer "1" --> "*" Receipt : generates
 HDBManager "1" --> "*" Report : generates
 
 @enduml
-```
