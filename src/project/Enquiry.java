@@ -49,4 +49,20 @@ public class Enquiry {
     public String getEnquiryText() {
         return enquiryText;
     }
+
+    public Date getDateSubmitted() {
+        return dateSubmitted;
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public Date getReplyDate() {
+        return replyDate;
+    }
+
+    public User getRepliedBy() {
+        return repliedBy;
+    }
 }
