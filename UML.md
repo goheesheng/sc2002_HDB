@@ -101,6 +101,14 @@ class Enquiry {
   - repliedBy: User
   + editText(newText: String): boolean
   + addReply(replyText: String, replier: User): boolean
+  + getEnquiryId(): String
+  + getUser(): User
+  + getProject(): Project
+  + getEnquiryText(): String
+  + getDateSubmitted(): Date
+  + getReply(): String
+  + getReplyDate(): Date
+  + getRepliedBy(): User
 }
 
 class Receipt {
