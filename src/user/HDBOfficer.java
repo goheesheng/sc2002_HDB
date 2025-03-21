@@ -8,7 +8,7 @@ import admin.Receipt;
 import status.ApplicationStatus;
 import status.RegistrationStatus;
 
-public class HDBOfficer extends User {
+public class HDBOfficer extends Applicant {
     private Project handlingProject;
     private RegistrationStatus registrationStatus;
 
