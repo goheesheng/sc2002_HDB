@@ -16,7 +16,7 @@ import status.RegistrationStatus;
 import java.util.*;
 import java.io.File;
 
-public class TestCases {
+public class Main {
     public static void main(String[] args) {
         System.out.println("Running BTO Management System Test Cases");
         System.out.println("Current Date: March 21, 2025");
@@ -113,7 +113,7 @@ public class TestCases {
         System.out.println("----------------------------------------\n");
         
       
-        System.out.println("----------------------------------------\n");
+
         
         System.out.println("All test cases completed.");
     }
