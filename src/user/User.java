@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-// I
+
 public abstract class User {
     private String nric;
     private String password;
