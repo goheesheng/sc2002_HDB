@@ -1,49 +1,78 @@
 package user;
 
 import project.Project;
+import project.Application;
+import project.FlatType;
+import status.ApplicationStatus;
 
 public class Applicant extends User {
+    private Project appliedProject;
+    private ApplicationStatus applicationStatus;
+    private FlatType bookedFlatType;
+
     public Applicant(String nric, String password, int age, String maritalStatus) {
         super(nric, password, age, maritalStatus);
     }
 
-    @Override
-    public boolean login() {
-        System.out.println("Applicant logged in successfully!");
-        return true; 
+    public boolean applyForProject(Project project) {
+        if (appliedProject == null && project.isEligibleForUser(this)) {
+            appliedProject = project;
+            applicationStatus = ApplicationStatus.PENDING;
+            
+            // Create and add application to project
+            String applicationId = "APP" + System.currentTimeMillis();
+            FlatType flatType = getEligibleFlatType();
+            Application application = new Application(applicationId, this, project, flatType);
+            project.addApplication(application);
+            
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    public void changePassword(String newPassword) {
-        setPassword(newPassword);
-        System.out.println("Password changed successfully!");
+    public Application viewApplication() {
+        // In a real implementation, this would retrieve the application from the project
+        return null;
     }
 
-    public void viewProjects() {
-        System.out.println("Viewing available projects...");
+    public boolean requestWithdrawal() {
+        if (appliedProject != null) {
+            Application application = viewApplication();
+            if (application != null) {
+                return application.requestWithdrawal();
+            }
+        }
+        return false;
     }
 
-    public void applyProject(Project project) {
-        System.out.println("Applying for project: " + project.getProjectName());
+    public boolean bookFlat(Project project, FlatType flatType) {
+        if (applicationStatus == ApplicationStatus.SUCCESSFUL && appliedProject == project) {
+            bookedFlatType = flatType;
+            applicationStatus = ApplicationStatus.BOOKED;
+            return true;
+        }
+        return false;
     }
 
-    public String viewApplicationStatus() {
-        return "Application Status: PENDING";
+    private FlatType getEligibleFlatType() {
+        if (getMaritalStatus().equals("SINGLE")) {
+            return FlatType.TWO_ROOM;
+        } else {
+            // For married applicants, default to THREE_ROOM if available
+            return FlatType.THREE_ROOM;
+        }
     }
 
-    public void requestWithdrawal() {
-        System.out.println("Request to withdraw submitted.");
+    // Getters and setters
+    public Project getAppliedProject() {
+        return appliedProject;
     }
 
-    public void submitEnquiry(String enquiry) {
-        System.out.println("Enquiry submitted: " + enquiry);
+    public ApplicationStatus getApplicationStatus() {
+        return applicationStatus;
     }
 
-    public void editEnquiry(int enquiryID, String newText) {
-        System.out.println("Enquiry edited: " + newText);
-    }
-
-    public void deleteEnquiry(int enquiryID) {
-        System.out.println("Enquiry deleted.");
+    public void setApplicationStatus(ApplicationStatus status) {
+        this.applicationStatus = status;
     }
 }
