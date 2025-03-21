@@ -1,0 +1,95 @@
+package user;
+
+import project.Project;
+import project.Enquiry;
+import project.Application;
+import project.FlatType;
+import admin.Receipt;
+import status.ApplicationStatus;
+import status.RegistrationStatus;
+
+public class HDBOfficer extends User {
+    private Project handlingProject;
+    private RegistrationStatus registrationStatus;
+
+    public HDBOfficer(String nric, String password, int age, String maritalStatus) {
+        super(nric, password, age, maritalStatus);
+        this.registrationStatus = RegistrationStatus.PENDING;
+    }
+
+    public boolean registerForProject(Project project) {
+        if (handlingProject == null && !hasAppliedForProject(project)) {
+            handlingProject = project;
+            registrationStatus = RegistrationStatus.PENDING;
+            return true;
+        }
+        return false;
+    }
+
+    public RegistrationStatus viewRegistrationStatus() {
+        return registrationStatus;
+    }
+
+    public Project viewProjectDetails(Project project) {
+        if (handlingProject == project) {
+            return project;
+        }
+        return null;
+    }
+
+    public boolean replyToEnquiry(Enquiry enquiry, String replyText) {
+        if (handlingProject == enquiry.getProject()) {
+            return enquiry.addReply(replyText, this);
+        }
+        return false;
+    }
+
+    public boolean updateRemainingFlats(Project project, FlatType flatType) {
+        // Implementation would update the remaining flats count
+        return true;
+    }
+
+    public Application retrieveApplication(String nric) {
+        // Implementation would retrieve application by NRIC
+        return null;
+    }
+
+    public boolean updateApplicationStatus(Application application, ApplicationStatus status) {
+        return application.updateStatus(status);
+    }
+
+    public boolean updateApplicantProfile(Applicant applicant, FlatType flatType) {
+        if (applicant.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
+            return applicant.bookFlat(applicant.getAppliedProject(), flatType);
+        }
+        return false;
+    }
+
+    public Receipt generateBookingReceipt(Application application) {
+        if (application.getStatus() == ApplicationStatus.BOOKED) {
+            Applicant applicant = application.getApplicant();
+            String receiptId = "REC" + System.currentTimeMillis();
+            
+            return new Receipt(
+                receiptId,
+                applicant.getNric(), // Using NRIC as name for simplicity
+                applicant.getNric(),
+                applicant.getAge(),
+                applicant.getMaritalStatus(),
+                application.getFlatType(),
+                application.getProject()
+            );
+        }
+        return null;
+    }
+
+    private boolean hasAppliedForProject(Project project) {
+        // Check if officer has applied for this project as an applicant
+        return false;
+    }
+
+    // Getters and setters
+    public void setRegistrationStatus(RegistrationStatus status) {
+        this.registrationStatus = status;
+    }
+}
