@@ -5,14 +5,22 @@ abstract class User {
   - nric: String
   - password: String
   - age: int
-  - maritalStatus: MaritalStatus
+  - maritalStatus: String
+  + getNric(): String
+  + setNric(nric: String): void
+  + getPassword(): String
+  + setPassword(password: String): void
+  + getAge(): int
+  + setAge(age: int): void
+  + getMaritalStatus(): String
+  + setMaritalStatus(maritalStatus: String): void
   + login(nric: String, password: String): boolean
   + changePassword(oldPassword: String, newPassword: String): boolean
   + viewProjects(filters: Map): List<Project>
   + submitEnquiry(project: Project, enquiryText: String): Enquiry
   + viewEnquiries(): List<Enquiry>
-  + editEnquiry(enquiryId: int, newText: String): boolean
-  + deleteEnquiry(enquiryId: int): boolean
+  + editEnquiry(enquiryId: String, newText: String): boolean
+  + deleteEnquiry(enquiryId: String): boolean
 }
 
 ' User types
@@ -20,6 +28,9 @@ class Applicant {
   - appliedProject: Project
   - applicationStatus: ApplicationStatus
   - bookedFlatType: FlatType
+  + getAppliedProject(): Project
+  + getApplicationStatus(): ApplicationStatus
+  + setApplicationStatus(status: ApplicationStatus): void
   + applyForProject(project: Project): boolean
   + viewApplication(): Application
   + requestWithdrawal(): boolean
@@ -29,6 +40,7 @@ class Applicant {
 class HDBOfficer {
   - handlingProject: Project
   - registrationStatus: RegistrationStatus
+  + setRegistrationStatus(status: RegistrationStatus): void
   + registerForProject(project: Project): boolean
   + viewRegistrationStatus(): RegistrationStatus
   + viewProjectDetails(project: Project): Project
@@ -53,8 +65,8 @@ class HDBManager {
   + rejectOfficerRegistration(registration: Registration): boolean
   + approveApplication(application: Application): boolean
   + rejectApplication(application: Application): boolean
-  + approveWithdrawal(withdrawal: Withdrawal): boolean
-  + rejectWithdrawal(withdrawal: Withdrawal): boolean
+  + approveWithdrawal(application: Application): boolean
+  + rejectWithdrawal(application: Application): boolean
   + generateReport(filters: Map): Report
   + viewAllEnquiries(): List<Enquiry>
 }
@@ -73,9 +85,16 @@ class Project {
   - officers: List<HDBOfficer>
   - applications: List<Application>
   - enquiries: List<Enquiry>
+  + getProjectId(): String
+  + getProjectName(): String
+  + getManagerInCharge(): HDBManager
+  + isVisible(): boolean
+  + setVisibility(visibility: boolean): void
   + getRemainingFlats(flatType: FlatType): int
   + isEligibleForUser(user: User): boolean
   + isWithinApplicationPeriod(): boolean
+  + addEnquiry(enquiry: Enquiry): void
+  + addApplication(application: Application): void
 }
 
 class Application {
@@ -86,6 +105,12 @@ class Application {
   - status: ApplicationStatus
   - flatType: FlatType
   - withdrawalRequest: boolean
+  + getApplicationId(): String
+  + getApplicant(): Applicant
+  + getProject(): Project
+  + getStatus(): ApplicationStatus
+  + getFlatType(): FlatType
+  + isWithdrawalRequested(): boolean
   + updateStatus(status: ApplicationStatus): boolean
   + requestWithdrawal(): boolean
 }
@@ -99,16 +124,12 @@ class Enquiry {
   - reply: String
   - replyDate: Date
   - repliedBy: User
-  + editText(newText: String): boolean
-  + addReply(replyText: String, replier: User): boolean
   + getEnquiryId(): String
   + getUser(): User
   + getProject(): Project
   + getEnquiryText(): String
-  + getDateSubmitted(): Date
-  + getReply(): String
-  + getReplyDate(): Date
-  + getRepliedBy(): User
+  + editText(newText: String): boolean
+  + addReply(replyText: String, replier: User): boolean
 }
 
 class Receipt {
@@ -116,7 +137,7 @@ class Receipt {
   - applicantName: String
   - applicantNRIC: String
   - applicantAge: int
-  - maritalStatus: MaritalStatus
+  - maritalStatus: String
   - flatTypeBooked: FlatType
   - project: Project
   - bookingDate: Date
@@ -147,11 +168,6 @@ class Registration {
 enum FlatType {
   TWO_ROOM
   THREE_ROOM
-}
-
-enum MaritalStatus {
-  SINGLE
-  MARRIED
 }
 
 enum ApplicationStatus {
