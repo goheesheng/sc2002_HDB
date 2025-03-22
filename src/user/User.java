@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 public abstract class User {
     private String nric;
     private String password;
@@ -34,31 +33,6 @@ public abstract class User {
         return false;
     }
 
-    public List<Project> viewProjects(Map<String, Object> filters) {
-        List<Project> filteredProjects = new ArrayList<>();
-        // Assuming we have access to all projects
-        List<Project> allProjects = getAllProjects(); // This method needs to be implemented
-        
-        for (Project project : allProjects) {
-            if (projectMatchesFilters(project, filters)) {
-                filteredProjects.add(project);
-            }
-        }
-        return filteredProjects;
-    }
-    // 
-    private boolean projectMatchesFilters(Project project, Map<String, Object> filters) {
-        // Implement filter logic here
-        // Example:
-        if (filters.containsKey("neighborhood")) {
-            String neighborhood = (String) filters.get("neighborhood");
-            if (!project.getNeighborhood().equals(neighborhood)) {
-                return false;
-            }
-        }
-        // Add more filter conditions as needed
-        return true;
-    }
     public Enquiry submitEnquiry(Project project, String enquiryText) {
         Enquiry enquiry = new Enquiry(generateEnquiryId(), this, project, enquiryText);
         enquiries.add(enquiry);
