@@ -180,10 +180,8 @@ public class Main {
         System.out.println("----------------------------------------\n");
         
         // Test Case 13: Restriction on Editing Project Details
-        // This would be tested in a UI context, as the officer doesn't have methods to edit projects
         System.out.println("Test Case 13: Restriction on Editing Project Details");
-        System.out.println("This test requires UI interaction - manual verification required");
-        System.out.println("----------------------------------------\n");
+        // Not possible to do this since I only code on HDBManager able to edit project
         
         // Test Case 14: Response to Project Enquiries
         System.out.println("Test Case 14: Response to Project Enquiries");

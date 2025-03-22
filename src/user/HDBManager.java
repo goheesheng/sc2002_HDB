@@ -46,11 +46,38 @@ public class HDBManager extends User {
 
     public boolean editProject(Project project, Map<String, Object> updatedDetails) {
         if (createdProjects.contains(project)) {
-            // Implementation would update project details
+            // Update project details based on the map
+            if (updatedDetails.containsKey("projectName")) {
+                project.setProjectName((String) updatedDetails.get("projectName"));
+            }
+            
+            if (updatedDetails.containsKey("neighborhood")) {
+                project.setNeighborhood((String) updatedDetails.get("neighborhood"));
+            }
+            
+            if (updatedDetails.containsKey("flatTypes")) {
+                @SuppressWarnings("unchecked")
+                Map<FlatType, Integer> flatTypes = (Map<FlatType, Integer>) updatedDetails.get("flatTypes");
+                project.setFlatTypes(flatTypes);
+            }
+            
+            if (updatedDetails.containsKey("applicationOpeningDate")) {
+                project.setApplicationOpeningDate((Date) updatedDetails.get("applicationOpeningDate"));
+            }
+            
+            if (updatedDetails.containsKey("applicationClosingDate")) {
+                project.setApplicationClosingDate((Date) updatedDetails.get("applicationClosingDate"));
+            }
+            
+            if (updatedDetails.containsKey("availableOfficerSlots")) {
+                project.setAvailableOfficerSlots((Integer) updatedDetails.get("availableOfficerSlots"));
+            }
+            
             return true;
         }
         return false;
     }
+    
 
     public boolean deleteProject(Project project) {
         return createdProjects.remove(project);
@@ -67,7 +94,6 @@ public class HDBManager extends User {
     public List<Project> viewAllProjects() {
         // Implementation to return all projects in the system
         List<Project> allProjects = new ArrayList<>(createdProjects);
-        // Add logic to fetch projects from other managers if needed
         return allProjects;
     }
 

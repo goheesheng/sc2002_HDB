@@ -108,5 +108,28 @@ public class Project {
     public void setVisibility(boolean visibility) {
         this.visibility = visibility;
     }
-
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+    
+    public void setNeighborhood(String neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+    
+    public void setFlatTypes(Map<FlatType, Integer> flatTypes) {
+        this.flatTypes = flatTypes;
+    }
+    
+    public void setApplicationOpeningDate(Date applicationOpeningDate) {
+        this.applicationOpeningDate = applicationOpeningDate;
+    }
+    
+    public void setApplicationClosingDate(Date applicationClosingDate) {
+        this.applicationClosingDate = applicationClosingDate;
+    }
+    
+    public void setAvailableOfficerSlots(int availableOfficerSlots) {
+        this.availableOfficerSlots = availableOfficerSlots;
+    }
+    
 }
