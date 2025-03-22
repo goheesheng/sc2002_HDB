@@ -102,13 +102,30 @@ public class HDBManager extends User {
     }
 
     public boolean approveWithdrawal(Application application) {
-        if (application.isWithdrawalRequested()) {
+            // @note Check - Effect - Interact design flow
+        if (application.isWithdrawalRequested()) { 
+            // The applicant is voluntarily withdrawing from the application process.
+            // It accurately reflects that the application did not result in a successful flat booking.
             application.updateStatus(ApplicationStatus.UNSUCCESSFUL);
-            // Additional logic to handle withdrawal (e.g., freeing up the flat)
+            
+            // Free up the flat by incrementing the count in the project
+            Project project = application.getProject();
+            FlatType flatType = application.getFlatType();
+            int currentCount = project.getRemainingFlats(flatType);
+            project.updateFlatCount(flatType, currentCount + 1);
+            
+            // Also update the applicant's status if needed
+            Applicant applicant = application.getApplicant();
+            if (applicant.getApplicationStatus() == ApplicationStatus.BOOKED || 
+                applicant.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
+                applicant.setApplicationStatus(ApplicationStatus.UNSUCCESSFUL);
+            }
+            
             return true;
         }
         return false;
     }
+    
     
 
     public boolean rejectWithdrawal(Application application) {
