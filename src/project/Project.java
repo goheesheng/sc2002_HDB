@@ -70,6 +70,10 @@ public class Project {
     public List<HDBOfficer> getOfficers() { // need check 
         return new ArrayList<>(officers);
     }
+    //@audit add UML
+    public List<Application> getApplications() {
+        return new ArrayList<>(applications);
+    }
     
     public String getProjectId() {
         return projectId;
