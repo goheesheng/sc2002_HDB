@@ -17,6 +17,7 @@ import java.util.*;
 import java.io.File;
 
 public class Main {
+    // Unit Test Case
     public static void main(String[] args) {
         System.out.println("Running BTO Management System Test Cases");
         System.out.println("Current Date: March 21, 2025");
@@ -112,8 +113,201 @@ public class Main {
         System.out.println("Result: " + (singleApplied && marriedApplied && !singleAppliedAgain ? "PASSED" : "FAILED"));
         System.out.println("----------------------------------------\n");
         
-      
-
+        // Test Case 7: Viewing Application Status after Visibility Toggle Off
+        System.out.println("Test Case 7: Viewing Application Status after Visibility Toggle Off");
+        manager.toggleProjectVisibility(project, false);
+        Application singleApplication = singleApplicant.viewApplication();
+        boolean canViewAfterToggle = singleApplication != null;
+        System.out.println("Can view application after visibility off: " + canViewAfterToggle);
+        System.out.println("Result: " + (canViewAfterToggle ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 8: Single Flat Booking per Successful Application
+        System.out.println("Test Case 8: Single Flat Booking per Successful Application");
+        singleApplicant.setApplicationStatus(ApplicationStatus.SUCCESSFUL);
+        boolean bookingSuccess = singleApplicant.bookFlat(project, FlatType.TWO_ROOM);
+        boolean secondBookingAttempt = singleApplicant.bookFlat(project, FlatType.THREE_ROOM);
+        System.out.println("First booking successful: " + bookingSuccess);
+        System.out.println("Second booking prevented: " + !secondBookingAttempt);
+        System.out.println("Result: " + (bookingSuccess && !secondBookingAttempt ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 9: Applicant's enquiries management
+        System.out.println("Test Case 9: Applicant's enquiries management");
+        Enquiry enquiry = singleApplicant.submitEnquiry(project, "What are the amenities nearby?");
+        List<Enquiry> enquiries = singleApplicant.viewEnquiries();
+        boolean enquirySubmitted = enquiries.size() > 0;
+        
+        String enquiryId = enquiry != null ? enquiry.getEnquiryId() : "";
+        boolean enquiryEdited = singleApplicant.editEnquiry(enquiryId, "What are the schools nearby?");
+        boolean enquiryDeleted = singleApplicant.deleteEnquiry(enquiryId);
+        
+        System.out.println("Enquiry submitted: " + enquirySubmitted);
+        System.out.println("Enquiry edited: " + enquiryEdited);
+        System.out.println("Enquiry deleted: " + enquiryDeleted);
+        System.out.println("Result: " + (enquirySubmitted && enquiryEdited && enquiryDeleted ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 10: HDB Officer Registration Eligibility
+        System.out.println("Test Case 10: HDB Officer Registration Eligibility");
+        HDBOfficer officer1 = new HDBOfficer("S5555555F", "password", 40, "MARRIED");
+        HDBOfficer officer2 = new HDBOfficer("S6666666G", "password", 38, "SINGLE");
+        
+        // Officer who has applied for the project shouldn't be able to register
+        officer2.applyForProject(project);
+        
+        boolean officer1Registered = officer1.registerForProject(project);
+        boolean officer2Registered = officer2.registerForProject(project);
+        
+        System.out.println("Officer without application registered: " + officer1Registered);
+        System.out.println("Officer with application registered: " + officer2Registered);
+        System.out.println("Result: " + (officer1Registered && !officer2Registered ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 11: HDB Officer Registration Status
+        System.out.println("Test Case 11: HDB Officer Registration Status");
+        RegistrationStatus status = officer1.viewRegistrationStatus();
+        System.out.println("Officer registration status: " + status);
+        System.out.println("Result: " + (status == RegistrationStatus.PENDING ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 12: Project Detail Access for HDB Officer
+        System.out.println("Test Case 12: Project Detail Access for HDB Officer");
+        Project visibleProject = officer1.viewProjectDetails(project);
+        boolean canAccessDetails = visibleProject != null;
+        System.out.println("Officer can access project details: " + canAccessDetails);
+        System.out.println("Result: " + (canAccessDetails ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 13: Restriction on Editing Project Details
+        // This would be tested in a UI context, as the officer doesn't have methods to edit projects
+        System.out.println("Test Case 13: Restriction on Editing Project Details");
+        System.out.println("This test requires UI interaction - manual verification required");
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 14: Response to Project Enquiries
+        System.out.println("Test Case 14: Response to Project Enquiries");
+        Enquiry newEnquiry = marriedApplicant.submitEnquiry(project, "When is the expected completion date?");
+        boolean replySuccess = officer1.replyToEnquiry(newEnquiry, "The expected completion date is December 2028.");
+        System.out.println("Officer replied to enquiry: " + replySuccess);
+        System.out.println("Result: " + (replySuccess ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 15: Flat Selection and Booking Management
+        System.out.println("Test Case 15: Flat Selection and Booking Management");
+        boolean updatedFlats = officer1.updateRemainingFlats(project, FlatType.TWO_ROOM);
+        Application retrievedApp = officer1.retrieveApplication(marriedApplicant.getNric());
+        boolean statusUpdated = false;
+        if (retrievedApp != null) {
+            statusUpdated = officer1.updateApplicationStatus(retrievedApp, ApplicationStatus.SUCCESSFUL);
+        }
+        boolean profileUpdated = officer1.updateApplicantProfile(marriedApplicant, FlatType.THREE_ROOM);
+        
+        System.out.println("Updated flat count: " + updatedFlats);
+        System.out.println("Retrieved application: " + (retrievedApp != null));
+        System.out.println("Updated status: " + statusUpdated);
+        System.out.println("Updated profile: " + profileUpdated);
+        System.out.println("Result: " + (updatedFlats && profileUpdated ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 16: Receipt Generation for Flat Booking
+        System.out.println("Test Case 16: Receipt Generation for Flat Booking");
+        marriedApplicant.setApplicationStatus(ApplicationStatus.SUCCESSFUL);
+        marriedApplicant.bookFlat(project, FlatType.THREE_ROOM);
+        Application bookedApp = marriedApplicant.viewApplication();
+        Receipt receipt = null;
+        if (bookedApp != null) {
+            receipt = officer1.generateBookingReceipt(bookedApp);
+        }
+        boolean receiptGenerated = receipt != null;
+        System.out.println("Receipt generated: " + receiptGenerated);
+        System.out.println("Result: " + (receiptGenerated ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 17: Create, Edit, and Delete BTO Project Listings
+        System.out.println("Test Case 17: Create, Edit, and Delete BTO Project Listings");
+        // Project already created above
+        Map<String, Object> updatedDetails = new HashMap<>();
+        updatedDetails.put("projectName", "Tampines GreenView (Updated)");
+        boolean projectEdited = manager.editProject(project, updatedDetails);
+        boolean projectDeleted = manager.deleteProject(project2);
+        
+        System.out.println("Project created: " + (project != null));
+        System.out.println("Project edited: " + projectEdited);
+        System.out.println("Project deleted: " + projectDeleted);
+        System.out.println("Result: " + (project != null && projectEdited && projectDeleted ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 18: Single Project Management per Application Period
+        // This would require more complex testing with date ranges
+        System.out.println("Test Case 18: Single Project Management per Application Period");
+        System.out.println("This test requires complex date range testing - manual verification required");
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 19: Toggle Project Visibility
+        System.out.println("Test Case 19: Toggle Project Visibility");
+        boolean visibilityOn = manager.toggleProjectVisibility(project, true);
+        boolean visibilityOff = manager.toggleProjectVisibility(project, false);
+        System.out.println("Visibility toggled on: " + visibilityOn);
+        System.out.println("Visibility toggled off: " + visibilityOff);
+        System.out.println("Result: " + (visibilityOn && visibilityOff ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 20: View All and Filtered Project Listings
+        System.out.println("Test Case 20: View All and Filtered Project Listings");
+        List<Project> allProjects = manager.viewAllProjects();
+        List<Project> createdProjects = manager.viewCreatedProjects();
+        System.out.println("Can view all projects: " + (allProjects != null));
+        System.out.println("Can view created projects: " + (createdProjects != null));
+        System.out.println("Result: " + (allProjects != null && createdProjects != null ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 21: Manage HDB Officer Registrations
+        System.out.println("Test Case 21: Manage HDB Officer Registrations");
+        List<Registration> registrations = manager.viewOfficerRegistrations(project);
+        Registration officerReg = null;
+        // In a real scenario, we would get the actual registration
+        // For now, we'll create a dummy one for testing
+        officerReg = new Registration("REG001", officer1, project);
+        
+        boolean approved = manager.approveOfficerRegistration(officerReg);
+        System.out.println("Can view registrations: " + (registrations != null));
+        System.out.println("Can approve registration: " + approved);
+        System.out.println("Result: " + (registrations != null && approved ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 22: Approve or Reject BTO Applications and Withdrawals
+        System.out.println("Test Case 22: Approve or Reject BTO Applications and Withdrawals");
+        Application testApp = singleApplicant.viewApplication();
+        boolean appApproved = false;
+        boolean withdrawalApproved = false;
+        
+        if (testApp != null) {
+            appApproved = manager.approveApplication(testApp);
+            testApp.requestWithdrawal();
+            withdrawalApproved = manager.approveWithdrawal(testApp);
+        }
+        
+        System.out.println("Application approved: " + appApproved);
+        System.out.println("Withdrawal approved: " + withdrawalApproved);
+        System.out.println("Result: " + (appApproved && withdrawalApproved ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
+        
+        // Test Case 23: Generate and Filter Reports
+        System.out.println("Test Case 23: Generate and Filter Reports");
+        Map<String, Object> reportFilters = new HashMap<>();
+        reportFilters.put("maritalStatus", "MARRIED");
+        reportFilters.put("flatType", FlatType.THREE_ROOM);
+        
+        Report report = manager.generateReport(reportFilters);
+        List<Application> filteredApps = report.applyFilters(reportFilters);
+        File reportFile = report.generatePDF();
+        
+        System.out.println("Report generated: " + (report != null));
+        System.out.println("Filters applied: " + (filteredApps != null));
+        System.out.println("PDF generated: " + (reportFile != null));
+        System.out.println("Result: " + (report != null && filteredApps != null && reportFile != null ? "PASSED" : "FAILED"));
+        System.out.println("----------------------------------------\n");
         
         System.out.println("All test cases completed.");
     }
