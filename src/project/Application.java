@@ -52,7 +52,10 @@ public class Application {
     public ApplicationStatus getStatus() {
         return status;
     }
-
+    public void setWithdrawalRequest(boolean value) {
+        this.withdrawalRequest = value;
+    }
+    
     public FlatType getFlatType() {
         return flatType;
     }

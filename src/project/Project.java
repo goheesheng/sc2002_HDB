@@ -65,16 +65,25 @@ public class Project {
     public void addApplication(Application application) {
         applications.add(application);
     }
-
+    public void updateFlatCount(FlatType flatType, int newCount) {
+        if (flatTypes.containsKey(flatType)) {
+            flatTypes.put(flatType, newCount);
+        } else {
+            throw new IllegalArgumentException("Flat type not found in the project.");
+        }
+    }
+    
     // Getters and setters
     public List<HDBOfficer> getOfficers() { // need check 
         return new ArrayList<>(officers);
     }
-    //@audit add UML
+
     public List<Application> getApplications() {
         return new ArrayList<>(applications);
     }
-    
+    public List<Enquiry> getEnquiries() {
+        return new ArrayList<>(enquiries);
+    }
     public String getProjectId() {
         return projectId;
     }

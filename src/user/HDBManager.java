@@ -65,8 +65,10 @@ public class HDBManager extends User {
     }
 
     public List<Project> viewAllProjects() {
-        // Implementation would return all projects in the system
-        return new ArrayList<>();
+        // Implementation to return all projects in the system
+        List<Project> allProjects = new ArrayList<>(createdProjects);
+        // Add logic to fetch projects from other managers if needed
+        return allProjects;
     }
 
     public List<Project> viewCreatedProjects() {
@@ -74,8 +76,13 @@ public class HDBManager extends User {
     }
 
     public List<Registration> viewOfficerRegistrations(Project project) {
-        // Implementation would return registrations for the project
-        return new ArrayList<>();
+        // Implementation to return registrations for the project
+        List<Registration> registrations = new ArrayList<>();
+        for (HDBOfficer officer : project.getOfficers()) {
+            Registration registration = new Registration("REG" + System.currentTimeMillis(), officer, project);
+            registrations.add(registration);
+        }
+        return registrations;
     }
 
     public boolean approveOfficerRegistration(Registration registration) {
@@ -96,16 +103,19 @@ public class HDBManager extends User {
 
     public boolean approveWithdrawal(Application application) {
         if (application.isWithdrawalRequested()) {
-            // Implementation would handle withdrawal approval
+            application.updateStatus(ApplicationStatus.UNSUCCESSFUL);
+            // Additional logic to handle withdrawal (e.g., freeing up the flat)
             return true;
         }
         return false;
     }
+    
 
     public boolean rejectWithdrawal(Application application) {
         if (application.isWithdrawalRequested()) {
-            // Implementation would handle withdrawal rejection
-            return false;
+            // Reset withdrawal request
+            application.setWithdrawalRequest(false);
+            return true;
         }
         return false;
     }
@@ -116,7 +126,10 @@ public class HDBManager extends User {
     }
 
     public List<Enquiry> viewAllEnquiries() {
-        // Implementation would return all enquiries from all projects
-        return new ArrayList<>();
+        List<Enquiry> allEnquiries = new ArrayList<>();
+        for (Project project : createdProjects) {
+            allEnquiries.addAll(project.getEnquiries());
+        }
+        return allEnquiries;
     }
 }

@@ -45,8 +45,14 @@ public class HDBOfficer extends Applicant {
     }
 
     public boolean updateRemainingFlats(Project project, FlatType flatType) {
-        // Implementation would update the remaining flats count
-        return true;
+        if (handlingProject == project) {
+            int currentCount = project.getRemainingFlats(flatType);
+            if (currentCount > 0) {
+                project.updateFlatCount(flatType, currentCount - 1);
+                return true;
+            }
+        }
+        return false;
     }
 
     public Application retrieveApplication(String nric) {
@@ -65,17 +71,33 @@ public class HDBOfficer extends Applicant {
     }
 
     public boolean updateApplicantProfile(Applicant applicant, FlatType flatType) {
+        // Check if the applicant has a successful application
         if (applicant.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
-            return applicant.bookFlat(handlingProject, flatType);
+            // Update the applicant's profile with the selected flat type
+            boolean result = applicant.bookFlat(handlingProject, flatType);
+            
+            // If booking was successful, also update the application status
+            if (result) {
+                Application app = retrieveApplication(applicant.getNric());
+                if (app != null) {
+                    app.updateStatus(ApplicationStatus.BOOKED);
+                }
+            }
+            return result;
         }
         return false;
-    }  
+    }    
 
     public Receipt generateBookingReceipt(Application application) {
-        if (application.getStatus() == ApplicationStatus.BOOKED) {
+        // Check if the application status is BOOKED or if we need to check the applicant's status
+        if (application != null && 
+            (application.getStatus() == ApplicationStatus.BOOKED || 
+             application.getApplicant().getApplicationStatus() == ApplicationStatus.BOOKED)) {
+            
             Applicant applicant = application.getApplicant();
             String receiptId = "REC" + System.currentTimeMillis();
             
+            // Create and return a new receipt with all required details
             return new Receipt(
                 receiptId,
                 applicant.getNric(), // Using NRIC as name for simplicity
@@ -88,7 +110,7 @@ public class HDBOfficer extends Applicant {
         }
         return null;
     }
-
+    
     private boolean hasAppliedForProject(Project project) {
         return getAppliedProject() != null && getAppliedProject().equals(project);
     }
