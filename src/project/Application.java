@@ -25,8 +25,11 @@ public class Application {
 
     public boolean updateStatus(ApplicationStatus status) {
         this.status = status;
+        // Also update the applicant's status
+        this.applicant.setApplicationStatus(status);
         return true;
     }
+    
 
     public boolean requestWithdrawal() {
         this.withdrawalRequest = true;

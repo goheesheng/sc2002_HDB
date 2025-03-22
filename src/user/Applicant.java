@@ -50,15 +50,20 @@ public class Applicant extends User {
         }
         return false;
     }
-
     public boolean bookFlat(Project project, FlatType flatType) {
         if (applicationStatus == ApplicationStatus.SUCCESSFUL && appliedProject == project) {
             bookedFlatType = flatType;
             applicationStatus = ApplicationStatus.BOOKED;
+            Application app = viewApplication();
+            if (app != null) {
+                app.updateStatus(ApplicationStatus.BOOKED);
+            }
             return true;
         }
         return false;
     }
+    
+       
 
     private FlatType getEligibleFlatType() {
         if (getMaritalStatus().equals("SINGLE")) {

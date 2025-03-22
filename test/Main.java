@@ -198,18 +198,18 @@ public class Main {
         boolean updatedFlats = officer1.updateRemainingFlats(project, FlatType.TWO_ROOM);
         Application retrievedApp = officer1.retrieveApplication(marriedApplicant.getNric());
         boolean statusUpdated = false;
-        if (retrievedApp != null) {
+        if (retrievedApp != null) { // Saftey Check for current test case
             statusUpdated = officer1.updateApplicationStatus(retrievedApp, ApplicationStatus.SUCCESSFUL);
         }
         boolean profileUpdated = officer1.updateApplicantProfile(marriedApplicant, FlatType.THREE_ROOM);
         
         System.out.println("Updated flat count: " + updatedFlats);
-        System.out.println("Retrieved application: " + (retrievedApp != null));
+        System.out.println("Retrieved application: " + (retrievedApp != null)); // since not null it returns truee
         System.out.println("Updated status: " + statusUpdated);
         System.out.println("Updated profile: " + profileUpdated);
         System.out.println("Result: " + (updatedFlats && profileUpdated ? "PASSED" : "FAILED"));
         System.out.println("----------------------------------------\n");
-        
+
         // Test Case 16: Receipt Generation for Flat Booking
         System.out.println("Test Case 16: Receipt Generation for Flat Booking");
         marriedApplicant.setApplicationStatus(ApplicationStatus.SUCCESSFUL);

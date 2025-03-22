@@ -71,22 +71,20 @@ public class HDBOfficer extends Applicant {
     }
 
     public boolean updateApplicantProfile(Applicant applicant, FlatType flatType) {
-        // Check if the applicant has a successful application
         if (applicant.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
-            // Update the applicant's profile with the selected flat type
             boolean result = applicant.bookFlat(handlingProject, flatType);
-            
-            // If booking was successful, also update the application status
             if (result) {
                 Application app = retrieveApplication(applicant.getNric());
                 if (app != null) {
-                    app.updateStatus(ApplicationStatus.BOOKED);
+                    app.updateStatus(ApplicationStatus.BOOKED); 
+                    handlingProject.updateFlatCount(flatType, handlingProject.getRemainingFlats(flatType) - 1);
                 }
             }
             return result;
         }
         return false;
-    }    
+    }
+      
 
     public Receipt generateBookingReceipt(Application application) {
         // Check if the application status is BOOKED or if we need to check the applicant's status
