@@ -50,7 +50,13 @@ public class HDBOfficer extends Applicant {
     }
 
     public Application retrieveApplication(String nric) {
-        // Implementation would retrieve application by NRIC
+        if (handlingProject != null) {
+            for (Application app : handlingProject.getApplications()) {
+                if (app.getApplicant().getNric().equals(nric)) {
+                    return app;
+                }
+            }
+        }
         return null;
     }
 
@@ -60,10 +66,10 @@ public class HDBOfficer extends Applicant {
 
     public boolean updateApplicantProfile(Applicant applicant, FlatType flatType) {
         if (applicant.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
-            return applicant.bookFlat(applicant.getAppliedProject(), flatType);
+            return applicant.bookFlat(handlingProject, flatType);
         }
         return false;
-    }
+    }  
 
     public Receipt generateBookingReceipt(Application application) {
         if (application.getStatus() == ApplicationStatus.BOOKED) {
@@ -84,8 +90,7 @@ public class HDBOfficer extends Applicant {
     }
 
     private boolean hasAppliedForProject(Project project) {
-        // Check if officer has applied for this project as an applicant
-        return false;
+        return getAppliedProject() != null && getAppliedProject().equals(project);
     }
 
     // Getters and setters
