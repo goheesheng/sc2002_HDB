@@ -31,7 +31,13 @@ public class Applicant extends User {
     }
 
     public Application viewApplication() {
-        // In a real implementation, this would retrieve the application from the project
+        if (appliedProject != null) {
+            for (Application app : appliedProject.getApplications()) {
+                if (app.getApplicant().equals(this)) {
+                    return app;
+                }
+            }
+        }
         return null;
     }
 
@@ -66,6 +72,10 @@ public class Applicant extends User {
     // Getters and setters
     public Project getAppliedProject() {
         return appliedProject;
+    }
+    //@audit add UML
+    public FlatType getbookedFlatType() {
+        return bookedFlatType;
     }
 
     public ApplicationStatus getApplicationStatus() {
