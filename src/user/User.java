@@ -49,7 +49,7 @@ public abstract class User {
     public List<Enquiry> viewEnquiries() {
         return new ArrayList<>(enquiries);
     }
-
+    // should I add abstract function here instead? @audit
     public boolean editEnquiry(String enquiryId, String newText) {
         for (Enquiry enquiry : enquiries) {
             if (enquiry.getEnquiryId().equals(enquiryId)) {
