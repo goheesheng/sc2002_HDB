@@ -11,6 +11,7 @@ import project.Enquiry;
 import project.FlatType;
 import status.ApplicationStatus;
 import status.RegistrationStatus;
+import utility.fileReader;
 
 import java.util.*;
 import java.io.File;
@@ -19,6 +20,42 @@ import java.io.File;
 public class Main {
     // Unit Test Case
     public static void main(String[] args) {
+    // menu screen
+
+    //     System.out.println("Welcome to Build-To-Order (BTO) Management System");
+        
+    //     Scanner scanner = new Scanner(System.in);
+       
+    //     System.out.println("What would you like to do");
+    //     System.out.println("1. Login");
+    //     System.out.println("2. view user list (temp)");
+    //     System.out.println("3. run test cases (temp)");
+    //     System.out.println("4. Exit");
+
+    //     int choice = scanner.nextInt();
+    //     scanner.nextLine();
+
+    //     switch (choice) {
+    //         case 1:
+    //             System.out.println("not done yet");
+    //             break;
+    //         case 2:
+    //             fileReader.selectUserList(scanner);
+    //             return;
+    //         case 3:
+    //             System.out.println("Running test cases...");
+    //             runTestCases();
+    //         break;
+    //         case 4: 
+    //             System.out.println("Exiting...");
+    //             return;
+    //         default:
+    //             System.out.println("Invalid choice.");
+    //             return;
+    //     }
+    // }
+    // public static void runTestCases() {
+
         System.out.println("Running BTO Management System Test Cases");
         System.out.println("Current Date: March 21, 2025");
         System.out.println("----------------------------------------\n");
