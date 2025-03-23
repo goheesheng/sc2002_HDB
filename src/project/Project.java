@@ -90,10 +90,9 @@ public class Project {
     }
 
     /**
-     * Checks if a user is eligible to apply for this project based on age and marital status.
+     * Checks if the current date is within the application period for this project.
      * 
-     * @param user The user to check eligibility for
-     * @return true if the user is eligible, false otherwise
+     * @return true if current date is within application period, false otherwise
      */
     public boolean isWithinApplicationPeriod() {
         Date now = new Date();

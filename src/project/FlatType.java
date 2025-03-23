@@ -1,3 +1,4 @@
+package project;
 /**
  * Represents the types of flats available in BTO projects.
  * 
