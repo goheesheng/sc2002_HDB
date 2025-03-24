@@ -14,10 +14,13 @@ import status.ApplicationStatus;
 import status.RegistrationStatus;
 import utility.fileReader;
 import utility.loginHandler;
+import menu.ApplicantMenu;
 
 import java.util.*;
 import java.io.File;
 
+import utility.ExcelReader;
+import utility.ExcelWriter;
 
 public class Main {
     // Unit Test Case
@@ -76,7 +79,10 @@ public class Main {
                 break;
 
             case 2:
-                fileReader.UserList();
+                String excelFilePath = "test/ApplicantsWithPassword.xlsx";  // Example file path
+                ExcelReader.readExcel(excelFilePath);
+                String excelOutputFilePath = "test/ApplicantsWithPasswordOutput.xlsx";
+                ExcelWriter.writeToExcel(excelOutputFilePath);
                 return;
             case 3:
                 System.out.println("Running test cases...");

@@ -7,6 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class fileReader extends UserFileHandler {
+    private static final String APPLICANT_FILE = "test/ApplicantList.txt";
+    private static final String MANAGER_FILE = "test/ManagerList.txt";
+    private static final String OFFICER_FILE = "test/OfficerList.txt";
+
     public static void UserList() {
         List<String> filePaths = Arrays.asList(APPLICANT_FILE, MANAGER_FILE, OFFICER_FILE);
         
