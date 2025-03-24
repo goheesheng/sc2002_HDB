@@ -23,68 +23,79 @@ public class Main {
     // Unit Test Case
     public static void main(String[] args) {
     // menu screen
-    //     Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
-    //     int choice;
-    //     do {
-    //     System.out.println("Welcome to Build-To-Order (BTO) Management System");
-    //     System.out.println("What would you like to do");
-    //     System.out.println("1. Login");
-    //     System.out.println("2. view user list (temp)");
-    //     System.out.println("3. run test cases (temp)");
-    //     System.out.println("4. Exit");
+        int choice;
+        do {
+        System.out.println("Welcome to Build-To-Order (BTO) Management System");
+        System.out.println("What would you like to do");
+        System.out.println("1. Login");
+        System.out.println("2. view user list (temp)");
+        System.out.println("3. run test cases (temp)");
+        System.out.println("4. Exit");
         
-    //     while (!scanner.hasNextInt()) {
-    //         System.out.println("Invalid input. Please enter a number.");
-    //         scanner.next(); 
-    //     }
+        while (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Please enter a number.");
+            scanner.next(); 
+        }
 
-    //     choice = scanner.nextInt();
-    //     scanner.nextLine();
+        choice = scanner.nextInt();
+        scanner.nextLine();
 
-    //     switch (choice) {
-    //         case 1:
-    //             System.out.println("Enter NRIC:");
-    //             String nric = scanner.nextLine();
+        switch (choice) {
+            case 1:
+                String nric;
+                while(true){
+                System.out.println("Enter NRIC:");
+                nric = scanner.nextLine();
 
-    //             if (!loginHandler.isValidNRIC(nric)) {
-    //                     System.out.println("Invalid NRIC format. Please enter a valid NRIC.");
-    //                     break;
-    //             }
-    //             System.out.println("Enter Password:");
-    //             String password = scanner.nextLine();
+                if (User.isValidNRIC(nric)) {
+                    break;
+                } else {
+                    System.out.println("Invalid NRIC format. Please enter a valid NRIC.");
+                }
+            }
+                System.out.println("Enter Password:");
+                String password = scanner.nextLine();
 
-    //             loginHandler loginHandler = new loginHandler();
-    //             User loggedInUser = loginHandler.login(nric, password); 
-    //             if (loggedInUser != null) {
-    //                 System.out.println("Login successful! User type: " + loggedInUser.getClass().getSimpleName());
-    //             } else {
-    //                 System.out.println("Invalid NRIC or password.");
-    //                 System.out.println("----------------------------------------\n");
-    //             }
-    //             break;
+                loginHandler loginHandler = new loginHandler();
+                User loggedInUser = loginHandler.login(nric, password); 
+                if (loggedInUser != null) {
+                    System.out.println("Login successful! User type: " + loggedInUser.getClass().getSimpleName());
+                    
+                    if (loggedInUser instanceof Applicant){
+                        new ApplicantMenu ((Applicant) loggedInUser).displayMenu();
+                    }
 
-    //         case 2:
-    //             fileReader.UserList();
-    //             return;
-    //         case 3:
-    //             System.out.println("Running test cases...");
-    //             runTestCases();
-    //         break;
-    //         case 4: 
-    //             System.out.println("Exiting...");
-    //             return;
-    //         default:
-    //             System.out.println("Invalid choice.");
-    //             System.out.println("----------------------------------------\n");
-    //         }
-    //     }
-    //     while (choice != 4);
-    //     scanner.close();
-    //     }
+
+                } else {
+                    System.out.println("Invalid NRIC or password.");
+                    System.out.println("----------------------------------------\n");
+                }
+            
+                break;
+
+            case 2:
+                fileReader.UserList();
+                return;
+            case 3:
+                System.out.println("Running test cases...");
+                runTestCases();
+            break;
+            case 4: 
+                System.out.println("Exiting...");
+                return;
+            default:
+                System.out.println("Invalid choice.");
+                System.out.println("----------------------------------------\n");
+            }
+        }
+        while (choice != 4);
+        scanner.close();
+        }
     
 
-    // public static void runTestCases() {
+    public static void runTestCases() {
 
         System.out.println("Running BTO Management System Test Cases");
         System.out.println("Current Date: March 21, 2025");
