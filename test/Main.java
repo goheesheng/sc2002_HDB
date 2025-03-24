@@ -12,7 +12,7 @@ import project.Enquiry;
 import project.FlatType;
 import status.ApplicationStatus;
 import status.RegistrationStatus;
-import utility.fileReader;
+//import utility.fileReader;
 import utility.loginHandler;
 import menu.ApplicantMenu;
 
