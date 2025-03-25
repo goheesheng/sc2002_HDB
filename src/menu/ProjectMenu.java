@@ -1,32 +1,22 @@
 package menu;
+import user.User;
 
-import java.util.Scanner;
+import project.Project;
+import java.util.List;
 
 public class ProjectMenu {
-    private Scanner scanner = new Scanner(System.in);
-
-    public void displayMenu() {
-        int choice;
-        do {
-            System.out.println("\n-----Project Menu-----");
-            System.out.println("1. View All Projects");
-            System.out.println("2. Back to Main Menu");
-            System.out.print("Enter your choice: ");
-
-            choice = scanner.nextInt();
-            scanner.nextLine();  
-
-            switch (choice) {
-                case 1:
-                System.out.println("Fetching all projects...");
-                // Add functionaity
-                    break;
-                case 2:
-                    return;  
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+        protected User user;
+    
+        public ProjectMenu(User user) {
+            this.user = user;
+        }
+    
+        public void viewProjects(List<Project> projects) {
+            System.out.println("\n----- Viewing All Projects -----");
+            for (Project project : projects) {
+                System.out.println(project);
             }
-        } while (choice != 2);
+        }
     }
-}
+    
 

@@ -145,6 +145,10 @@ public abstract class User {
     public String getNric() {
         return nric;
     }
+
+    public String getPassword(){
+        return password;
+    }
     
     /**
      * Gets the age of this user.
