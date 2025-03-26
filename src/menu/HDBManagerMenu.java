@@ -25,7 +25,8 @@ public class HDBManagerMenu extends UserMenu{
         System.out.println("3. View and reply Enquires");
         System.out.println("4. Manage Applications");
         System.out.println("5. Generate Report");
-        System.out.println("6. Logout");
+        System.out.println("6: Change password");
+        System.out.println("7. Logout");
         
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -47,7 +48,11 @@ public class HDBManagerMenu extends UserMenu{
                 System.out.println("Generating report");
                 // Add functionailties
                 break;
-            case 6: 
+            case 6:
+                System.out.println("New password:");
+                // Add functionailites
+                break;
+            case 7: 
                 System.out.println("Logging out, have a nice day");
                 return;
             default:

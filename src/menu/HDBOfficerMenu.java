@@ -25,7 +25,8 @@ public class HDBOfficerMenu extends UserMenu {
             System.out.println("3. Access Applicant Functionalities");
             System.out.println("4. Register for project");
             System.out.println("5. Generate Booking Receipt");
-            System.out.println("6. Logout");
+            System.out.println("6: Change password");
+            System.out.println("7. Logout");
             System.out.print("Enter your choice: ");
 
             choice = scanner.nextInt();
@@ -49,6 +50,9 @@ public class HDBOfficerMenu extends UserMenu {
                 // add functionaities
                     break;
                 case 6:
+                System.out.println("New password:");
+                    break;
+                case 7:
                     System.out.println("Logging out...");
                     return;  
                 default:
