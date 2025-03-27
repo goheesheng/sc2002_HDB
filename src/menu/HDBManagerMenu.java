@@ -3,58 +3,56 @@ package menu;
 import user.HDBManager;
 
 public class HDBManagerMenu extends UserMenu{
-    private ProjectMenu projectMenu;
+    private HDBManagerProjectMenu projectMenu;
+    private OfficerRegistrationMenu officerRegistrationMenu;
+    private EnquiryMenu enquiryMenu;
+    private ApplicationManagerMenu applicationManagerMenu;
 
-    public HDBManagerMenu (HDBManager user){
-        super(user);
+
+    public HDBManagerMenu (HDBManager manager){
+        super(manager);
+        this.projectMenu = new HDBManagerProjectMenu(manager);
+        this.officerRegistrationMenu = new OfficerRegistrationMenu(manager);
+        this.enquiryMenu = new EnquiryMenu();
+        this.applicationManagerMenu = new ApplicationManagerMenu(manager);
     }
 
     public void displayMenu() {
 
-        System.out.println("-----HDB Manager Menu-----");
-        System.out.println("1. Create Project");
-        System.out.println("2. Edit Project");
-        System.out.println("3. Delete Project");
-        System.out.println("4. Toggle Project Visibility");
-
-        System.out.println("5. View all Projects");
-
-        System.out.println("5. View created Projects");
-        System.out.println("5. View Officer Registration");
-        System.out.println("5. Approve Officer Registration");
-        System.out.println("5. Reject Officer Registration ");
-        System.out.println("5. Approve Apllication");
-        System.out.println("5. Reject Application");
-        System.out.println("5. Approve withdrawal");
-        System.out.println("5. Reject withdrawal");
+        System.out.println("\n-----HDB Manager Menu-----");
+        System.out.println("1. Manage Projects");
+        System.out.println("2. Manage Officer Registration");
+        System.out.println("3. View and reply Enquires");
+        System.out.println("4. Manage Applications");
         System.out.println("5. Generate Report");
-
-        System.out.println("5. View all Enquires");
-
-        System.out.println("6. Logout");
+        System.out.println("6: Change password");
+        System.out.println("7. Logout");
         
         int choice = scanner.nextInt();
         scanner.nextLine();
 
         switch (choice) {
             case 1:
-                System.out.println("Pojects available:");
-                // insert functionailty 
+                projectMenu.displayMenu(null); 
                 break;
             case 2:
-                System.out.println("Which project do you wish to apply for?");
-                // insert functionailty 
+                officerRegistrationMenu.displayMenu();
                 break;
             case 3:
-                System.out.println("Application status");
-                // insert functionailty 
+                enquiryMenu.displayMenu();
                 break;
             case 4:
-                
+                applicationManagerMenu.displayMenu();
                 break;
             case 5:
-                projectMenu.displayMenu();
-            case 6: 
+                System.out.println("Generating report");
+                // Add functionailties
+                break;
+            case 6:
+                System.out.println("New password:");
+                // Add functionailites
+                break;
+            case 7: 
                 System.out.println("Logging out, have a nice day");
                 return;
             default:

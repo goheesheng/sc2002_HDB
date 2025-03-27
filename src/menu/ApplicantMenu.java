@@ -10,21 +10,24 @@ public class ApplicantMenu extends UserMenu{
     }
 
     public void displayMenu() {
-
-        System.out.println("-----Applicant Menu-----");
+        int choice; 
+        
+    do {
+        System.out.println("\n-----Applicant Menu-----");
         System.out.println("1. View Projects");
         System.out.println("2. Apply for Project");
         System.out.println("3. View Application");
         System.out.println("4. Request Withdrawal");
         System.out.println("5. Submit Enquiry");
-        System.out.println("6. Logout");
+        System.out.println("6: Change password");
+        System.out.println("7. Logout");
 
-        int choice = scanner.nextInt();
+        choice = scanner.nextInt();
         scanner.nextLine();
 
         switch (choice) {
             case 1:
-            projectMenu.displayMenu();
+            projectMenu.viewProjects(null);
             // insert functionailty 
                 break;
             case 2:
@@ -42,12 +45,16 @@ public class ApplicantMenu extends UserMenu{
             case 5:
                 System.out.println("What would you like to enquire?");
                 // insert functionailty 
-            case 6: 
+            case 6:
+                System.out.println("New password:");
+                //insert functionality  
+                break;
+            case 7:
                 System.out.println("Logging out, have a nice day");
                 return;
             default:
                 System.out.println("Invalid choice.");
-        }
-        displayMenu();
+            }
+        } while (choice !=7);
     }
 }

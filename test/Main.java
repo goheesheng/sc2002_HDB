@@ -15,6 +15,8 @@ import status.RegistrationStatus;
 //import utility.fileReader;
 import utility.loginHandler;
 import menu.ApplicantMenu;
+import menu.HDBManagerMenu;
+import menu.HDBOfficerMenu;
 
 import java.util.*;
 import java.io.File;
@@ -30,7 +32,7 @@ public class Main {
 
         int choice;
         do {
-        System.out.println("Welcome to Build-To-Order (BTO) Management System");
+        System.out.println("\nWelcome to Build-To-Order (BTO) Management System");
         System.out.println("What would you like to do");
         System.out.println("1. Login");
         System.out.println("2. view user list (temp)");
@@ -66,11 +68,14 @@ public class Main {
                 if (loggedInUser != null) {
                     System.out.println("Login successful! User type: " + loggedInUser.getClass().getSimpleName());
                     
-                    if (loggedInUser instanceof Applicant){
+                    if (loggedInUser instanceof HDBManager){
+                        new HDBManagerMenu((HDBManager) loggedInUser).displayMenu();
+                    }
+                    if (loggedInUser instanceof HDBOfficer){
+                        new HDBOfficerMenu((HDBOfficer) loggedInUser).displayMenu();
+                    } else if (loggedInUser instanceof Applicant) {
                         new ApplicantMenu ((Applicant) loggedInUser).displayMenu();
                     }
-
-
                 } else {
                     System.out.println("Invalid NRIC or password.");
                     System.out.println("----------------------------------------\n");
@@ -84,6 +89,7 @@ public class Main {
                 String excelOutputFilePath = "test/ApplicantsWithPasswordOutput.xlsx";
                 ExcelWriter.writeToExcel(excelOutputFilePath);
                 return;
+
             case 3:
                 System.out.println("Running test cases...");
                 runTestCases();

@@ -2,18 +2,18 @@ package menu;
 
 import user.HDBOfficer;
 import user.Applicant;
-import java.util.Scanner;
 
 public class HDBOfficerMenu extends UserMenu {
     private ApplicantMenu applicantMenu;
     private EnquiryMenu enquiryMenu;
     private ProjectMenu projectMenu;
+    private ProjectRegisterMenu projectRegisterMenu;
 
-    public HDBOfficerMenu(HDBOfficer user) {
-        super(user);
-        this.applicantMenu = new ApplicantMenu(new Applicant(user.getNric(), user.getPassword(), user.getAge(), user.getMaritalStatus()));
+    public HDBOfficerMenu(HDBOfficer officer) {
+        super(officer);
+        this.projectMenu = new ProjectMenu(officer);
+        this.applicantMenu = new ApplicantMenu((Applicant) officer);
         this.enquiryMenu = new EnquiryMenu();
-        this.projectMenu = new ProjectMenu();
     }
 
     public void displayMenu() {
@@ -23,7 +23,10 @@ public class HDBOfficerMenu extends UserMenu {
             System.out.println("1. View and Reply to Enquiries");
             System.out.println("2. View Project Details");
             System.out.println("3. Access Applicant Functionalities");
-            System.out.println("4. Logout");
+            System.out.println("4. Register for project");
+            System.out.println("5. Generate Booking Receipt");
+            System.out.println("6: Change password");
+            System.out.println("7. Logout");
             System.out.print("Enter your choice: ");
 
             choice = scanner.nextInt();
@@ -34,17 +37,27 @@ public class HDBOfficerMenu extends UserMenu {
                     enquiryMenu.displayMenu();
                     break;
                 case 2:
-                    projectMenu.displayMenu();
+                    projectMenu.viewProjects(null);
                     break;
                 case 3:
                     applicantMenu.displayMenu();
                     break;
                 case 4:
+                    projectRegisterMenu.displayMenu();
+                    break;
+                case 5:
+                System.out.println("Generating reciept...");
+                // add functionaities
+                    break;
+                case 6:
+                System.out.println("New password:");
+                    break;
+                case 7:
                     System.out.println("Logging out...");
                     return;  
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 4);
+        } while (choice != 6);
     }
 }
