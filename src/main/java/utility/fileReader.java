@@ -1,15 +1,18 @@
 package utility;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
 public class fileReader extends UserFileHandler {
-    private static final String APPLICANT_FILE = "ApplicantList.txt";
-    private static final String MANAGER_FILE = "ManagerList.txt";
-    private static final String OFFICER_FILE = "OfficerList.txt";
+    private static final String BASE_PATH = "sc2002_HDB/src/main/resources/";
+
+    private static final String APPLICANT_FILE = BASE_PATH + "ApplicantList.txt";
+    private static final String MANAGER_FILE = BASE_PATH + "ManagerList.txt";
+    private static final String OFFICER_FILE = BASE_PATH + "OfficerList.txt";
 
     public static void UserList() {
         List<String> filePaths = Arrays.asList(APPLICANT_FILE, MANAGER_FILE, OFFICER_FILE);
@@ -21,8 +24,7 @@ public class fileReader extends UserFileHandler {
     }
 
     private static void viewUserList(String filePath) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                fileReader.class.getClassLoader().getResourceAsStream(filePath)))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
 
             String line;
             br.readLine();

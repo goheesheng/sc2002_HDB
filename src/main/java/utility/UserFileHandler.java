@@ -9,17 +9,21 @@ import user.HDBManager;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public abstract class UserFileHandler {
 
     // File paths for txt files
-    protected static final String APPLICANT_FILE = "sc2002_HDB/test/ApplicantList.txt";
-    protected static final String MANAGER_FILE = "sc2002_HDB/test/ManagerList.txt";
-    protected static final String OFFICER_FILE = "sc2002_HDB/test/OfficerList.txt";
+
+    protected static final String APPLICANT_FILE = "ApplicantList.txt";
+    protected static final String MANAGER_FILE = "ManagerList.txt";
+    protected static final String OFFICER_FILE = "OfficerList.txt";
 
 
     protected User checkLoginInFile(String nric, String password, String filePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+            fileReader.class.getClassLoader().getResourceAsStream(filePath)))) {
+
             br.readLine();
             String line;
 
