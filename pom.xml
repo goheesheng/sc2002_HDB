@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <build>
+        <!-- Changed source directory + shifted main.java into it-->
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
