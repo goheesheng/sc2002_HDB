@@ -12,6 +12,18 @@
     <build>
         <!-- Changed source directory + shifted main.java into it-->
         <sourceDirectory>src/main/java</sourceDirectory>
+
+        <!-- Added our txt & xslx files here -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                 <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.xlsx</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

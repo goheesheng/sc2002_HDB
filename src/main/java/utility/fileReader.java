@@ -1,15 +1,15 @@
 package utility;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
 public class fileReader extends UserFileHandler {
-    private static final String APPLICANT_FILE = "test/ApplicantList.txt";
-    private static final String MANAGER_FILE = "test/ManagerList.txt";
-    private static final String OFFICER_FILE = "test/OfficerList.txt";
+    private static final String APPLICANT_FILE = "ApplicantList.txt";
+    private static final String MANAGER_FILE = "ManagerList.txt";
+    private static final String OFFICER_FILE = "OfficerList.txt";
 
     public static void UserList() {
         List<String> filePaths = Arrays.asList(APPLICANT_FILE, MANAGER_FILE, OFFICER_FILE);
@@ -21,7 +21,9 @@ public class fileReader extends UserFileHandler {
     }
 
     private static void viewUserList(String filePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                fileReader.class.getClassLoader().getResourceAsStream(filePath)))) {
+
             String line;
             br.readLine();
 
@@ -36,11 +38,9 @@ public class fileReader extends UserFileHandler {
                 String maritalStatus = details[3].toUpperCase();
 
                 System.out.println("Name: " + name + ", NRIC: " + nric + ", Age: " + age + ", Marital Status: " + maritalStatus);
-                
             }
         } catch (IOException e) {
             System.err.println("Error reading file: " + filePath + " " + e.getMessage());
         }
     }
-
 }
