@@ -4,6 +4,7 @@ import project.Project;
 import project.Application;
 import project.FlatType;
 import status.ApplicationStatus;
+import project.Enquiry;
 
 /**
  * Represents an applicant for BTO housing projects.
@@ -117,6 +118,10 @@ public class Applicant extends User {
             return FlatType.THREE_ROOM;
         }
     }
+    public void setAppliedProject(Project project) {
+        this.appliedProject = project;
+    }
+    
 
     /**
      * Gets the project this applicant has applied for.
@@ -153,5 +158,6 @@ public class Applicant extends User {
     public void setApplicationStatus(ApplicationStatus status) {
         this.applicationStatus = status;
     }
+    
     
 }
