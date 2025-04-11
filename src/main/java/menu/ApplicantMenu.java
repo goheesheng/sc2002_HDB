@@ -1,10 +1,11 @@
 package menu;
-
+import status.ApplicationStatus;
 import user.Applicant;
 import project.Project;
 import utility.BtoDataStore; // Import the data store
 import project.FlatType;    // Import FlatType
 import project.Application; // Import Application
+import project.Enquiry;
 
 import java.util.List;
 import java.util.Optional;

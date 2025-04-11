@@ -153,4 +153,5 @@ public class Applicant extends User {
     public void setApplicationStatus(ApplicationStatus status) {
         this.applicationStatus = status;
     }
+    
 }
