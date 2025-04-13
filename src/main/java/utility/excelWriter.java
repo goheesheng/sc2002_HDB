@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ExcelWriter {
+public class excelWriter {
 
     public static void writeToExcel(String filePath) {
         Workbook workbook = new XSSFWorkbook();

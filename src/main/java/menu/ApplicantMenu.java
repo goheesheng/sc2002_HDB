@@ -2,7 +2,7 @@ package menu;
 
 import user.Applicant;
 import project.Project;
-import utility.BtoDataStore; // Import the data store
+import utility.BTODataStore; // Import the data store
 import project.FlatType;    // Import FlatType
 import project.Application; // Import Application
 
@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 public class ApplicantMenu extends UserMenu {
     // Removed projectMenu field, access projects via DataStore
 
-    private BtoDataStore dataStore; // Hold a reference
+    private BTODataStore dataStore; // Hold a reference
 
     public ApplicantMenu(Applicant user) {
         super(user);
-        this.dataStore = BtoDataStore.getInstance(); // Get instance
+        this.dataStore = BTODataStore.getInstance(); // Get instance
     }
 
     @Override
@@ -166,7 +166,7 @@ public class ApplicantMenu extends UserMenu {
               // 1. Check eligibility AGAIN maybe (or trust the filtering)
               // 2. Check if already applied (already done above)
               // 3. Create the Application object
-              // 4. Add the Application object to the BtoDataStore
+              // 4. Add the Application object to the BTODataStore
               // 5. Update the applicant's state (appliedProject, status)
 
               // --- Revised Application Process ---

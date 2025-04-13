@@ -84,9 +84,9 @@ public class Main {
                 break;
 
             case 2:
-                String excelFilePath = "test/ApplicantsWithPassword.xlsx";  // Example file path
+                String excelFilePath = "test/ApplicantsList.xlsx";  // Example file path
                 ExcelReader.readExcel(excelFilePath);
-                String excelOutputFilePath = "test/ApplicantsWithPasswordOutput.xlsx";
+                String excelOutputFilePath = "test/ApplicantsList.xlsx";
                 ExcelWriter.writeToExcel(excelOutputFilePath);
                 return;
 

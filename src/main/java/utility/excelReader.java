@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class ExcelReader {
+public class excelReader {
 
     public static void readExcel(String filePath) {
         try (FileInputStream fis = new FileInputStream(new File(filePath))) {

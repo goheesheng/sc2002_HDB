@@ -209,6 +209,16 @@ public class Project {
     }
 
     /**
+     * Gets the Flat Types of this project.
+     * 
+     * @return The Flat Types
+     */
+
+    public Map<FlatType, Integer> getFlatTypes(){
+        return flatTypes;
+    }
+
+    /**
      * Checks if this project is visible to applicants.
      * 
      * @return true if the project is visible, false otherwise

@@ -40,7 +40,7 @@ public class PersistenceUtils {
         }
     }
 
-    public static void loadUsers(BtoDataStore store) {
+    public static void loadUsers(BTODataStore store) {
         File file = new File(USER_FILE);
         if (!file.exists()) return; // No file to load
 
@@ -98,7 +98,7 @@ public class PersistenceUtils {
          }
     }
 
-     public static void loadProjects(BtoDataStore store) {
+     public static void loadProjects(BTODataStore store) {
          File file = new File(PROJECT_FILE);
         if (!file.exists()) return;
 
@@ -141,11 +141,11 @@ public class PersistenceUtils {
     // --- Implement save/load for Applications, Enquiries, Registrations similarly ---
     // Remember to save IDs for related objects (User, Project) and link them back during load.
     public static void saveApplications(List<Application> applications) {/*... Implement ...*/}
-    public static void loadApplications(BtoDataStore store) {/*... Implement ...*/}
+    public static void loadApplications(BTODataStore store) {/*... Implement ...*/}
     public static void saveEnquiries(List<Enquiry> enquiries) {/*... Implement ...*/}
-    public static void loadEnquiries(BtoDataStore store) {/*... Implement ...*/}
+    public static void loadEnquiries(BTODataStore store) {/*... Implement ...*/}
     public static void saveRegistrations(List<Registration> registrations) {/*... Implement ...*/}
-    public static void loadRegistrations(BtoDataStore store) {/*... Implement ...*/}
+    public static void loadRegistrations(BTODataStore store) {/*... Implement ...*/}
 
 
     // Helper for basic CSV escaping (replace with a library for real use)

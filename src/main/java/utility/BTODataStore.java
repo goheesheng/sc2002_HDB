@@ -11,9 +11,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 // Simple singleton pattern to hold application data
-public class BtoDataStore {
+public class BTODataStore {
 
-    private static BtoDataStore instance = null;
+    private static BTODataStore instance = null;
 
     private List<User> allUsers;
     private List<Project> allProjects;
@@ -22,7 +22,7 @@ public class BtoDataStore {
     private List<Registration> pendingRegistrations; // Or all registrations
 
     // Private constructor for Singleton
-    private BtoDataStore() {
+    private BTODataStore() {
         allUsers = new ArrayList<>();
         allProjects = new ArrayList<>();
         allApplications = new ArrayList<>();
@@ -31,9 +31,9 @@ public class BtoDataStore {
     }
 
     // Public method to get the instance
-    public static BtoDataStore getInstance() {
+    public static BTODataStore getInstance() {
         if (instance == null) {
-            instance = new BtoDataStore();
+            instance = new BTODataStore();
         }
         return instance;
     }
