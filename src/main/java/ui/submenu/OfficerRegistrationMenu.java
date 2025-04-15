@@ -1,4 +1,4 @@
-package menu;
+package ui.submenu;
 
 import java.util.Scanner;
 

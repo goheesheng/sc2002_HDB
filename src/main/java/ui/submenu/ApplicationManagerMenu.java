@@ -1,11 +1,11 @@
-package menu;
+package ui.submenu;
 
 import java.util.Scanner;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import user.HDBManager;
-import utility.BtoDataStore;
+import utility.BTODataStore;
 import project.Application;
 import status.ApplicationStatus;
 
@@ -19,7 +19,7 @@ public class ApplicationManagerMenu {
     }
 
     public void displayMenu() {
-        int choice;
+        int choice = 0;
         do {
             System.out.println("\n----- Application Manager Menu -----");
             System.out.println("1. Approve Application");
@@ -61,7 +61,7 @@ public class ApplicationManagerMenu {
     }
 
     private void approveApplication() {
-        BtoDataStore dataStore = BtoDataStore.getInstance();
+        BTODataStore dataStore = BTODataStore.getInstance();
         // Get applications with PENDING status
         List<Application> pendingApps = dataStore.getApplications().stream()
                 .filter(a -> a.getStatus() == ApplicationStatus.PENDING)
@@ -101,7 +101,7 @@ public class ApplicationManagerMenu {
     }
 
     private void rejectApplication() {
-        BtoDataStore dataStore = BtoDataStore.getInstance();
+        BTODataStore dataStore = BTODataStore.getInstance();
         List<Application> pendingApps = dataStore.getApplications().stream()
                 .filter(a -> a.getStatus() == ApplicationStatus.PENDING)
                 .collect(Collectors.toList());
@@ -139,7 +139,7 @@ public class ApplicationManagerMenu {
     }
 
     private void approveWithdrawal() {
-        BtoDataStore dataStore = BtoDataStore.getInstance();
+        BTODataStore dataStore = BTODataStore.getInstance();
         // Get applications with pending withdrawal request
         List<Application> withdrawalApps = dataStore.getApplications().stream()
                 .filter(a -> a.isWithdrawalRequested())
@@ -177,7 +177,7 @@ public class ApplicationManagerMenu {
     }
 
     private void rejectWithdrawal() {
-        BtoDataStore dataStore = BtoDataStore.getInstance();
+        BTODataStore dataStore = BTODataStore.getInstance();
         List<Application> withdrawalApps = dataStore.getApplications().stream()
                 .filter(a -> a.isWithdrawalRequested())
                 .collect(Collectors.toList());

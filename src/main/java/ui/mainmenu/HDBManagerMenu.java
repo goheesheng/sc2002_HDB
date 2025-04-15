@@ -1,6 +1,11 @@
-package menu;
+package ui.mainmenu;
 
 import user.HDBManager;
+
+import ui.submenu.HDBManagerProjectMenu;
+import ui.submenu.OfficerRegistrationMenu;
+import ui.submenu.EnquiryMenu;
+import ui.submenu.ApplicationManagerMenu;
 
 public class HDBManagerMenu extends UserMenu{
     private HDBManagerProjectMenu projectMenu;

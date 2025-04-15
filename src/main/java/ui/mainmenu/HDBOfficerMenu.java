@@ -1,7 +1,11 @@
-package menu;
+package ui.mainmenu;
 
 import user.HDBOfficer;
 import user.Applicant;
+
+import ui.submenu.EnquiryMenu;
+import ui.submenu.ProjectMenu;
+import ui.submenu.ProjectRegisterMenu;
 
 public class HDBOfficerMenu extends UserMenu {
     private ApplicantMenu applicantMenu;

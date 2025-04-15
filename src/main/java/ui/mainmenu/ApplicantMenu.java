@@ -1,4 +1,4 @@
-package menu;
+package ui.mainmenu;
 import status.ApplicationStatus;
 import user.Applicant;
 import project.Project;

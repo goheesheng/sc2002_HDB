@@ -1,7 +1,7 @@
-package menu;
+package ui.submenu;
 
 import project.Enquiry;
-import utility.BtoDataStore;
+import utility.BTODataStore;
 import user.HDBManager;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class EnquiryMenu {
 
     private Scanner scanner = new Scanner(System.in);
     private HDBManager manager;  // The user replying to the enquiry
-    private BtoDataStore dataStore = BtoDataStore.getInstance();
+    private BTODataStore dataStore = BTODataStore.getInstance();
 
     public EnquiryMenu(HDBManager manager) {
         this.manager = manager;
