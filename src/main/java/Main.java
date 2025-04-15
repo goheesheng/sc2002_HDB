@@ -85,6 +85,9 @@ public class Main {
 
             case 2:
                 try {
+                    // Ensure the test data contains sample users in data store
+                    ensureTestUsers();
+                    
                     // Create test directory if it doesn't exist
                     File testDir = new File("test");
                     if (!testDir.exists()) {
@@ -131,6 +134,23 @@ public class Main {
         scanner.close();
         }
     
+    /**
+     * Ensures that there are test users in the central data store.
+     * This is called when viewing the user list to ensure there's data to view.
+     */
+    private static void ensureTestUsers() {
+        BTODataStore dataStore = BTODataStore.getInstance();
+        
+        // Check if we already have the sample user
+        if (dataStore.findUserByNric("S1234567A").isEmpty()) {
+            // Add sample users if the data store is empty
+            dataStore.addUser(new Applicant("S1234567A", "password123", 30, "SINGLE"));
+            dataStore.addUser(new HDBManager("S9876543B", "manager123", 45, "MARRIED"));
+            dataStore.addUser(new HDBOfficer("S5555555F", "officer123", 40, "MARRIED"));
+            
+            System.out.println("Added sample users to the data store.");
+        }
+    }
 
     public static void runTestCases() {
 
@@ -141,6 +161,10 @@ public class Main {
         // Test Case 1: Valid User Login
         System.out.println("Test Case 1: Valid User Login");
         Applicant applicant = new Applicant("S1234567A", "password", 35, "SINGLE");
+        
+        // Add test user to data store
+        BTODataStore.getInstance().addUser(applicant);
+        
         boolean loginSuccess = applicant.login("S1234567A", "password");
         System.out.println("Result: " + (loginSuccess ? "PASSED" : "FAILED"));
         System.out.println("----------------------------------------\n");
