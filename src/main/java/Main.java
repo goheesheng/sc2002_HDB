@@ -21,8 +21,8 @@ import menu.HDBOfficerMenu;
 import java.util.*;
 import java.io.File;
 
-import utility.ExcelReader;
-import utility.ExcelWriter;
+import utility.excelReader;
+import utility.excelWriter;
 
 public class Main {
     // Unit Test Case
@@ -84,11 +84,36 @@ public class Main {
                 break;
 
             case 2:
-                String excelFilePath = "test/ApplicantsList.xlsx";  // Example file path
-                ExcelReader.readExcel(excelFilePath);
-                String excelOutputFilePath = "test/ApplicantsList.xlsx";
-                ExcelWriter.writeToExcel(excelOutputFilePath);
-                return;
+                try {
+                    // Create test directory if it doesn't exist
+                    File testDir = new File("test");
+                    if (!testDir.exists()) {
+                        testDir.mkdirs();
+                        System.out.println("Created test directory.");
+                    }
+                    
+                    String excelFilePath = "test/ApplicantsList.xlsx";  // Example file path
+                    File excelFile = new File(excelFilePath);
+                    
+                    // Create parent directories if they don't exist
+                    if (!excelFile.getParentFile().exists()) {
+                        excelFile.getParentFile().mkdirs();
+                    }
+                    
+                    // Write to Excel file first (creates the file if it doesn't exist)
+                    System.out.println("Writing to Excel file: " + excelFile.getAbsolutePath());
+                    excelWriter.writeToExcel(excelFilePath);
+                    
+                    // Then read from it
+                    System.out.println("Reading from Excel file: " + excelFile.getAbsolutePath());
+                    excelReader.readExcel(excelFilePath);
+                    
+                    System.out.println("Excel operations completed successfully.");
+                } catch (Exception e) {
+                    System.err.println("Error in Excel operations: " + e.getMessage());
+                    e.printStackTrace();
+                }
+                break;
 
             case 3:
                 System.out.println("Running test cases...");
