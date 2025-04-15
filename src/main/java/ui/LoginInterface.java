@@ -15,7 +15,7 @@ import ui.mainmenu.ApplicantMenu;
 
 public class LoginInterface {
     private Scanner scanner = new Scanner(System.in);
-    private loginHandler loginHandler = new loginHandler(); // Assuming you have a LoginHandler class
+    private loginHandler loginHandler = new loginHandler(); 
 
     public void start() {
         String nric;

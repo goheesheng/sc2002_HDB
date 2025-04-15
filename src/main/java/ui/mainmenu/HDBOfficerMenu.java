@@ -51,10 +51,11 @@ public class HDBOfficerMenu extends UserMenu {
                     break;
                 case 5:
                 System.out.println("Generating reciept...");
-                // add functionaities
+                    // add functionaities
                     break;
                 case 6:
-                System.out.println("New password:");
+                    System.out.println("New password:");
+                    // sd
                     break;
                 case 7:
                     System.out.println("Logging out...");
