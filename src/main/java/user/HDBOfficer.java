@@ -5,8 +5,10 @@ import project.Enquiry;
 import project.Application;
 import project.FlatType;
 import admin.Receipt;
+import admin.Registration;
 import status.ApplicationStatus;
 import status.RegistrationStatus;
+import utility.BTODataStore;
 /**
  * Represents an HDB Officer who can handle BTO projects.
  * Officers can register for projects, update application statuses, and generate receipts.
@@ -40,7 +42,11 @@ public class HDBOfficer extends Applicant {
      */
     public boolean registerForProject(Project project) {
         if (handlingProject == null && !hasAppliedForProject(project)) {
-            handlingProject = project;
+            // Create a registration object and add it to the central data store
+            String regId = "REG" + System.currentTimeMillis();
+            Registration registration = new Registration(regId, this, project);
+            BTODataStore.getInstance().addRegistration(registration);
+            
             registrationStatus = RegistrationStatus.PENDING;
             return true;
         }
@@ -138,12 +144,18 @@ public class HDBOfficer extends Applicant {
      */
     public boolean updateApplicantProfile(Applicant applicant, FlatType flatType) {
         if (applicant.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
+            // Book the flat for the applicant
             boolean result = applicant.bookFlat(handlingProject, flatType);
+            
             if (result) {
+                // Update the application status
                 Application app = retrieveApplication(applicant.getNric());
                 if (app != null) {
-                    app.updateStatus(ApplicationStatus.BOOKED); 
-                    handlingProject.updateFlatCount(flatType, handlingProject.getRemainingFlats(flatType) - 1);
+                    app.updateStatus(ApplicationStatus.BOOKED);
+                    
+                    // Update the flat count within the same method for tight coupling
+                    int currentCount = handlingProject.getRemainingFlats(flatType);
+                    handlingProject.updateFlatCount(flatType, currentCount - 1);
                 }
             }
             return result;
@@ -197,5 +209,15 @@ public class HDBOfficer extends Applicant {
      */
     public void setRegistrationStatus(RegistrationStatus status) {
         this.registrationStatus = status;
+    }
+
+    /**
+     * Sets the handling project for this officer.
+     * This is called when the officer's registration is approved.
+     * 
+     * @param project The project to handle
+     */
+    public void setHandlingProject(Project project) {
+        this.handlingProject = project;
     }
 }

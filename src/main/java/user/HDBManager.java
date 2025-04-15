@@ -7,11 +7,13 @@ import admin.Registration;
 import admin.Report;
 import status.ApplicationStatus;
 import project.FlatType;
+import utility.BTODataStore;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Represents an HDB Manager who can create and manage BTO projects.
@@ -138,9 +140,8 @@ public class HDBManager extends User {
      * @return A list of all projects
      */
     public List<Project> viewAllProjects() {
-        // Implementation to return all projects in the system
-        List<Project> allProjects = new ArrayList<>(createdProjects);
-        return allProjects;
+        // Get all projects from the central data store instead of just created ones
+        return BTODataStore.getInstance().getAllProjects();
     }
 
     /**
@@ -159,13 +160,10 @@ public class HDBManager extends User {
      * @return A list of officer registrations
      */
     public List<Registration> viewOfficerRegistrations(Project project) {
-        // Implementation to return registrations for the project
-        List<Registration> registrations = new ArrayList<>();
-        for (HDBOfficer officer : project.getOfficers()) {
-            Registration registration = new Registration("REG" + System.currentTimeMillis(), officer, project);
-            registrations.add(registration);
-        }
-        return registrations;
+        // Get the registrations from the central data store
+        return BTODataStore.getInstance().getPendingRegistrations().stream()
+                .filter(r -> r.getProject().equals(project))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -175,7 +173,28 @@ public class HDBManager extends User {
      * @return true if the registration was approved successfully
      */
     public boolean approveOfficerRegistration(Registration registration) {
-        return registration.approve();
+        if (registration.approve()) {
+            // Add the officer to the project's officer list
+            Project project = registration.getProject();
+            HDBOfficer officer = registration.getOfficer();
+            
+            // Add officer to the project using proper method instead of directly modifying list
+            project.addOfficer(officer);
+            
+            // Set the handling project for the officer
+            officer.setHandlingProject(project);
+            
+            // Decrement available officer slots
+            if (project.getavailableOfficerSlots() > 0) {
+                project.setAvailableOfficerSlots(project.getavailableOfficerSlots() - 1);
+            }
+            
+            // Update officer's registration status
+            officer.setRegistrationStatus(status.RegistrationStatus.APPROVED);
+            
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -185,7 +204,12 @@ public class HDBManager extends User {
      * @return true if the registration was rejected successfully
      */
     public boolean rejectOfficerRegistration(Registration registration) {
-        return registration.reject();
+        if (registration.reject()) {
+            // Update officer's registration status
+            registration.getOfficer().setRegistrationStatus(status.RegistrationStatus.REJECTED);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -273,10 +297,7 @@ public class HDBManager extends User {
      * @return A list of all enquiries
      */
     public List<Enquiry> viewAllEnquiries() {
-        List<Enquiry> allEnquiries = new ArrayList<>();
-        for (Project project : createdProjects) {
-            allEnquiries.addAll(project.getEnquiries());
-        }
-        return allEnquiries;
+        // Get all enquiries from the central data store
+        return BTODataStore.getInstance().getAllEnquiries();
     }
 }

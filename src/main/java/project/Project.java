@@ -142,6 +142,30 @@ public class Project {
     public List<HDBOfficer> getOfficers() { 
         return new ArrayList<>(officers);
     }
+    
+    /**
+     * Gets direct access to the internal officers list.
+     * Used by HDBManager to manage officer assignments.
+     * 
+     * @return The internal list of officers assigned to this project
+     */
+    public List<HDBOfficer> getOfficersList() {
+        return officers;
+    }
+    
+    /**
+     * Adds an officer to this project.
+     * 
+     * @param officer The officer to add
+     * @return true if the officer was added successfully, false otherwise
+     */
+    public boolean addOfficer(HDBOfficer officer) {
+        if (availableOfficerSlots > 0) {
+            officers.add(officer);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Gets a copy of the list of applications submitted for this project.

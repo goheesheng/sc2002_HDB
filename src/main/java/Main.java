@@ -63,7 +63,6 @@ public class Main {
                 System.out.println("Enter Password:");
                 String password = scanner.nextLine();
 
-                loginHandler loginHandler = new loginHandler();
                 User loggedInUser = loginHandler.login(nric, password); 
                 if (loggedInUser != null) {
                     System.out.println("Login successful! User type: " + loggedInUser.getClass().getSimpleName());
@@ -71,7 +70,7 @@ public class Main {
                     if (loggedInUser instanceof HDBManager){
                         new HDBManagerMenu((HDBManager) loggedInUser).displayMenu();
                     }
-                    if (loggedInUser instanceof HDBOfficer){
+                    else if (loggedInUser instanceof HDBOfficer){
                         new HDBOfficerMenu((HDBOfficer) loggedInUser).displayMenu();
                     } else if (loggedInUser instanceof Applicant) {
                         new ApplicantMenu ((Applicant) loggedInUser).displayMenu();
@@ -378,12 +377,13 @@ public class Main {
         // Test Case 21: Manage HDB Officer Registrations
         System.out.println("Test Case 21: Manage HDB Officer Registrations");
         List<Registration> registrations = manager.viewOfficerRegistrations(project);
-        Registration officerReg = null;
-        // In a real scenario, we would get the actual registration
-        // For now, we'll create a dummy one for testing
-        officerReg = new Registration("REG001", officer1, project);
-        
-        boolean approved = manager.approveOfficerRegistration(officerReg);
+        // Get the actual registration created in Test Case 10
+        Registration officerReg = registrations.stream()
+            .filter(r -> r.getOfficer().getNric().equals(officer1.getNric()))
+            .findFirst()
+            .orElse(null);
+
+        boolean approved = officerReg != null && manager.approveOfficerRegistration(officerReg);
         System.out.println("Can view registrations: " + (registrations != null));
         System.out.println("Can approve registration: " + approved);
         System.out.println("Result: " + (registrations != null && approved ? "PASSED" : "FAILED"));
