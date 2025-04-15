@@ -14,6 +14,7 @@ import status.ApplicationStatus;
 import status.RegistrationStatus;
 //import utility.fileReader;
 import utility.loginHandler;
+import utility.BTODataStore;
 import menu.ApplicantMenu;
 import menu.HDBManagerMenu;
 import menu.HDBOfficerMenu;
@@ -264,6 +265,7 @@ public class Main {
         
         // Test Case 10: HDB Officer Registration Eligibility
         System.out.println("Test Case 10: HDB Officer Registration Eligibility");
+        // We'll get a clean state by creating new officers and registrations
         HDBOfficer officer1 = new HDBOfficer("S5555555F", "password", 40, "MARRIED");
         HDBOfficer officer2 = new HDBOfficer("S6666666G", "password", 38, "SINGLE");
         
@@ -376,17 +378,28 @@ public class Main {
         
         // Test Case 21: Manage HDB Officer Registrations
         System.out.println("Test Case 21: Manage HDB Officer Registrations");
+        // Get registrations from our central data store
         List<Registration> registrations = manager.viewOfficerRegistrations(project);
-        // Get the actual registration created in Test Case 10
-        Registration officerReg = registrations.stream()
-            .filter(r -> r.getOfficer().getNric().equals(officer1.getNric()))
-            .findFirst()
-            .orElse(null);
+        
+        // Find the registration created in Test Case 10 for officer1
+        Registration officerReg = null;
+        if (registrations != null && !registrations.isEmpty()) {
+            officerReg = registrations.stream()
+                .filter(r -> r.getOfficer().getNric().equals(officer1.getNric()))
+                .findFirst()
+                .orElse(null);
+            
+            if (officerReg == null) {
+                System.out.println("Warning: Could not find officer1 registration in the data store");
+            }
+        } else {
+            System.out.println("Warning: No registrations found in the data store");
+        }
 
         boolean approved = officerReg != null && manager.approveOfficerRegistration(officerReg);
-        System.out.println("Can view registrations: " + (registrations != null));
+        System.out.println("Can view registrations: " + (registrations != null && !registrations.isEmpty()));
         System.out.println("Can approve registration: " + approved);
-        System.out.println("Result: " + (registrations != null && approved ? "PASSED" : "FAILED"));
+        System.out.println("Result: " + (registrations != null && !registrations.isEmpty() && approved ? "PASSED" : "FAILED"));
         System.out.println("----------------------------------------\n");
         
         // Test Case 22: Approve or Reject BTO Applications and Withdrawals
