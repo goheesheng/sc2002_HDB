@@ -1,4 +1,4 @@
-package menu;
+package ui.submenu;
 
 import java.util.Scanner;
 
@@ -17,7 +17,7 @@ public class ApplicationManagerMenu {
         int choice;
         do {
             System.out.println("\n-----Application Manager Menu-----");
-            System.out.println("1. Approve Apllication");
+            System.out.println("1. Approve Application");
             System.out.println("2. Reject Application");
             System.out.println("3. Approve withdrawal");
             System.out.println("4. Reject withdrawal");

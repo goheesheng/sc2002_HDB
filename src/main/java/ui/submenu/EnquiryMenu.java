@@ -1,16 +1,16 @@
-package menu;
+package ui.submenu;
 
 import java.util.Scanner;
 
-public class ProjectRegisterMenu {
+public class EnquiryMenu {
     private Scanner scanner = new Scanner(System.in);
 
     public void displayMenu() {
         int choice;
         do {
-            System.out.println("\n-----Registration Menu-----");
-            System.out.println("1. Register for project");
-            System.out.println("2. View Registration Status");
+            System.out.println("\n-----Enquiry Menu-----");
+            System.out.println("1. View All Enquiries");
+            System.out.println("2. Reply to an Enquiry");
             System.out.println("3. Back to Main Menu");
             System.out.print("Enter your choice: ");
 
@@ -19,11 +19,11 @@ public class ProjectRegisterMenu {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Projects to register");
+                    System.out.println("Fetching all enquiries...");
                     // Add functionaily
                     break;
                 case 2:
-                    System.out.println("Registration Status:");
+                    System.out.println("Enter Enquiry ID to reply:");
                     // Add functionaily
                     break;
                 case 3:

@@ -1,4 +1,9 @@
-package menu;
+package ui.mainUserMenu;
+
+import ui.submenu.HDBManagerProjectMenu;
+import ui.submenu.OfficerRegistrationMenu;
+import ui.submenu.EnquiryMenu;
+import ui.submenu.ApplicationManagerMenu;
 
 import user.HDBManager;
 
