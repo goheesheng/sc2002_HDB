@@ -1,7 +1,7 @@
 package menu;
 
 import project.Enquiry;
-import utility.BTODataStore;
+import utility.BtoDataStore;
 import user.HDBManager;
 
 import java.util.List;
@@ -12,11 +12,15 @@ public class EnquiryMenu {
 
     private Scanner scanner = new Scanner(System.in);
     private HDBManager manager;  // The user replying to the enquiry
-    private BTODataStore dataStore = BTODataStore.getInstance();
+    private BtoDataStore dataStore = BtoDataStore.getInstance();
 
     public EnquiryMenu(HDBManager manager) {
         this.manager = manager;
     }
+    public EnquiryMenu() {
+        // No-arg constructor so it can be instantiated like: new EnquiryMenu()
+    }
+    
 
     public void displayMenu() {
         int choice;
