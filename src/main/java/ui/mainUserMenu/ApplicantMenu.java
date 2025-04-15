@@ -1,5 +1,9 @@
 package ui.mainUserMenu;
+<<<<<<< HEAD
 import status.ApplicationStatus;
+=======
+
+>>>>>>> 47cb1d25c8e1f336bca43f4aa9b79e989361f89d
 import user.Applicant;
 import project.Project;
 import utility.BTODataStore; // Import the data store
