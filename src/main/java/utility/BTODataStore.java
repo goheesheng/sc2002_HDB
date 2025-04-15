@@ -146,6 +146,51 @@ public class BTODataStore {
         }
         return false;
     }
+    
+    /**
+     * Removes a project directly from the data store.
+     * This method should only be called by HDBManager's deleteProject method.
+     * 
+     * @param project The project to remove
+     * @return true if the project was successfully removed, false otherwise
+     */
+    public boolean removeProject(Project project) {
+        if (project == null) return false;
+        
+        // Find the project in the list
+        Optional<Project> projOpt = findProjectById(project.getProjectId());
+        if (projOpt.isPresent()) {
+            // Remove the project
+            boolean removed = allProjects.remove(projOpt.get());
+            
+            if (removed) {
+                // Also clean up any related applications
+                List<Application> relatedApplications = allApplications.stream()
+                        .filter(app -> app.getProject().equals(project))
+                        .collect(Collectors.toList());
+                
+                allApplications.removeAll(relatedApplications);
+                
+                // Clean up any related enquiries
+                List<Enquiry> relatedEnquiries = allEnquiries.stream()
+                        .filter(enq -> enq.getProject().equals(project))
+                        .collect(Collectors.toList());
+                
+                allEnquiries.removeAll(relatedEnquiries);
+                
+                // Clean up any related registrations
+                List<Registration> relatedRegistrations = pendingRegistrations.stream()
+                        .filter(reg -> reg.getProject().equals(project))
+                        .collect(Collectors.toList());
+                
+                pendingRegistrations.removeAll(relatedRegistrations);
+            }
+            
+            return removed;
+        }
+        
+        return false;
+    }
 
     // --- Load/Save Triggers ---
     public void loadAllData() {

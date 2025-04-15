@@ -63,28 +63,51 @@ public class HDBOfficer extends Applicant {
     }
 
     /**
-     * Views the details of a project if this officer is handling it.
+     * Views the details of a project. Officers can always view project details 
+     * even if they are not handling it and even if visibility is toggled off.
      * 
      * @param project The project to view details for
-     * @return The project if this officer is handling it, null otherwise
+     * @return The project if it exists, null otherwise
      */
     public Project viewProjectDetails(Project project) {
-        if (handlingProject == project) {
+        // HDB Officers can always view project details regardless of visibility
+        // This fixes Test Case 12: Project Detail Access for HDB Officer
+        if (project != null) {
             return project;
         }
         return null;
     }
+    
+    /**
+     * HDB Officers cannot edit project details. Only HDB Managers have this permission.
+     * This method always returns false to enforce this restriction.
+     * 
+     * @param project The project attempting to be edited
+     * @param updatedDetails The details to be updated
+     * @return Always false, as officers cannot edit projects
+     */
+    public boolean editProject(Project project, java.util.Map<String, Object> updatedDetails) {
+        // Officers cannot edit project details - this is only for HDBManager
+        // This implements Test Case 13: Restriction on Editing Project Details
+        return false;
+    }
 
     /**
-     * Replies to an enquiry submitted for the project this officer is handling.
+     * Replies to an enquiry submitted for any project.
+     * Officers can reply to enquiries for the project they are handling.
      * 
      * @param enquiry The enquiry to reply to
      * @param replyText The text content of the reply
      * @return true if the reply was added successfully, false otherwise
      */
     public boolean replyToEnquiry(Enquiry enquiry, String replyText) {
-        if (handlingProject == enquiry.getProject()) {
-            return enquiry.addReply(replyText, this);
+        // Fix for Test Case 14: Response to Project Enquiries
+        // Officers can reply to enquiries for their assigned project
+        if (enquiry != null) {
+            // Check if officer is assigned to this project
+            if (handlingProject != null && handlingProject.equals(enquiry.getProject())) {
+                return enquiry.addReply(replyText, this);
+            }
         }
         return false;
     }
@@ -97,11 +120,14 @@ public class HDBOfficer extends Applicant {
      * @return true if the update was successful, false otherwise
      */
     public boolean updateRemainingFlats(Project project, FlatType flatType) {
-        if (handlingProject == project) {
-            int currentCount = project.getRemainingFlats(flatType);
-            if (currentCount > 0) {
-                project.updateFlatCount(flatType, currentCount - 1);
-                return true;
+        // Fix for Test Case 15: Flat Selection and Booking Management
+        if (project != null && flatType != null) {
+            if (handlingProject != null && handlingProject.equals(project)) {
+                int currentCount = project.getRemainingFlats(flatType);
+                if (currentCount > 0) {
+                    project.updateFlatCount(flatType, currentCount - 1);
+                    return true;
+                }
             }
         }
         return false;
@@ -114,8 +140,17 @@ public class HDBOfficer extends Applicant {
      * @return The application, or null if not found
      */
     public Application retrieveApplication(String nric) {
-        if (handlingProject != null) {
+        // Fix for Test Case 15: Flat Selection and Booking Management
+        if (handlingProject != null && nric != null && !nric.isEmpty()) {
+            // First check the project's applications
             for (Application app : handlingProject.getApplications()) {
+                if (app.getApplicant().getNric().equals(nric)) {
+                    return app;
+                }
+            }
+            
+            // If not found in project, check the data store
+            for (Application app : BTODataStore.getInstance().getAllApplications()) {
                 if (app.getApplicant().getNric().equals(nric)) {
                     return app;
                 }
@@ -132,7 +167,11 @@ public class HDBOfficer extends Applicant {
      * @return true if the status was updated successfully
      */
     public boolean updateApplicationStatus(Application application, ApplicationStatus status) {
-        return application.updateStatus(status);
+        // Fix for Test Case 15: Flat Selection and Booking Management
+        if (application != null && status != null) {
+            return application.updateStatus(status);
+        }
+        return false;
     }
 
     /**
@@ -143,22 +182,25 @@ public class HDBOfficer extends Applicant {
      * @return true if the profile was updated successfully
      */
     public boolean updateApplicantProfile(Applicant applicant, FlatType flatType) {
-        if (applicant.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
-            // Book the flat for the applicant
-            boolean result = applicant.bookFlat(handlingProject, flatType);
-            
-            if (result) {
-                // Update the application status
-                Application app = retrieveApplication(applicant.getNric());
-                if (app != null) {
-                    app.updateStatus(ApplicationStatus.BOOKED);
-                    
-                    // Update the flat count within the same method for tight coupling
-                    int currentCount = handlingProject.getRemainingFlats(flatType);
-                    handlingProject.updateFlatCount(flatType, currentCount - 1);
+        // Fix for Test Case 15: Flat Selection and Booking Management
+        if (applicant != null && flatType != null && handlingProject != null) {
+            if (applicant.getApplicationStatus() == ApplicationStatus.SUCCESSFUL) {
+                // Book the flat for the applicant
+                boolean result = applicant.bookFlat(handlingProject, flatType);
+                
+                if (result) {
+                    // Update the application status
+                    Application app = retrieveApplication(applicant.getNric());
+                    if (app != null) {
+                        app.updateStatus(ApplicationStatus.BOOKED);
+                        
+                        // Update the flat count within the same method for tight coupling
+                        int currentCount = handlingProject.getRemainingFlats(flatType);
+                        handlingProject.updateFlatCount(flatType, currentCount - 1);
+                    }
                 }
+                return result;
             }
-            return result;
         }
         return false;
     }
@@ -219,5 +261,14 @@ public class HDBOfficer extends Applicant {
      */
     public void setHandlingProject(Project project) {
         this.handlingProject = project;
+    }
+    
+    /**
+     * Gets the project this officer is handling.
+     * 
+     * @return The project this officer is handling, or null if not assigned
+     */
+    public Project getHandlingProject() {
+        return handlingProject;
     }
 }

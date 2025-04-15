@@ -252,12 +252,30 @@ public class Project {
     }
 
     /**
-     * Sets the visibility of this project to applicants.
+     * Sets the visibility of this project.
      * 
-     * @param visibility The new visibility status
+     * @param visibility The new visibility
      */
     public void setVisibility(boolean visibility) {
         this.visibility = visibility;
+    }
+    
+    /**
+     * Gets the application opening date for this project.
+     * 
+     * @return The application opening date
+     */
+    public Date getApplicationOpeningDate() {
+        return applicationOpeningDate;
+    }
+    
+    /**
+     * Gets the application closing date for this project.
+     * 
+     * @return The application closing date
+     */
+    public Date getApplicationClosingDate() {
+        return applicationClosingDate;
     }
 
     /**

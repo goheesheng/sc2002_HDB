@@ -41,9 +41,10 @@ public class HDBManager extends User {
 
     /**
      * Creates a new BTO project with the specified details.
+     * Ensures that a manager cannot manage multiple projects with overlapping application periods.
      * 
      * @param projectDetails Map containing all project details
-     * @return The newly created Project
+     * @return The newly created Project or null if dates conflict with existing projects
      */
     public Project createProject(Map<String, Object> projectDetails) {
         String projectId = (String) projectDetails.get("projectId");
@@ -58,6 +59,13 @@ public class HDBManager extends User {
         Date applicationClosingDate = (Date) projectDetails.get("applicationClosingDate");
         int availableOfficerSlots = (Integer) projectDetails.get("availableOfficerSlots");
         
+        // Check for date conflicts with existing projects
+        // Implementation for Test Case 18: Single Project Management per Application Period
+        if (hasDateConflict(applicationOpeningDate, applicationClosingDate)) {
+            System.out.println("Project creation failed: Date conflict with an existing project");
+            return null;
+        }
+        
         Project project = new Project(
             projectId, projectName, neighborhood, flatTypes,
             applicationOpeningDate, applicationClosingDate,
@@ -65,7 +73,38 @@ public class HDBManager extends User {
         );
         
         createdProjects.add(project);
+        
+        // Add to central data store
+        BTODataStore.getInstance().addProject(project);
+        
         return project;
+    }
+    
+    /**
+     * Checks if there is a date conflict with existing projects.
+     * A conflict exists if the new date range overlaps with any existing project's date range.
+     * 
+     * @param openingDate The opening date of the new project
+     * @param closingDate The closing date of the new project
+     * @return true if there is a conflict, false otherwise
+     */
+    private boolean hasDateConflict(Date openingDate, Date closingDate) {
+        // Implementation for Test Case 18: Single Project Management per Application Period
+        for (Project existingProject : createdProjects) {
+            Date existingOpeningDate = existingProject.getApplicationOpeningDate();
+            Date existingClosingDate = existingProject.getApplicationClosingDate();
+            
+            // Check for overlap:
+            // 1. New opening date is within existing date range
+            // 2. New closing date is within existing date range
+            // 3. New date range completely contains existing date range
+            if ((openingDate.compareTo(existingOpeningDate) >= 0 && openingDate.compareTo(existingClosingDate) <= 0) ||
+                (closingDate.compareTo(existingOpeningDate) >= 0 && closingDate.compareTo(existingClosingDate) <= 0) ||
+                (openingDate.compareTo(existingOpeningDate) <= 0 && closingDate.compareTo(existingClosingDate) >= 0)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -93,11 +132,23 @@ public class HDBManager extends User {
             }
             
             if (updatedDetails.containsKey("applicationOpeningDate")) {
-                project.setApplicationOpeningDate((Date) updatedDetails.get("applicationOpeningDate"));
+                Date newOpeningDate = (Date) updatedDetails.get("applicationOpeningDate");
+                // Check for conflicts with other projects before updating
+                if (!hasDateConflictExcept(project, newOpeningDate, project.getApplicationClosingDate())) {
+                    project.setApplicationOpeningDate(newOpeningDate);
+                } else {
+                    return false;
+                }
             }
             
             if (updatedDetails.containsKey("applicationClosingDate")) {
-                project.setApplicationClosingDate((Date) updatedDetails.get("applicationClosingDate"));
+                Date newClosingDate = (Date) updatedDetails.get("applicationClosingDate");
+                // Check for conflicts with other projects before updating
+                if (!hasDateConflictExcept(project, project.getApplicationOpeningDate(), newClosingDate)) {
+                    project.setApplicationClosingDate(newClosingDate);
+                } else {
+                    return false;
+                }
             }
             
             if (updatedDetails.containsKey("availableOfficerSlots")) {
@@ -110,13 +161,53 @@ public class HDBManager extends User {
     }
     
     /**
+     * Checks if there is a date conflict with existing projects, excluding the specified project.
+     * 
+     * @param excludedProject The project to exclude from the conflict check
+     * @param openingDate The opening date to check
+     * @param closingDate The closing date to check
+     * @return true if there is a conflict, false otherwise
+     */
+    private boolean hasDateConflictExcept(Project excludedProject, Date openingDate, Date closingDate) {
+        for (Project existingProject : createdProjects) {
+            if (existingProject.equals(excludedProject)) {
+                continue;
+            }
+            
+            Date existingOpeningDate = existingProject.getApplicationOpeningDate();
+            Date existingClosingDate = existingProject.getApplicationClosingDate();
+            
+            if ((openingDate.compareTo(existingOpeningDate) >= 0 && openingDate.compareTo(existingClosingDate) <= 0) ||
+                (closingDate.compareTo(existingOpeningDate) >= 0 && closingDate.compareTo(existingClosingDate) <= 0) ||
+                (openingDate.compareTo(existingOpeningDate) <= 0 && closingDate.compareTo(existingClosingDate) >= 0)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Deletes a project from the system.
+     * Removes the project from both the manager's list and the central data store.
      * 
      * @param project The project to delete
      * @return true if the project was deleted successfully
      */
     public boolean deleteProject(Project project) {
-        return createdProjects.remove(project);
+        if (project == null) return false;
+        
+        // Only projects created by this manager can be deleted
+        if (!createdProjects.contains(project)) {
+            return false;
+        }
+        
+        // Remove from central data store
+        boolean removedFromStore = BTODataStore.getInstance().removeProject(project);
+        
+        // Remove from manager's list
+        boolean removedFromList = createdProjects.remove(project);
+        
+        return removedFromStore && removedFromList;
     }
 
     /**
