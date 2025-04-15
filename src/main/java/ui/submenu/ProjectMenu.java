@@ -1,4 +1,4 @@
-package menu;
+package ui.submenu;
 import user.User;
 
 import project.Project;
