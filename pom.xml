@@ -4,20 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Required fields -->
     <groupId>org.example</groupId>
     <artifactId>sc2002_HDB</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <build>
-        <!-- Changed source directory + shifted main.java into it-->
         <sourceDirectory>src/main/java</sourceDirectory>
 
-        <!-- Added our txt & xslx files here -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                 <includes>
+                <includes>
                     <include>**/*.txt</include>
                     <include>**/*.xlsx</include>
                 </includes>
@@ -49,6 +46,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -58,10 +56,53 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>Main</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <dependencies>
-        <!-- Add your dependencies here -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.21</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
     </dependencies>
 </project>

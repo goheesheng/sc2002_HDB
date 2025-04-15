@@ -134,6 +134,11 @@ public class BtoDataStore {
          }
          return false;
      }
+     public List<Application> getApplications() {
+        return new ArrayList<>(allApplications);
+
+    }
+
 
     // --- Methods to Remove data (Example: Delete Project) ---
     public boolean removeProject(String projectId) {
