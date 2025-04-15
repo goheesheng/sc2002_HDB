@@ -2,31 +2,30 @@ package utility;
 
 import user.User;
 
-public class loginHandler extends UserFileHandler {
-
-
-    public User login(String nric, String password) {
-        if (!User.isValidNRIC(nric)) {
-            System.out.println("Invalid NRIC format.");
-            return null;
+/**
+ * Handles user login operations including authentication.
+ * This class provides static methods for logging in and validating credentials.
+ */
+public class loginHandler {
+    
+    /**
+     * Validates user credentials and returns the authenticated user object.
+     * 
+     * @param nric The user's NRIC
+     * @param password The user's password
+     * @return The authenticated User object if credentials are valid, null otherwise
+     */
+    public static User login(String nric, String password) {
+        BTODataStore dataStore = BTODataStore.getInstance();
+        
+        java.util.Optional<User> userOpt = dataStore.findUserByNric(nric);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (user.login(nric, password)) {
+                return user;
+            }
         }
-
-    //Check all three files (Applicant, Manager, Officer)
-        User user;
-
-        //Check Applicant file
-        user = checkLoginInFile(nric, password, APPLICANT_FILE);
-        if (user != null) return user;
-
-        //Check Manager file
-        user = checkLoginInFile(nric, password, MANAGER_FILE);
-        if (user != null) return user;
-
-        //Check Officer file
-        user = checkLoginInFile(nric, password, OFFICER_FILE);
-        if (user != null) return user;
-
-        return null; 
+        return null;
     }
 }
 
