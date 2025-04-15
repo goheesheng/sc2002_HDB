@@ -2,7 +2,7 @@
 import admin.Receipt;
 import admin.Report;
 import admin.Registration;
-import user.User;
+
 import user.Applicant;
 import user.HDBManager;
 import user.HDBOfficer;
@@ -12,11 +12,10 @@ import project.Enquiry;
 import project.FlatType;
 import status.ApplicationStatus;
 import status.RegistrationStatus;
-import utility.loginHandler;
+import ui.LoginInterface;
+
 import utility.BTODataStore;
-import menu.ApplicantMenu;
-import menu.HDBManagerMenu;
-import menu.HDBOfficerMenu;
+import ui.LoginInterface;
 
 import java.util.*;
 import java.io.File;
@@ -49,38 +48,8 @@ public class Main {
 
         switch (choice) {
             case 1:
-                String nric;
-                while(true){
-                System.out.println("Enter NRIC:");
-                nric = scanner.nextLine();
-
-                if (User.isValidNRIC(nric)) {
-                    break;
-                } else {
-                    System.out.println("Invalid NRIC format. Please enter a valid NRIC.");
-                }
-            }
-                System.out.println("Enter Password:");
-                String password = scanner.nextLine();
-
-                User loggedInUser = loginHandler.login(nric, password); 
-                if (loggedInUser != null) {
-                    System.out.println("Login successful! User type: " + loggedInUser.getClass().getSimpleName());
-                    
-                    if (loggedInUser instanceof HDBManager){
-                        new HDBManagerMenu((HDBManager) loggedInUser).displayMenu();
-                    }
-                    else if (loggedInUser instanceof HDBOfficer){
-                        new HDBOfficerMenu((HDBOfficer) loggedInUser).displayMenu();
-                    } else if (loggedInUser instanceof Applicant) {
-                        new ApplicantMenu ((Applicant) loggedInUser).displayMenu();
-                    }
-                } else {
-                    System.out.println("Invalid NRIC or password.");
-                    System.out.println("----------------------------------------\n");
-                }
-            
-                break;
+                LoginInterface loginInterface = new LoginInterface();
+                loginInterface.start();
 
             case 2:
                 try {

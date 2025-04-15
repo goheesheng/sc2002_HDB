@@ -2,7 +2,7 @@ package ui.mainmenu;
 
 import user.HDBOfficer;
 import user.Applicant;
-
+import ui.mainmenu.ApplicantMenu;
 import ui.submenu.EnquiryMenu;
 import ui.submenu.ProjectMenu;
 import ui.submenu.ProjectRegisterMenu;
