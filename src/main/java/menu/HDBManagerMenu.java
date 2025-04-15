@@ -18,46 +18,45 @@ public class HDBManagerMenu extends UserMenu{
     }
 
     public void displayMenu() {
-
-        System.out.println("\n-----HDB Manager Menu-----");
-        System.out.println("1. Manage Projects");
-        System.out.println("2. Manage Officer Registration");
-        System.out.println("3. View and reply Enquires");
-        System.out.println("4. Manage Applications");
-        System.out.println("5. Generate Report");
-        System.out.println("6: Change password");
-        System.out.println("7. Logout");
-        
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (choice) {
-            case 1:
-                projectMenu.displayMenu(null); 
-                break;
-            case 2:
-                officerRegistrationMenu.displayMenu();
-                break;
-            case 3:
-                enquiryMenu.displayMenu();
-                break;
-            case 4:
-                applicationManagerMenu.displayMenu();
-                break;
-            case 5:
-                System.out.println("Generating report");
-                // Add functionailties
-                break;
-            case 6:
-                System.out.println("New password:");
-                // Add functionailites
-                break;
-            case 7: 
-                System.out.println("Logging out, have a nice day");
-                return;
-            default:
-                System.out.println("Invalid choice.");
-        }
-        displayMenu();
+        int choice;
+        do {
+            System.out.println("\n-----HDB Manager Menu-----");
+            System.out.println("1. Manage Projects");
+            System.out.println("2. Manage Officer Registration");
+            System.out.println("3. View and reply Enquires");
+            System.out.println("4. Manage Applications");
+            System.out.println("5. Generate Report");
+            System.out.println("6: Change password");
+            System.out.println("7. Logout");
+            
+            choice = scanner.nextInt();
+            scanner.nextLine();
+    
+            switch (choice) {
+                case 1:
+                    projectMenu.displayMenu(((HDBManager)user).viewAllProjects());
+                    break;
+                case 2:
+                    officerRegistrationMenu.displayMenu();
+                    break;
+                case 3:
+                    enquiryMenu.displayMenu();
+                    break;
+                case 4:
+                    applicationManagerMenu.displayMenu();
+                    break;
+                case 5:
+                    // Generate report
+                    break;
+                case 6:
+                    // change password
+                    break;
+                case 7:
+                    System.out.println("Logging out...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 7);
     }
 }

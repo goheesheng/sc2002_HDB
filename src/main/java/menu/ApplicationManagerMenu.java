@@ -49,7 +49,7 @@ public class ApplicationManagerMenu {
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 3);
+        } while (choice != 5);
     }
 
 }

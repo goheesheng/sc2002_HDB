@@ -58,6 +58,6 @@ public class HDBOfficerMenu extends UserMenu {
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
-        } while (choice != 6);
+        } while (choice != 7);
     }
 }
