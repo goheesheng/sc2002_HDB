@@ -1,11 +1,13 @@
 package ui.mainmenu;
 
 import user.HDBOfficer;
+import utility.BTODataStore;
 import user.Applicant;
 
 import java.io.File;
+import java.util.List;
 import project.Application;
-
+import project.Project;
 import admin.Receipt;
 import ui.mainmenu.ApplicantMenu;
 import ui.submenu.EnquiryMenu;
@@ -48,7 +50,8 @@ public class HDBOfficerMenu extends UserMenu {
                     enquiryMenu.displayMenu();
                     break;
                 case 2:
-                    projectMenu.viewProjects(null);
+                    List<Project> projects = BTODataStore.getInstance().getAllProjects();
+                    projectMenu.viewProjects(projects);
                     break;
                 case 3:
                     applicantMenu.displayMenu();

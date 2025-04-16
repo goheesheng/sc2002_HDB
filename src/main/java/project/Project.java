@@ -333,6 +333,20 @@ public class Project {
         this.availableOfficerSlots = availableOfficerSlots;
     }
 
+    public String toString() {
+        StringBuilder flatTypesString = new StringBuilder();
+        for (Map.Entry<FlatType, Integer> entry : flatTypes.entrySet()) {
+            flatTypesString.append(entry.getKey()).append(": ").append(entry.getValue()).append(" flats\n");
+        }
     
-
+        return "Project ID: " + projectId + "\n" +
+               "Project Name: " + projectName + "\n" +
+               "Neighborhood: " + neighborhood + "\n" +
+               "Flat Types: \n" + flatTypesString.toString() + 
+               "Application Opening Date: " + applicationOpeningDate + "\n" +
+               "Application Closing Date: " + applicationClosingDate + "\n" +
+               "Manager In Charge: " + managerInCharge.getNric() + "\n" + 
+               "Available Officer Slots: " + availableOfficerSlots + "\n" +
+               "Visibility: " + (visibility ? "Visible" : "Not Visible");
+    }
 }

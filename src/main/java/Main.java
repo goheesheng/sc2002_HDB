@@ -19,6 +19,7 @@ import ui.LoginInterface;
 
 import java.util.*;
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 import utility.excelReader;
 import utility.excelWriter;
@@ -117,6 +118,53 @@ public class Main {
             dataStore.addUser(new HDBOfficer("S5555555F", "officer123", 40, "MARRIED"));
             
             System.out.println("Added sample users to the data store.");
+        }
+    
+    // Check if we already have the sample project
+        if (dataStore.findProjectById("P12345").isEmpty()) {
+            System.out.println("Creating test project...");
+            // Create a Map of Flat Types and their quantities
+            Map<FlatType, Integer> flatTypes = new HashMap<>();
+            flatTypes.put(FlatType.TWO_ROOM, 2);  // 2 units of 2-Room flats
+            flatTypes.put(FlatType.THREE_ROOM, 3); // 3 units of 3-Room flats
+            
+            // Parse application dates
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            Date applicationOpeningDate = null;
+            Date applicationClosingDate = null;
+            try {
+                applicationOpeningDate = sdf.parse("2/15/2025");
+                applicationClosingDate = sdf.parse("3/20/2025");
+            } catch (Exception e) {
+                System.out.println("Error parsing dates: " + e.getMessage());
+                return;
+            }
+        
+            // Assume we have a manager named "Jessica" (HDBManager)
+            HDBManager manager = new HDBManager("S9876543B", "manager123", 45, "MARRIED");
+            
+            // Create the project
+            Project project = new Project(
+                "P12345",                     // projectId
+                "Acacia Breeze",            // projectName
+                "Yishun",                  // neighborhood
+                flatTypes,                              // flatTypes (Map<FlatType, Integer>)
+                applicationOpeningDate,                 // applicationOpeningDate
+                applicationClosingDate,                 // applicationClosingDate
+                manager,                                // managerInCharge
+                3                 // availableOfficerSlots
+            );
+            
+            // Create and add officers (assuming officer slots are available)
+            HDBOfficer officer1 = new HDBOfficer("S5555555F", "officer123", 40, "MARRIED");
+            HDBOfficer officer2 = new HDBOfficer("S1234567A", "officer456", 38, "SINGLE");
+            project.addOfficer(officer1);
+            project.addOfficer(officer2);
+                
+            // Add the project to the data store
+            dataStore.addProject(project);
+        
+            System.out.println("Added test project 'Acacia Breeze' to the data store.");
         }
     }
 

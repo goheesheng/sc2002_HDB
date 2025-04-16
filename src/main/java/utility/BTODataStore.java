@@ -46,7 +46,7 @@ public class BTODataStore {
     public List<Project> getAllProjects() {
         return new ArrayList<>(allProjects);
     }
-
+    
      public List<Application> getAllApplications() {
         return new ArrayList<>(allApplications);
     }
@@ -99,7 +99,7 @@ public class BTODataStore {
      public void addRegistration(Registration registration) {
          if (findRegistrationById(registration.getRegistrationId()).isEmpty()) {
             this.pendingRegistrations.add(registration);
-         }
+        }
      }
 
      // --- Methods to Find data ---
