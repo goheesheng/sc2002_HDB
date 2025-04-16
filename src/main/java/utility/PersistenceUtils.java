@@ -144,8 +144,72 @@ public class PersistenceUtils {
     public static void loadApplications(BTODataStore store) {/*... Implement ...*/}
     public static void saveEnquiries(List<Enquiry> enquiries) {/*... Implement ...*/}
     public static void loadEnquiries(BTODataStore store) {/*... Implement ...*/}
-    public static void saveRegistrations(List<Registration> registrations) {/*... Implement ...*/}
-    public static void loadRegistrations(BTODataStore store) {/*... Implement ...*/}
+
+    // will continue to work on this
+    
+//     public static void saveRegistrations(List<Registration> registrations) {
+//         try (PrintWriter writer = new PrintWriter(new FileWriter("registrations.csv"))) {
+//             writer.println("RegistrationId,OfficerNric,ProjectId,Status,Date"); // Header
+//             for (Registration registration : registrations) {
+//                 writer.println(
+//                     registration.getRegistrationId() + "," +
+//                     registration.getOfficer().getNric() + "," +
+//                     registration.getProject().getProjectId() + "," +
+//                     registration.getStatus().name() + "," +
+//                     DATE_FORMAT.format(registration.getregistrationDate()) // Save registration date
+//                 );
+//             }
+//         } catch (IOException e) {
+//             System.err.println("Error saving registrations: " + e.getMessage());
+//         }
+//     }
+
+//     public static void loadRegistrations(BTODataStore store) {
+//         try (InputStream is = PersistenceUtils.class.getClassLoader().getResourceAsStream("registration.csv");
+//         BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+//             if (is == null) {
+//                 System.err.println("File not found: registration.csv");
+//                 return;
+//             }
+//             String line;
+//             reader.readLine(); // Skip header
+//             while ((line = reader.readLine()) != null) {
+//                 String[] data = line.split(",");
+//                 if (data.length == 5) {
+//                     String registrationId = data[0];
+//                     String officerNric = data[1];
+//                     String projectId = data[2];
+//                     String status = data[3];
+//                     Date registrationDate = DATE_FORMAT.parse(data[4]);
+    
+//                     // Fetch officer and project from the store
+//                     Optional<User> officerOpt = store.findUserByNric(officerNric);
+//                     Optional<Project> projectOpt = store.findProjectById(projectId);
+    
+//                     if (officerOpt.isPresent() && projectOpt.isPresent()) {
+//                         HDBOfficer officer = (HDBOfficer) officerOpt.get();
+//                         Project project = projectOpt.get();
+//                         Registration registration = new Registration(registrationId, officer, project);
+
+//                         // Only approve or reject if the registration is pending
+//                         if (status.equals("APPROVED") && registration.getStatus() == RegistrationStatus.PENDING) {
+//                             registration.approve();
+//                         } else if (status.equals("REJECTED") && registration.getStatus() == RegistrationStatus.PENDING) {
+//                             registration.reject();
+//                         } else {
+//                             System.out.println("Registration status rror");
+//                         } 
+
+//                         store.addRegistration(registration); 
+//                     } else {
+//                         System.err.println("Error loading registration: Officer or project not found.");
+//                     }
+//                 }
+//             }
+//         } catch (IOException | ParseException e) {
+//             System.err.println("Error loading registrations: " + e.getMessage());
+//         }
+//     }
 
 
     // Helper for basic CSV escaping (replace with a library for real use)
