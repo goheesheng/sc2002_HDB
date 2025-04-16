@@ -401,5 +401,5 @@ public class HDBManager extends User {
      */
     public List<Application> getApplications() {
         return allApplications; 
-
+    }
 }
