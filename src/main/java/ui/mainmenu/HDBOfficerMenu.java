@@ -23,6 +23,8 @@ public class HDBOfficerMenu extends UserMenu {
         this.projectMenu = new ProjectMenu(officer);
         this.applicantMenu = new ApplicantMenu((Applicant) officer);
         this.enquiryMenu = new EnquiryMenu();
+        this.projectRegisterMenu = new ProjectRegisterMenu(officer);
+
     }
 
     public void displayMenu() {
