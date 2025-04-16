@@ -1,345 +1,137 @@
-package utility;
+package project;
 
-import user.Applicant;
-import user.HDBManager;
-import user.HDBOfficer;
 import user.User;
-import project.Project;
-import project.Application;
-import project.FlatType;
-import admin.Registration;
-import project.Enquiry;
-import status.*;
+import java.util.Date;
 
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+/**
+ * Represents an enquiry about a BTO project.
+ * Users can submit enquiries to get more information about projects.
+ * 
+ * @author SC2002 G Team
+ * @version 1.0
+ * @since 2025-03-16
+ */
+public class Enquiry {
+    private String enquiryId;
+    private User user;
+    private Project project;
+    private String enquiryText;
+    private Date dateSubmitted;
+    private String reply;
+    private Date replyDate;
+    private User repliedBy;
 
-public class PersistenceUtils {
-
-    // File names for CSV persistence
-    private static final String USER_FILE = "users.csv";
-    private static final String PROJECT_FILE = "projects.csv";
-    private static final String APPLICATION_FILE = "applications.csv";
-    private static final String ENQUIRY_FILE = "enquiries.csv";
-    private static final String REGISTRATION_FILE = "registrations.csv";
-
-    // Date format for projects (if needed)
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
-    // --- User Persistence ---
-
-    public static void saveUsers(List<User> users) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(USER_FILE))) {
-            writer.println("NRIC,Password,Age,MaritalStatus,UserType");
-            for (User user : users) {
-                String userType = "";
-                if (user instanceof HDBManager) userType = "Manager";
-                else if (user instanceof HDBOfficer) userType = "Officer";
-                else if (user instanceof Applicant) userType = "Applicant";
-                writer.println(
-                    escapeCsv(user.getNric()) + "," +
-                    escapeCsv(user.getPassword()) + "," +
-                    user.getAge() + "," +
-                    escapeCsv(user.getMaritalStatus()) + "," +
-                    userType
-                );
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving users: " + e.getMessage());
-        }
+    /**
+     * Creates a new Enquiry with the specified details.
+     * 
+     * @param enquiryId The unique identifier for this enquiry
+     * @param user The user who submitted this enquiry
+     * @param project The project this enquiry is about
+     * @param enquiryText The text content of the enquiry
+     */
+    public Enquiry(String enquiryId, User user, Project project, String enquiryText) {
+        this.enquiryId = enquiryId;
+        this.user = user;
+        this.project = project;
+        this.enquiryText = enquiryText;
+        this.dateSubmitted = new Date();
     }
 
-    public static void loadUsers(BTODataStore store) {
-        File file = new File(USER_FILE);
-        if (!file.exists()) return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(USER_FILE))) {
-            String line;
-            reader.readLine(); // Skip header
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 5) {
-                    String nric = data[0];
-                    String password = data[1];
-                    int age = Integer.parseInt(data[2]);
-                    String maritalStatus = data[3];
-                    String userType = data[4];
-
-                    User user = null;
-                    if ("Manager".equals(userType)) {
-                        user = new HDBManager(nric, password, age, maritalStatus);
-                    } else if ("Officer".equals(userType)) {
-                        user = new HDBOfficer(nric, password, age, maritalStatus);
-                    } else if ("Applicant".equals(userType)) {
-                        user = new Applicant(nric, password, age, maritalStatus);
-                    }
-                    if (user != null) {
-                        store.addUser(user);
-                    }
-                }
-            }
-        } catch (IOException | NumberFormatException e) {
-            System.err.println("Error loading users: " + e.getMessage());
-        }
+    /**
+     * Updates the text content of this enquiry.
+     * 
+     * @param newText The new text content
+     * @return true if the text was updated successfully
+     */
+    public boolean editText(String newText) {
+        this.enquiryText = newText;
+        return true;
     }
 
-    // --- Project Persistence ---
-
-    public static void saveProjects(List<Project> projects) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(PROJECT_FILE))) {
-            // Header: ID,Name,Neighbourhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes
-            writer.println("ID,Name,Neighbourhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes");
-            for (Project p : projects) {
-                writer.print(escapeCsv(p.getProjectId()) + ",");
-                writer.print(escapeCsv(p.getProjectName()) + ",");
-                writer.print(escapeCsv(p.getNeighbourhood()) + ",");
-                writer.print(DATE_FORMAT.format(p.getApplicationOpeningDate()) + ",");
-                writer.print(DATE_FORMAT.format(p.getApplicationClosingDate()) + ",");
-                writer.print(escapeCsv(p.getManagerInCharge().getNric()) + ",");
-                writer.print(p.getAvailableOfficerSlots() + ",");
-                writer.print(p.isVisible() + ",");
-                
-                // Serialize FlatTypes map as "TWO_ROOM:50;THREE_ROOM:30"
-                Map<FlatType, Integer> flatTypes = p.getFlatsAvailable();
-                if (flatTypes != null && !flatTypes.isEmpty()) {
-                    StringBuilder flatTypesStr = new StringBuilder();
-                    for (Map.Entry<FlatType, Integer> entry : flatTypes.entrySet()) {
-                        flatTypesStr.append(entry.getKey().name())
-                                    .append(":")
-                                    .append(entry.getValue())
-                                    .append(";");
-                    }
-                    // Remove trailing semicolon
-                    if (flatTypesStr.length() > 0)
-                        flatTypesStr.setLength(flatTypesStr.length() - 1);
-                    writer.println(flatTypesStr.toString());
-                } else {
-                    writer.println("");
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving projects: " + e.getMessage());
-        }
+    /**
+     * Adds a reply to this enquiry.
+     * 
+     * @param replyText The text content of the reply
+     * @param replier The user who is replying
+     * @return true if the reply was added successfully
+     */
+    public boolean addReply(String replyText, User replier) {
+        this.reply = replyText;
+        this.replyDate = new Date();
+        this.repliedBy = replier;
+        return true;
     }
 
-    public static void loadProjects(BTODataStore store) {
-        File file = new File(PROJECT_FILE);
-        if (!file.exists()) return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(PROJECT_FILE))) {
-            String line;
-            reader.readLine(); // Skip header
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length >= 9) {
-                    String id = data[0];
-                    String name = data[1];
-                    String neighbourhood = data[2];
-                    Date openDate;
-                    Date closeDate;
-                    try {
-                        openDate = DATE_FORMAT.parse(data[3]);
-                        closeDate = DATE_FORMAT.parse(data[4]);
-                    } catch (ParseException pe) {
-                        System.err.println("Error parsing dates for project " + id + ": " + pe.getMessage());
-                        continue;
-                    }
-                    String managerNric = data[5];
-                    int slots = Integer.parseInt(data[6]);
-                    boolean visibility = Boolean.parseBoolean(data[7]);
-                    
-                    // Deserialize FlatTypes from data[8]
-                    Map<FlatType, Integer> flatTypesMap = new HashMap<>();
-                    if (data[8] != null && !data[8].isEmpty()) {
-                        String[] flatTokens = data[8].split(";");
-                        for (String token : flatTokens) {
-                            String[] parts = token.split(":");
-                            if (parts.length == 2) {
-                                try {
-                                    FlatType type = FlatType.valueOf(parts[0]);
-                                    int count = Integer.parseInt(parts[1]);
-                                    flatTypesMap.put(type, count);
-                                } catch (IllegalArgumentException e) {
-                                    System.err.println("Error parsing flat type for project " + id + ": " + token);
-                                }
-                            }
-                        }
-                    }
-                    
-                    Optional<User> managerOpt = store.findUserByNric(managerNric);
-                    if (managerOpt.isPresent() && managerOpt.get() instanceof HDBManager) {
-                        HDBManager manager = (HDBManager) managerOpt.get();
-                        Project project = new Project(id, name, neighbourhood, flatTypesMap, openDate, closeDate, manager, slots);
-                        project.setVisibility(visibility);
-                        store.addProject(project);
-                    } else {
-                        System.err.println("Could not find Manager " + managerNric + " for project " + id);
-                    }
-                }
-            }
-        } catch (IOException | NumberFormatException e) {
-            System.err.println("Error loading projects: " + e.getMessage());
-        }
+    // Getters and setters
+    /**
+     * Gets the unique identifier of this enquiry.
+     * 
+     * @return The enquiry ID
+     */
+    public String getEnquiryId() {
+        return enquiryId;
     }
 
-    // --- Application Persistence ---
-    // Note: Based on Applicant.java, the Application constructor is assumed to be:
-    // Application(String applicationId, Applicant applicant, Project project, FlatType flatType)
-    public static void saveApplications(List<Application> applications) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(APPLICATION_FILE))) {
-            // Header: ID,ApplicantNRIC,ProjectID,FlatType
-            writer.println("ID,ApplicantNRIC,ProjectID,FlatType");
-            for (Application a : applications) {
-                writer.print(escapeCsv(a.getApplicationId()) + ",");
-                writer.print(escapeCsv(a.getApplicant().getNric()) + ",");
-                writer.print(escapeCsv(a.getProject().getProjectId()) + ",");
-                writer.println(a.getFlatType().name());
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving applications: " + e.getMessage());
-        }
+    /**
+     * Gets the user who submitted this enquiry.
+     * 
+     * @return The user
+     */
+    public User getUser() {
+        return user;
     }
 
-    public static void loadApplications(BTODataStore store) {
-        File file = new File(APPLICATION_FILE);
-        if (!file.exists()) return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(APPLICATION_FILE))) {
-            String line;
-            reader.readLine(); // Skip header
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 4) {
-                    String id = data[0];
-                    String applicantNric = data[1];
-                    String projectId = data[2];
-                    String flatTypeStr = data[3];
-                    FlatType flatType;
-                    try {
-                        flatType = FlatType.valueOf(flatTypeStr);
-                    } catch (IllegalArgumentException e) {
-                        System.err.println("Error parsing flat type for application " + id + ": " + e.getMessage());
-                        continue;
-                    }
-                    
-                    Optional<User> applicantOpt = store.findUserByNric(applicantNric);
-                    Optional<Project> projectOpt = store.findProjectById(projectId);
-                    
-                    if (applicantOpt.isPresent() && projectOpt.isPresent() && applicantOpt.get() instanceof Applicant) {
-                        // Create application using the appropriate constructor
-                        Application application = new Application(id, (Applicant) applicantOpt.get(), projectOpt.get(), flatType);
-                        store.addApplication(application);
-                    } else {
-                        System.err.println("Error loading application " + id + ": Applicant or Project not found.");
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading applications: " + e.getMessage());
-        }
+    /**
+     * Gets the project this enquiry is about.
+     * 
+     * @return The project
+     */
+    public Project getProject() {
+        return project;
     }
 
-    // --- Enquiry Persistence ---
-    // Based on your Enquiry.java, its constructor is:
-    // Enquiry(String enquiryId, User user, Project project, String enquiryText)
-    public static void saveEnquiries(List<Enquiry> enquiries) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(ENQUIRY_FILE))) {
-            // Header: ID,SenderNRIC,ProjectID,EnquiryText
-            writer.println("ID,SenderNRIC,ProjectID,EnquiryText");
-            for (Enquiry e : enquiries) {
-                writer.print(escapeCsv(e.getEnquiryId()) + ",");
-                writer.print(escapeCsv(e.getUser().getNric()) + ",");
-                writer.print(escapeCsv(e.getProject().getProjectId()) + ",");
-                writer.println(escapeCsv(e.getEnquiryText()));
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving enquiries: " + e.getMessage());
-        }
+    /**
+     * Gets the text content of this enquiry.
+     * 
+     * @return The enquiry text
+     */
+    public String getEnquiryText() {
+        return enquiryText;
     }
 
-    public static void loadEnquiries(BTODataStore store) {
-        File file = new File(ENQUIRY_FILE);
-        if (!file.exists()) return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(ENQUIRY_FILE))) {
-            String line;
-            reader.readLine(); // Skip header
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 4) {
-                    String id = data[0];
-                    String senderNric = data[1];
-                    String projectId = data[2];
-                    String enquiryText = data[3];
-                    
-                    Optional<User> senderOpt = store.findUserByNric(senderNric);
-                    Optional<Project> projectOpt = store.findProjectById(projectId);
-                    
-                    if (senderOpt.isPresent() && projectOpt.isPresent()) {
-                        // Create enquiry using the available constructor
-                        Enquiry enquiry = new Enquiry(id, senderOpt.get(), projectOpt.get(), enquiryText);
-                        store.addEnquiry(enquiry);
-                    } else {
-                        System.err.println("Error loading enquiry " + id + ": Sender or Project not found.");
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading enquiries: " + e.getMessage());
-        }
+    /**
+     * Gets the date when this enquiry was submitted.
+     * 
+     * @return The submission date
+     */
+    public Date getDateSubmitted() {
+        return dateSubmitted;
     }
-
-    // --- Registration Persistence ---
-    // For Registration, the constructor is:
-    // Registration(String registrationId, HDBOfficer officer, Project project)
-    public static void saveRegistrations(List<Registration> registrations) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(REGISTRATION_FILE))) {
-            // Header: ID,OfficerNRIC,ProjectID
-            writer.println("ID,OfficerNRIC,ProjectID");
-            for (Registration r : registrations) {
-                writer.print(escapeCsv(r.getRegistrationId()) + ",");
-                writer.print(escapeCsv(r.getOfficer().getNric()) + ",");
-                writer.println(escapeCsv(r.getProject().getProjectId()));
-            }
-        } catch (IOException e) {
-            System.err.println("Error saving registrations: " + e.getMessage());
-        }
+    
+    /**
+     * Gets the reply to this enquiry, if any.
+     * 
+     * @return The reply text, or null if no reply exists
+     */
+    public String getReply() {
+        return reply;
     }
-
-    public static void loadRegistrations(BTODataStore store) {
-        File file = new File(REGISTRATION_FILE);
-        if (!file.exists()) return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(REGISTRATION_FILE))) {
-            String line;
-            reader.readLine(); // Skip header
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 3) {
-                    String id = data[0];
-                    String officerNric = data[1];
-                    String projectId = data[2];
-                    
-                    Optional<User> officerOpt = store.findUserByNric(officerNric);
-                    Optional<Project> projectOpt = store.findProjectById(projectId);
-                    
-                    if (officerOpt.isPresent() && projectOpt.isPresent() && officerOpt.get() instanceof HDBOfficer) {
-                        Registration registration = new Registration(id, (HDBOfficer) officerOpt.get(), projectOpt.get());
-                        store.addRegistration(registration);
-                    } else {
-                        System.err.println("Error loading registration " + id + ": Officer or Project not found.");
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading registrations: " + e.getMessage());
-        }
+    
+    /**
+     * Gets the date when a reply was added to this enquiry, if any.
+     * 
+     * @return The reply date, or null if no reply exists
+     */
+    public Date getReplyDate() {
+        return replyDate;
     }
-
-    // --- Helper for CSV escaping ---
-    private static String escapeCsv(String value) {
-        if (value == null) return "";
-        String escaped = value.replace("\"", "\"\"");
-        if (escaped.contains(",") || escaped.contains("\"") || escaped.contains("\n")) {
-            return "\"" + escaped + "\"";
-        }
-        return escaped;
+    
+    /**
+     * Gets the user who replied to this enquiry, if any.
+     * 
+     * @return The user who replied, or null if no reply exists
+     */
+    public User getRepliedBy() {
+        return repliedBy;
     }
 }
