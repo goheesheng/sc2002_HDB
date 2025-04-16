@@ -242,6 +242,7 @@ public class Project {
         return flatTypes;
     }
 
+
     /**
      * Checks if this project is visible to applicants.
      * 
@@ -331,9 +332,7 @@ public class Project {
     public void setAvailableOfficerSlots(int availableOfficerSlots) {
         this.availableOfficerSlots = availableOfficerSlots;
     }
-    public Map<FlatType, Integer> getFlatTypes() {
-        return this.flatTypes;
-    }
+
     
 
 }

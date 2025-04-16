@@ -2,6 +2,11 @@ package ui.mainmenu;
 
 import user.HDBOfficer;
 import user.Applicant;
+
+import java.io.File;
+import project.Application;
+
+import admin.Receipt;
 import ui.mainmenu.ApplicantMenu;
 import ui.submenu.EnquiryMenu;
 import ui.submenu.ProjectMenu;
@@ -50,12 +55,30 @@ public class HDBOfficerMenu extends UserMenu {
                     projectRegisterMenu.displayMenu();
                     break;
                 case 5:
-                System.out.println("Generating reciept...");
-                    // add functionaities
+                    System.out.print("Enter NRIC of applicant to generate receipt: ");
+                    String nric = scanner.nextLine();
+
+                    HDBOfficer officer = (HDBOfficer) user;
+                    Application app = officer.retrieveApplication(nric);
+
+                    if (app != null) {
+                        Receipt receipt = officer.generateBookingReceipt(app);
+                        if (receipt != null) {
+                            System.out.println("Receipt generated successfully!\n");
+
+                            // PDF generation
+                            File pdf = receipt.generatePDF();
+                            System.out.println("PDF file:" + pdf.getName());
+                        } else {
+                            System.out.println("Application is not eligible for a booking receipt.");
+                        }
+                    } else {
+                        System.out.println("No application found for the given NRIC.");
+                    }
                     break;
+
                 case 6:
-                    System.out.println("New password:");
-                    // sd
+                    changePassword();
                     break;
                 case 7:
                     System.out.println("Logging out...");

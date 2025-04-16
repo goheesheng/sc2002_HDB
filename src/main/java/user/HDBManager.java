@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  */
 public class HDBManager extends User {
     private List<Project> createdProjects;
+    private List<Application> allApplications;
 
     /**
      * Creates a new HDB Manager with the specified details.
@@ -37,6 +38,7 @@ public class HDBManager extends User {
     public HDBManager(String nric, String password, int age, String maritalStatus) {
         super(nric, password, age, maritalStatus);
         this.createdProjects = new ArrayList<>();
+        this.allApplications = new ArrayList<>();
     }
 
     /**
@@ -391,4 +393,13 @@ public class HDBManager extends User {
         // Get all enquiries from the central data store
         return BTODataStore.getInstance().getAllEnquiries();
     }
+
+    /**
+     * Returns a list of all applications submitted for projects managed by this manager.
+     * 
+     * @return A list of all applications
+     */
+    public List<Application> getApplications() {
+        return allApplications; 
+
 }

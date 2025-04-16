@@ -62,7 +62,7 @@ public class ApplicantMenu extends UserMenu {
                      submitEnquiry();
                      break;
                 case 6:
-                     changePassword();
+                    changePassword();
                      break;
                 case 7:
                     System.out.println("Logging out...");
@@ -286,31 +286,4 @@ public class ApplicantMenu extends UserMenu {
 
          System.out.println("Enquiry submitted successfully (ID: " + newEnquiry.getEnquiryId() + ")");
      }
-
-    private void changePassword() {
-         System.out.println("\n--- Change Password ---");
-         System.out.print("Enter current password: ");
-         String oldPass = scanner.nextLine();
-         System.out.print("Enter new password: ");
-         String newPass = scanner.nextLine();
-         System.out.print("Confirm new password: ");
-         String confirmPass = scanner.nextLine();
-
-         if (!newPass.equals(confirmPass)) {
-             System.out.println("New passwords do not match.");
-             return;
-         }
-         if (newPass.trim().isEmpty()) {
-             System.out.println("Password cannot be empty.");
-             return;
-         }
-
-         if (user.changePassword(oldPass, newPass)) {
-             System.out.println("Password changed successfully.");
-             // The User object in dataStore.allUsers now has the new password.
-             // Persistence will save this change.
-         } else {
-             System.out.println("Password change failed. Incorrect current password.");
-         }
-     }
-}
+    }
