@@ -29,8 +29,8 @@ public class HDBOfficer extends Applicant {
      * @param age The age of this officer
      * @param maritalStatus The marital status of this officer
      */
-    public HDBOfficer(String nric, String password, int age, String maritalStatus) {
-        super(nric, password, age, maritalStatus);
+    public HDBOfficer(String name, String nric, String password, int age, String maritalStatus) {
+        super(name, nric, password, age, maritalStatus);
         this.registrationStatus = RegistrationStatus.PENDING;
     }
     /**

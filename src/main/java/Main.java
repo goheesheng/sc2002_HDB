@@ -16,7 +16,6 @@ import status.RegistrationStatus;
 import ui.LoginInterface;
 
 import utility.BTODataStore;
-import ui.LoginInterface;
 
 import java.util.*;
 import java.io.File;
@@ -36,8 +35,8 @@ public class Main {
         System.out.println("\nWelcome to Build-To-Order (BTO) Management System");
         System.out.println("What would you like to do");
         System.out.println("1. Login");
-        System.out.println("2. view user list (temp)");
-        System.out.println("3. run test cases (temp)");
+        System.out.println("2. Load all sheets");
+        System.out.println("3. Run test cases");
         System.out.println("4. Exit");
         
         while (!scanner.hasNextInt()) {
@@ -52,6 +51,7 @@ public class Main {
             case 1:
                 LoginInterface loginInterface = new LoginInterface();
                 loginInterface.start();
+                break;
 
             case 2:
                 // try {
@@ -87,7 +87,6 @@ public class Main {
                 //     e.printStackTrace();
                 // }
                 processExcelFilesAndExportCSV();
-                ensureTestUsers();
                 break;
 
             case 3:
@@ -108,99 +107,62 @@ public class Main {
     
     private static void processExcelFilesAndExportCSV() {
         BTODataStore dataStore = BTODataStore.getInstance();
-
-        // List of Excel files to process
-        String[] excelPaths = {
+        String[] userExcelPaths = {
             "src/main/resources/ApplicantList.xlsx",
             "src/main/resources/ManagerList.xlsx",
             "src/main/resources/OfficerList.xlsx"
         };
 
-        for (String excelPath : excelPaths) {
+        for (String excelPath : userExcelPaths) {
             File file = new File(excelPath);
             if (!file.exists()) {
                 System.out.println("Skipping missing file: " + excelPath);
                 continue;
             }
-
-            System.out.println("Processing: " + excelPath);
-
+    
+            System.out.println("Processing user data from: " + excelPath);
+    
             try {
                 List<User> users = excelReader.readUsersFromExcel(excelPath);
-
                 for (User user : users) {
                     dataStore.addUser(user);
                 }
-
+    
                 System.out.println("Loaded " + users.size() + " users from " + excelPath);
             } catch (Exception e) {
                 System.err.println("Error processing " + excelPath + ": " + e.getMessage());
                 e.printStackTrace();
             }
-
+    
             System.out.println("Done: " + excelPath + "\n");
         }
-
-        
+    
+        // Now process the Project-related Excel file
+        String projectExcelPath = "src/main/resources/ProjectList.xlsx";
+        File projectFile = new File(projectExcelPath);
+        if (!projectFile.exists()) {
+            System.out.println("Skipping missing project file: " + projectExcelPath);
+        } else {
+            System.out.println("Processing project data from: " + projectExcelPath);
+    
+            try {
+                // Assuming managerMap is already populated at this point
+                Map<String, HDBManager> managerMap = dataStore.getManagerMap(); // Ensure this method exists to get all managers
+                List<Project> projects = excelReader.readProjectsFromExcel(projectExcelPath, managerMap);
+                for (Project project : projects) {
+                    dataStore.addProject(project); // Assuming you have an addProject method in your data store
+                }
+                System.out.println("Loaded " + projects.size() + " projects from " + projectExcelPath);
+            } catch (Exception e) {
+                System.err.println("Error processing " + projectExcelPath + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+    
+            System.out.println("Done: " + projectExcelPath + "\n");
+        }    
         // Now save to CSVs
         dataStore.saveAllData();
         System.out.println("All users saved to CSV files.");
-    }
-
-
-    /**
-     * Ensures that there are test users in the central data store.
-     * This is called when viewing the user list to ensure there's data to view.
-     */
-    private static void ensureTestUsers() {
-        BTODataStore dataStore = BTODataStore.getInstance();
-
-    // Check if we already have the sample project
-        if (dataStore.findProjectById("P12345").isEmpty()) {
-            System.out.println("Creating test project...");
-            // Create a Map of Flat Types and their quantities
-            Map<FlatType, Integer> flatTypes = new HashMap<>();
-            flatTypes.put(FlatType.TWO_ROOM, 2);  // 2 units of 2-Room flats
-            flatTypes.put(FlatType.THREE_ROOM, 3); // 3 units of 3-Room flats
-            
-            // Parse application dates
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            Date applicationOpeningDate = null;
-            Date applicationClosingDate = null;
-            try {
-                applicationOpeningDate = sdf.parse("2/15/2025");
-                applicationClosingDate = sdf.parse("3/20/2025");
-            } catch (Exception e) {
-                System.out.println("Error parsing dates: " + e.getMessage());
-                return;
-            }
-        
-            // Assume we have a manager named "Jessica" (HDBManager)
-            HDBManager manager = new HDBManager("S9876543B", "manager123", 45, "MARRIED");
-            
-            // Create the project
-            Project project = new Project(
-                "P12345",                     // projectId
-                "Acacia Breeze",            // projectName
-                "Yishun",                  // neighborhood
-                flatTypes,                              // flatTypes (Map<FlatType, Integer>)
-                applicationOpeningDate,                 // applicationOpeningDate
-                applicationClosingDate,                 // applicationClosingDate
-                manager,                                // managerInCharge
-                3                 // availableOfficerSlots
-            );
-            
-            // Create and add officers (assuming officer slots are available)
-            HDBOfficer officer1 = new HDBOfficer("S5555555F", "officer123", 40, "MARRIED");
-            HDBOfficer officer2 = new HDBOfficer("S1234567A", "officer456", 38, "SINGLE");
-            project.addOfficer(officer1);
-            project.addOfficer(officer2);
-                
-            // Add the project to the data store
-            dataStore.addProject(project);
-        
-            System.out.println("Added test project 'Acacia Breeze' to the data store.");
-        }
     }
 
     public static void runTestCases() {
@@ -211,7 +173,7 @@ public class Main {
 
         // Test Case 1: Valid User Login
         System.out.println("Test Case 1: Valid User Login");
-        Applicant applicant = new Applicant("S1234567A", "password", 35, "SINGLE");
+        Applicant applicant = new Applicant("solomon","S1234567A", "password", 35, "SINGLE");
         
         // Add test user to data store
         BTODataStore.getInstance().addUser(applicant);
@@ -240,7 +202,7 @@ public class Main {
         System.out.println("----------------------------------------\n");
 
         // Create HDB Manager and Project for further tests
-        HDBManager manager = new HDBManager("S9876543B", "password", 45, "MARRIED");
+        HDBManager manager = new HDBManager("Jessica","S9876543B", "password", 45, "MARRIED");
         
         Map<FlatType, Integer> flatTypes = new HashMap<>();
         flatTypes.put(FlatType.TWO_ROOM, 50);
@@ -268,9 +230,9 @@ public class Main {
         
         // Test Case 5: Project Visibility Based on User Group
         System.out.println("Test Case 5: Project Visibility Based on User Group");
-        Applicant singleApplicant = new Applicant("S1234567C", "password", 36, "SINGLE");
-        Applicant marriedApplicant = new Applicant("S7654321D", "password", 25, "MARRIED");
-        Applicant youngSingleApplicant = new Applicant("S2345678E", "password", 30, "SINGLE");
+        Applicant singleApplicant = new Applicant("Joe","S1234567C", "password", 36, "SINGLE");
+        Applicant marriedApplicant = new Applicant("Emily","S7654321D", "password", 25, "MARRIED");
+        Applicant youngSingleApplicant = new Applicant("Daniel","S2345678E", "password", 30, "SINGLE");
         
         boolean singleCanSee = project.isEligibleForUser(singleApplicant);
         boolean marriedCanSee = project.isEligibleForUser(marriedApplicant);
@@ -349,8 +311,8 @@ public class Main {
         // Test Case 10: HDB Officer Registration Eligibility
         System.out.println("Test Case 10: HDB Officer Registration Eligibility");
         // We'll get a clean state by creating new officers and registrations
-        HDBOfficer officer1 = new HDBOfficer("S5555555F", "password", 40, "MARRIED");
-        HDBOfficer officer2 = new HDBOfficer("S6666666G", "password", 38, "SINGLE");
+        HDBOfficer officer1 = new HDBOfficer("Emily","S5555555F", "password", 40, "MARRIED");
+        HDBOfficer officer2 = new HDBOfficer("Daniel","S6666666G", "password", 38, "SINGLE");
         
         // Officer who has applied for the project shouldn't be able to register
         officer2.applyForProject(project);
@@ -500,8 +462,8 @@ public class Main {
         System.out.println("Test Case 18: Single Project Management per Application Period");
         
         // Create completely new managers to avoid conflicts with previous test cases
-        HDBManager testManager1 = new HDBManager("S8888888A", "password", 45, "MARRIED");
-        HDBManager testManager2 = new HDBManager("S9999999C", "password", 50, "MARRIED");
+        HDBManager testManager1 = new HDBManager("Joe","S8888888A", "password", 45, "MARRIED");
+        HDBManager testManager2 = new HDBManager("Tom","S9999999C", "password", 50, "MARRIED");
         
         // Set up dates for the first test project - use a completely different year and month
         Calendar firstCalendar = Calendar.getInstance();

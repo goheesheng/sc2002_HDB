@@ -386,7 +386,7 @@ public class PersistenceUtils {
         }
     
         try (PrintWriter writer = new PrintWriter(fileName)){
-            writer.println("NRIC,Password,Age,MaritalStatus,UserType");
+            writer.println("Name,NRIC,Password,Age,MaritalStatus,UserType");
     
             for (User user : users) {
                 writer.println(user.toCsvRow());
@@ -429,20 +429,21 @@ public class PersistenceUtils {
             reader.readLine(); // Skip header
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 5) {
-                    String nric = data[0];
-                    String password = data[1];
-                    int age = Integer.parseInt(data[2]);
-                    String maritalStatus = data[3];
-                    String userType = data[4];
+                if (data.length == 6) {
+                    String name = data[0];
+                    String nric = data[1];
+                    String password = data[2];
+                    int age = Integer.parseInt(data[3]);
+                    String maritalStatus = data[4];
+                    String userType = data[5];
 
                     User user = null;
                     if ("Manager".equals(userType)) {
-                        user = new HDBManager(nric, password, age, maritalStatus);
+                        user = new HDBManager(name,nric, password, age, maritalStatus);
                     } else if ("Officer".equals(userType)) {
-                        user = new HDBOfficer(nric, password, age, maritalStatus);
+                        user = new HDBOfficer(name,nric, password, age, maritalStatus);
                     } else if ("Applicant".equals(userType)) {
-                        user = new Applicant(nric, password, age, maritalStatus);
+                        user = new Applicant(name,nric, password, age, maritalStatus);
                     }
                     if (user != null) {
                         store.addUser(user);
@@ -458,35 +459,40 @@ public class PersistenceUtils {
 
     public static void saveProjects(List<Project> projects) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(PROJECT_FILE))) {
-            // Header: ID,Name,Neighborhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes
+            // Header
             writer.println("ID,Name,Neighborhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes");
+    
             for (Project p : projects) {
                 writer.print(escapeCsv(p.getProjectId()) + ",");
                 writer.print(escapeCsv(p.getProjectName()) + ",");
-                // Use the method name defined in Project: getneighborhood()
                 writer.print(escapeCsv(p.getneighborhood()) + ",");
-                writer.print(DATE_FORMAT.format(p.getApplicationOpeningDate()) + ",");
-                writer.print(DATE_FORMAT.format(p.getApplicationClosingDate()) + ",");
+
+                String openDateStr = (p.getApplicationOpeningDate() != null) ?
+                        DATE_FORMAT.format(p.getApplicationOpeningDate()) : "";
+                String closeDateStr = (p.getApplicationClosingDate() != null) ?
+                        DATE_FORMAT.format(p.getApplicationClosingDate()) : "";
+                writer.print(openDateStr + ",");
+                writer.print(closeDateStr + ",");
+    
                 writer.print(escapeCsv(p.getManagerInCharge().getNric()) + ",");
-                // Use getavailableOfficerSlots() as defined in Project
                 writer.print(p.getavailableOfficerSlots() + ",");
                 writer.print(p.isVisible() + ",");
-                
-                // Serialize flat types map (Project method is getFlatTypes())
+    
+                // Flat types
                 Map<FlatType, Integer> flatTypes = p.getFlatTypes();
                 if (flatTypes != null && !flatTypes.isEmpty()) {
                     StringBuilder flatTypesStr = new StringBuilder();
                     for (Map.Entry<FlatType, Integer> entry : flatTypes.entrySet()) {
                         flatTypesStr.append(entry.getKey().name())
-                                    .append(":")
-                                    .append(entry.getValue())
-                                    .append(";");
+                                .append(":")
+                                .append(entry.getValue())
+                                .append(";");
                     }
                     if (flatTypesStr.length() > 0)
-                        flatTypesStr.setLength(flatTypesStr.length() - 1); // remove trailing semicolon
+                        flatTypesStr.setLength(flatTypesStr.length() - 1); // remove last ;
                     writer.println(flatTypesStr.toString());
                 } else {
-                    writer.println("");
+                    writer.println(""); // No flat types
                 }
             }
         } catch (IOException e) {

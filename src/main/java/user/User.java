@@ -14,6 +14,7 @@ import java.util.List;
  * @since 2025-03-16
  */
 public abstract class User {
+    private String name;
     private String nric;
     private String password;
     private int age;
@@ -28,7 +29,8 @@ public abstract class User {
      * @param age The age of this user
      * @param maritalStatus The marital status of this user
      */
-    public User(String nric, String password, int age, String maritalStatus) {
+    public User(String name, String nric, String password, int age, String maritalStatus) {
+        this.name = name;
         this.nric = nric;
         this.password = password;
         this.age = age;
@@ -136,6 +138,14 @@ public abstract class User {
     private String generateEnquiryId() {
         return "ENQ" + System.currentTimeMillis();
     }
+    /**
+     * Gets the NRIC of this user.
+     * 
+     * @return The NRIC
+     */
+    public String getName() {
+        return name;
+    }
 
     /**
      * Gets the NRIC of this user.
@@ -169,6 +179,6 @@ public abstract class User {
     }
 
     public String toCsvRow() {
-        return nric + "," + password + "," + age + "," + maritalStatus + "," + getClass().getSimpleName();
+        return name + "," + nric + "," + password + "," + age + "," + maritalStatus + "," + getClass().getSimpleName();
     }
 }

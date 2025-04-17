@@ -42,7 +42,7 @@ public class excelWriter {
             int rowNum = 1;
             for (User user : users) {
                 Row row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(user.getNric()); // Using NRIC as name for simplicity
+                row.createCell(0).setCellValue(user.getName()); 
                 row.createCell(1).setCellValue(user.getNric());
                 row.createCell(2).setCellValue(user.getAge());
                 row.createCell(3).setCellValue(user.getMaritalStatus());

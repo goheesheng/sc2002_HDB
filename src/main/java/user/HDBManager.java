@@ -35,8 +35,8 @@ public class HDBManager extends User {
      * @param age The age of this manager
      * @param maritalStatus The marital status of this manager
      */
-    public HDBManager(String nric, String password, int age, String maritalStatus) {
-        super(nric, password, age, maritalStatus);
+    public HDBManager(String name, String nric, String password, int age, String maritalStatus) {
+        super(name, nric, password, age, maritalStatus);
         this.createdProjects = new ArrayList<>();
         this.allApplications = new ArrayList<>();
     }

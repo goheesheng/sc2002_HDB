@@ -61,6 +61,17 @@ public class BTODataStore {
         return new ArrayList<>(pendingRegistrations);
     }
 
+     // --- Method to get the manager map ---
+     public Map<String, HDBManager> getManagerMap() {
+        Map<String, HDBManager> managerMap = new HashMap<>();
+        for (User user : allUsers) {
+            if (user instanceof HDBManager) {
+                HDBManager manager = (HDBManager) user;
+                managerMap.put(manager.getName(), manager);
+            }
+        }
+        return managerMap;
+    }
 
     // --- Methods to Add data (used during loading or creation) ---
     public void addUser(User user) {

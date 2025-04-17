@@ -2,10 +2,15 @@ package utility;
 
 import utility.excelReader;
 import utility.PersistenceUtils;
+import user.HDBManager;
 import user.User;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import project.Project;
 
 public class ExcelToCsv {
 
@@ -21,12 +26,26 @@ public class ExcelToCsv {
         }
         BTODataStore store = BTODataStore.getInstance();
 
+        // Step 1: Load all managers first (once)
+        Map<String, HDBManager> managerMap = new HashMap<>();
+        for (User user : excelReader.readUsersFromExcel("src/main/resources/managers.xlsx")) {
+            if (user instanceof HDBManager) {
+                managerMap.put(user.getNric(), (HDBManager) user);
+            }
+        }
+
+        // Step 2: Read and store projects
+        List<Project> projects = excelReader.readProjectsFromExcel("src/main/resources/projects.xlsx", managerMap);
+        for (Project project : projects) {
+            store.addProject(project);
+        }
+
+        // Step 3: Process each user Excel file
         for (File excelFile : excelFiles) {
             System.out.println("Processing: " + excelFile.getName());
 
-            // Step 1: Read users from the current Excel file
             List<User> users = excelReader.readUsersFromExcel(excelFile.getPath());
-
+            
             for (User u : users) {
                 store.addUser(u);
             }

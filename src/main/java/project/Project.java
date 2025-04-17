@@ -345,7 +345,7 @@ public class Project {
                "Flat Types: \n" + flatTypesString.toString() + 
                "Application Opening Date: " + applicationOpeningDate + "\n" +
                "Application Closing Date: " + applicationClosingDate + "\n" +
-               "Manager In Charge: " + managerInCharge.getNric() + "\n" + 
+               "Manager In Charge: " + managerInCharge.getName() + "\n" + 
                "Available Officer Slots: " + availableOfficerSlots + "\n" +
                "Visibility: " + (visibility ? "Visible" : "Not Visible");
     }

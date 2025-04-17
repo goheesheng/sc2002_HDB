@@ -1,4 +1,4 @@
-NRIC,Password,Age,MaritalStatus,UserType
-T2109876H,password,36,Single,HDBOfficer
-S6543210I,password,28,Single,HDBOfficer
-T1234567J,password,29,Married,HDBOfficer
+Name,NRIC,Password,Age,MaritalStatus,UserType
+Daniel,T2109876H,password,36,Single,HDBOfficer
+Emily,S6543210I,password,28,Single,HDBOfficer
+David,T1234567J,password,29,Married,HDBOfficer
