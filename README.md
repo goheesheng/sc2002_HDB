@@ -39,11 +39,11 @@ The HDB BTO Management System facilitates the following key activities:
 
 You can use the following credentials to test the system:
 
-| NRIC      | Password    | Age | Marital Status | Role        |
-|-----------|-------------|-----|----------------|-------------|
-| S1234567A | password    | 35  | SINGLE         | Applicant   |
-| T8765432F | password    | 36  | SINGLE         | HDBManager  |
-| T1234567J | password    | 29  | MARRIED        | HDBOfficer  |
+|Name     | NRIC      | Password    | Age | Marital Status | Role        |
+|---------|-----------|-------------|-----|----------------|-------------|
+|John     | S1234567A | password    | 35  | SINGLE         | Applicant   |
+|Jessica  | S5678901G | password    | 26  | MARRIED        | HDBManager  |
+|David    | T1234567J | password    | 29  | MARRIED        | HDBOfficer  |
 
 ## Documentation
 

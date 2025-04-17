@@ -375,7 +375,7 @@ public class PersistenceUtils {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     // --- User Persistence ---
-
+   //checked
     public static void saveUsers(List<User> users, String ExcelName) {
         String fileName = ExcelName.replace(".xlsx", "").toLowerCase();
         String folderPath = "src/main/resources"; 
@@ -416,6 +416,7 @@ public class PersistenceUtils {
                 //     userType
                 // );
 
+    //unchecked
     public static void loadUsers(BTODataStore store) {
         // File file = new File(USER_FILE);
         // if (!file.exists()) return;
@@ -456,7 +457,7 @@ public class PersistenceUtils {
     }
 
     // --- Project Persistence ---
-
+    //checked
     public static void saveProjects(List<Project> projects) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(PROJECT_FILE))) {
             // Header
@@ -500,6 +501,7 @@ public class PersistenceUtils {
         }
     }
 
+    //unchecked
     public static void loadProjects(BTODataStore store) {
         File file = new File(PROJECT_FILE);
         if (!file.exists()) return;
@@ -563,6 +565,8 @@ public class PersistenceUtils {
     // --- Application Persistence ---
     // Assumes Application constructor is:
     // Application(String applicationId, Applicant applicant, Project project, FlatType flatType)
+
+    //unchecked
     public static void saveApplications(List<Application> applications) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(APPLICATION_FILE))) {
             // Header: ID,ApplicantNRIC,ProjectID,FlatType
@@ -578,6 +582,7 @@ public class PersistenceUtils {
         }
     }
 
+    //unchecked
     public static void loadApplications(BTODataStore store) {
         File file = new File(APPLICATION_FILE);
         if (!file.exists()) return;
@@ -615,6 +620,8 @@ public class PersistenceUtils {
 
     // --- Enquiry Persistence ---
     // Using Enquiry(String enquiryId, User user, Project project, String enquiryText)
+
+    //unchecked
     public static void saveEnquiries(List<Enquiry> enquiries) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(ENQUIRY_FILE))) {
             // Header: ID,SenderNRIC,ProjectID,EnquiryText
@@ -630,6 +637,7 @@ public class PersistenceUtils {
         }
     }
 
+    //unchecked
     public static void loadEnquiries(BTODataStore store) {
         File file = new File(ENQUIRY_FILE);
         if (!file.exists()) return;
@@ -660,6 +668,8 @@ public class PersistenceUtils {
 
     // --- Registration Persistence ---
     // Uses Registration(String registrationId, HDBOfficer officer, Project project)
+
+    //unchecked
     public static void saveRegistrations(List<Registration> registrations) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(REGISTRATION_FILE))) {
             // Header: ID,OfficerNRIC,ProjectID
@@ -674,6 +684,7 @@ public class PersistenceUtils {
         }
     }
 
+    //unchecked
     public static void loadRegistrations(BTODataStore store) {
         File file = new File(REGISTRATION_FILE);
         if (!file.exists()) return;
