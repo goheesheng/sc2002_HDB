@@ -1,0 +1,3 @@
+NRIC,Password,Age,MaritalStatus,UserType
+T8765432F,password,36,Single,HDBManager
+S5678901G,password,26,Married,HDBManager

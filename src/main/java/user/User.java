@@ -167,4 +167,8 @@ public abstract class User {
     public String getMaritalStatus() {
         return maritalStatus;
     }
+
+    public String toCsvRow() {
+        return nric + "," + password + "," + age + "," + maritalStatus + "," + getClass().getSimpleName();
+    }
 }

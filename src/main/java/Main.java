@@ -6,6 +6,7 @@ import admin.Registration;
 import user.Applicant;
 import user.HDBManager;
 import user.HDBOfficer;
+import user.User;
 import project.Project;
 import project.Application;
 import project.Enquiry;
@@ -53,38 +54,40 @@ public class Main {
                 loginInterface.start();
 
             case 2:
-                try {
-                    // Ensure the test data contains sample users in data store
-                    ensureTestUsers();
+                // try {
+                //     // Ensure the test data contains sample users in data store
+                //     ensureTestUsers();
                     
-                    // Create test directory if it doesn't exist
-                    File testDir = new File("test");
-                    if (!testDir.exists()) {
-                        testDir.mkdirs();
-                        System.out.println("Created test directory.");
-                    }
+                //     // Create test directory if it doesn't exist
+                //     File testDir = new File("test");
+                //     if (!testDir.exists()) {
+                //         testDir.mkdirs();
+                //         System.out.println("Created test directory.");
+                //     }
                     
-                    String excelFilePath = "test/ApplicantsList.xlsx";  // Example file path
-                    File excelFile = new File(excelFilePath);
+                //     String excelFilePath = "test/ApplicantsList.xlsx";  // Example file path
+                //     File excelFile = new File(excelFilePath);
                     
-                    // Create parent directories if they don't exist
-                    if (!excelFile.getParentFile().exists()) {
-                        excelFile.getParentFile().mkdirs();
-                    }
+                //     // Create parent directories if they don't exist
+                //     if (!excelFile.getParentFile().exists()) {
+                //         excelFile.getParentFile().mkdirs();
+                //     }
                     
-                    // Write to Excel file first (creates the file if it doesn't exist)
-                    System.out.println("Writing to Excel file: " + excelFile.getAbsolutePath());
-                    excelWriter.writeToExcel(excelFilePath);
+                //     // Write to Excel file first (creates the file if it doesn't exist)
+                //     System.out.println("Writing to Excel file: " + excelFile.getAbsolutePath());
+                //     excelWriter.writeToExcel(excelFilePath);
                     
-                    // Then read from it
-                    System.out.println("Reading from Excel file: " + excelFile.getAbsolutePath());
-                    excelReader.readExcel(excelFilePath);
+                //     // Then read from it
+                //     System.out.println("Reading from Excel file: " + excelFile.getAbsolutePath());
+                //     excelReader.readUsersFromExcel(excelFilePath);
                     
-                    System.out.println("Excel operations completed successfully.");
-                } catch (Exception e) {
-                    System.err.println("Error in Excel operations: " + e.getMessage());
-                    e.printStackTrace();
-                }
+                //     System.out.println("Excel operations completed successfully.");
+                // } catch (Exception e) {
+                //     System.err.println("Error in Excel operations: " + e.getMessage());
+                //     e.printStackTrace();
+                // }
+                processExcelFilesAndExportCSV();
+                ensureTestUsers();
                 break;
 
             case 3:
@@ -103,23 +106,55 @@ public class Main {
         scanner.close();
         }
     
+    private static void processExcelFilesAndExportCSV() {
+        BTODataStore dataStore = BTODataStore.getInstance();
+
+        // List of Excel files to process
+        String[] excelPaths = {
+            "src/main/resources/ApplicantList.xlsx",
+            "src/main/resources/ManagerList.xlsx",
+            "src/main/resources/OfficerList.xlsx"
+        };
+
+        for (String excelPath : excelPaths) {
+            File file = new File(excelPath);
+            if (!file.exists()) {
+                System.out.println("Skipping missing file: " + excelPath);
+                continue;
+            }
+
+            System.out.println("Processing: " + excelPath);
+
+            try {
+                List<User> users = excelReader.readUsersFromExcel(excelPath);
+
+                for (User user : users) {
+                    dataStore.addUser(user);
+                }
+
+                System.out.println("Loaded " + users.size() + " users from " + excelPath);
+            } catch (Exception e) {
+                System.err.println("Error processing " + excelPath + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+
+            System.out.println("Done: " + excelPath + "\n");
+        }
+
+        
+        // Now save to CSVs
+        dataStore.saveAllData();
+        System.out.println("All users saved to CSV files.");
+    }
+
+
     /**
      * Ensures that there are test users in the central data store.
      * This is called when viewing the user list to ensure there's data to view.
      */
     private static void ensureTestUsers() {
         BTODataStore dataStore = BTODataStore.getInstance();
-        
-        // Check if we already have the sample user
-        if (dataStore.findUserByNric("S1234567A").isEmpty()) {
-            // Add sample users if the data store is empty
-            dataStore.addUser(new Applicant("S1234567A", "password123", 30, "SINGLE"));
-            dataStore.addUser(new HDBManager("S9876543B", "manager123", 45, "MARRIED"));
-            dataStore.addUser(new HDBOfficer("S5555555F", "officer123", 40, "MARRIED"));
-            
-            System.out.println("Added sample users to the data store.");
-        }
-    
+
     // Check if we already have the sample project
         if (dataStore.findProjectById("P12345").isEmpty()) {
             System.out.println("Creating test project...");

@@ -6,7 +6,9 @@ import admin.*;
 import status.*; 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -210,7 +212,22 @@ public class BTODataStore {
     }
 
     public void saveAllData() {
-        PersistenceUtils.saveUsers(this.allUsers);
+        List<User> applicants = allUsers.stream()
+            .filter(u -> u instanceof Applicant)
+            .collect(Collectors.toList());
+
+        List<User> managers = allUsers.stream()
+                .filter(u -> u instanceof HDBManager)
+                .collect(Collectors.toList());
+
+        List<User> officers = allUsers.stream()
+                .filter(u -> u instanceof HDBOfficer)
+                .collect(Collectors.toList());
+            
+        PersistenceUtils.saveUsers(applicants, "src/main/resources/applicantlist.csv");
+        PersistenceUtils.saveUsers(managers, "src/main/resources/managerlist.csv");
+        PersistenceUtils.saveUsers(officers, "src/main/resources/officerlist.csv");
+
         PersistenceUtils.saveProjects(this.allProjects);
         PersistenceUtils.saveApplications(this.allApplications);
         PersistenceUtils.saveEnquiries(this.allEnquiries);

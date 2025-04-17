@@ -365,41 +365,65 @@ import java.util.*;
 public class PersistenceUtils {
 
     // File names for CSV persistence
-    private static final String USER_FILE = "users.csv";
-    private static final String PROJECT_FILE = "projects.csv";
-    private static final String APPLICATION_FILE = "applications.csv";
-    private static final String ENQUIRY_FILE = "enquiries.csv";
-    private static final String REGISTRATION_FILE = "registrations.csv";
+    private static final String USER_FILE = "src/main/resources/users.csv";
+    private static final String PROJECT_FILE = "src/main/resources/projects.csv";
+    private static final String APPLICATION_FILE = "src/main/resources/applications.csv";
+    private static final String ENQUIRY_FILE = "src/main/resources/enquiries.csv";
+    private static final String REGISTRATION_FILE = "src/main/resources/registrations.csv";
 
     // Date format used for serializing/deserializing dates.
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     // --- User Persistence ---
 
-    public static void saveUsers(List<User> users) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(USER_FILE))) {
+    public static void saveUsers(List<User> users, String ExcelName) {
+        String fileName = ExcelName.replace(".xlsx", "").toLowerCase();
+        String folderPath = "src/main/resources"; 
+        
+        File dir = new File(folderPath);
+            if (!dir.exists()) {
+            dir.mkdirs();  // Creates the directory if it doesn't exist
+        }
+    
+        try (PrintWriter writer = new PrintWriter(fileName)){
             writer.println("NRIC,Password,Age,MaritalStatus,UserType");
+    
             for (User user : users) {
-                String userType = "";
-                if (user instanceof HDBManager) userType = "Manager";
-                else if (user instanceof HDBOfficer) userType = "Officer";
-                else if (user instanceof Applicant) userType = "Applicant";
-                writer.println(
-                    escapeCsv(user.getNric()) + "," +
-                    escapeCsv(user.getPassword()) + "," +
-                    user.getAge() + "," +
-                    escapeCsv(user.getMaritalStatus()) + "," +
-                    userType
-                );
+                writer.println(user.toCsvRow());
             }
+
+                System.out.println("Data successfully saved to: " + fileName);
+                writer.close();
         } catch (IOException e) {
             System.err.println("Error saving users: " + e.getMessage());
         }
     }
+            //try (PrintWriter writer = new PrintWriter(new FileWriter(USER_FILE))) {
+                // try (PrintWriter writer = new PrintWriter(outputPath)) {
+                //     writer.println("NRIC,Password,Age,MaritalStatus,UserType");
+                //     for (User user : users) {
+                //         //String userType = "";
+                //         writer.println(user.toCsvRow());
+                //     }
+                // if (user instanceof HDBManager) userType = "Manager";
+                // else if (user instanceof HDBOfficer) userType = "Officer";
+                // else if (user instanceof Applicant) userType = "Applicant";
+                // writer.println(
+                //     escapeCsv(user.getNric()) + "," +
+                //     escapeCsv(user.getPassword()) + "," +
+                //     user.getAge() + "," +
+                //     escapeCsv(user.getMaritalStatus()) + "," +
+                //     userType
+                // );
 
     public static void loadUsers(BTODataStore store) {
-        File file = new File(USER_FILE);
-        if (!file.exists()) return;
+        // File file = new File(USER_FILE);
+        // if (!file.exists()) return;
+        InputStream input = PersistenceUtils.class.getClassLoader().getResourceAsStream("users.csv");
+        if (input == null) {
+            System.err.println("Error: users.csv not found in resources.");
+            return;
+        }
         try (BufferedReader reader = new BufferedReader(new FileReader(USER_FILE))) {
             String line;
             reader.readLine(); // Skip header

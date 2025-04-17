@@ -1,0 +1,2 @@
+ID,Name,Neighborhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes
+P12345,Acacia Breeze,Yishun,2025-02-15,2025-03-20,S9876543B,3,false,TWO_ROOM:2;THREE_ROOM:3
