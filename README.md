@@ -41,9 +41,9 @@ You can use the following credentials to test the system:
 
 | NRIC      | Password    | Age | Marital Status | Role        |
 |-----------|-------------|-----|----------------|-------------|
-| S1234567A | password123 | 30  | SINGLE         | Applicant   |
-| S9876543B | manager123  | 45  | MARRIED        | HDBManager  |
-| S5555555F | officer123  | 40  | MARRIED        | HDBOfficer  |
+| S1234567A | password    | 35  | SINGLE         | Applicant   |
+| T8765432F | password    | 36  | SINGLE         | HDBManager  |
+| T1234567J | password    | 29  | MARRIED        | HDBOfficer  |
 
 ## Documentation
 
