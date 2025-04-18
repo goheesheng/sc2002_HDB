@@ -42,15 +42,30 @@ public class Applicant extends User {
             appliedProject = project;
             applicationStatus = ApplicationStatus.PENDING;
             
-            // Create and add application to project
+        // Get eligible flat type
+        FlatType flatType = getEligibleFlatType(project);
+
+        // Decrease the available flats for the chosen type
+        int remainingFlats = project.getRemainingFlats(flatType);
+        System.out.println("remaining flats: " + remainingFlats + "\n");
+        if (remainingFlats > 0) {
+            project.updateFlatCount(flatType, remainingFlats - 1);
+            
+            // Create and add the application
             String applicationId = "APP" + System.currentTimeMillis();
-            FlatType flatType = getEligibleFlatType(project);
             Application application = new Application(applicationId, this, project, flatType);
             project.addApplication(application);
-            
+            System.out.println("Application successful!");
+
             return true;
+        } else {
+            System.out.println("No remaining flats for the selected type.");
         }
-        return false;
+    } else {
+        System.out.println("You are either ineligible or have already applied.");
+    }
+
+    return false;  // Return false if application was unsuccessful
     }
 
     /**
@@ -111,16 +126,31 @@ public class Applicant extends User {
      * @return The eligible flat type
      */
     private FlatType getEligibleFlatType(Project project) {
-        if (getMaritalStatus().equals("SINGLE")) {
-            return FlatType.TWO_ROOM;
-        } else {
+        if (getMaritalStatus() == null || getMaritalStatus().isEmpty()) {
+            System.err.println("Invalid marital status.");
+            return FlatType.UNKNOWN;  // Return UNKNOWN if marital status is invalid
+        }
+    
+        // Check eligibility based on marital status
+        if (getMaritalStatus().equalsIgnoreCase("SINGLE")) {
+            // For singles, only TWO_ROOM flats are eligible
+            if (project.getRemainingFlats(FlatType.TWO_ROOM) > 0) {
+                return FlatType.TWO_ROOM;
+            }
+        } else if (getMaritalStatus().equalsIgnoreCase("MARRIED")) {
+            // For married users, check for THREE_ROOM flats first
             if (project.getRemainingFlats(FlatType.THREE_ROOM) > 0) {
                 return FlatType.THREE_ROOM;
-            } else {
+            } else if (project.getRemainingFlats(FlatType.TWO_ROOM) > 0) {
+                // If no THREE_ROOM flats available, fallback to TWO_ROOM
                 return FlatType.TWO_ROOM;
             }
         }
+    
+        // If no eligible flat type is found
+        return FlatType.UNKNOWN;
     }
+    
     public void setAppliedProject(Project project) {
         this.appliedProject = project;
     }

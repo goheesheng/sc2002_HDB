@@ -1,6 +1,3 @@
 Name,NRIC,Password,Age,MaritalStatus,UserType
-John,S1234567A,password,35,Single,
-Sarah,T7654321B,password,40,Married,
-Grace,S9876543C,password,37,Married,
-James,T2345678D,password,30,Married,
-Rachel,S3456789E,password,25,Single,
+Michael,T8765432F,password,36,Single,HDBManager
+Jessica,S5678901G,password,26,Married,HDBManager

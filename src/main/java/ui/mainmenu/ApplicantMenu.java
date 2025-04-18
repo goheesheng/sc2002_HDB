@@ -79,7 +79,7 @@ public class ApplicantMenu extends UserMenu {
 
     // --- Implementation for Menu Options ---
 
-    private void viewAvailableProjects(Applicant applicant) {A
+    private void viewAvailableProjects(Applicant applicant) {
         System.out.println("\n--- Available BTO Projects ---");
         List<Project> allProjects = dataStore.getAllProjects();
         List<Project> availableProjects = allProjects.stream()
@@ -172,7 +172,7 @@ public class ApplicantMenu extends UserMenu {
             Application app = applicant.viewApplication();
             dataStore.addApplication(app);
     
-            System.out.println("Application submitted successfully!");
+            System.out.println("\nApplication submitted successfully!");
             System.out.println("  Project:   " + selected.getProjectName());
             System.out.println("  Flat Type: " + app.getFlatType());
             System.out.println("  Status:    " + app.getStatus());

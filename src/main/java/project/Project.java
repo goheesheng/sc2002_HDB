@@ -4,6 +4,7 @@ import user.HDBManager;
 import user.HDBOfficer;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,11 +81,13 @@ public class Project {
      * @return true if the user is eligible, false otherwise
      */
     public boolean isEligibleForUser(user.User user) {
-        if (user.getMaritalStatus().equals("SINGLE") && user.getAge() >= 35) {
+        
+        if (user.getMaritalStatus().equalsIgnoreCase("SINGLE") && user.getAge() >= 35) {
+            System.out.println("Eligible for TWO_ROOM");
             return getRemainingFlats(FlatType.TWO_ROOM) > 0;
-        } else if (user.getMaritalStatus().equals("MARRIED") && user.getAge() >= 21) {
-            return getRemainingFlats(FlatType.TWO_ROOM) > 0 || 
-                   getRemainingFlats(FlatType.THREE_ROOM) > 0;
+        } else if (user.getMaritalStatus().equalsIgnoreCase("MARRIED") && user.getAge() >= 21) {
+            System.out.println("Eligible for TWO_ROOM or THREE_ROOM");
+            return getRemainingFlats(FlatType.TWO_ROOM) > 0 || getRemainingFlats(FlatType.THREE_ROOM) > 0;
         }
         return false;
     }

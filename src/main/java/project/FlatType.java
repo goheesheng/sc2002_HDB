@@ -28,24 +28,24 @@ public enum FlatType {
     * @param flatTypeString The string representation of a flat type (e.g., "2_ROOM", "TWO ROOM").
     * @return The corresponding FlatType enum value, or UNKNOWN if the input is invalid.
     */
-   public static FlatType parseFlatType(String flatTypeString) {
-       // Normalize the input (e.g., remove spaces, convert to uppercase, and replace "2_ROOM" with "TWO_ROOM")
-       flatTypeString = flatTypeString.trim().toUpperCase().replace(" ", "_");
-
-       // Map common misrepresentations to standard enum values
-       if (flatTypeString.equals("2-ROOM")) {
-           flatTypeString = "TWO_ROOM"; // Map "2_ROOM" to "TWO_ROOM"
-       } else if (flatTypeString.equals("3-ROOM")){
-            flatTypeString = "THREE_ROOM"; // Map "3_ROOM" to "THREE_ROOM"
-       }
-
-       try {
-           // Attempt to convert the string to the corresponding FlatType enum
-           return FlatType.valueOf(flatTypeString);
-       } catch (IllegalArgumentException e) {
-           // Return UNKNOWN if the string doesn't match any valid enum value
-           System.err.println("Invalid FlatType: " + flatTypeString);
-           return FlatType.UNKNOWN; // Return UNKNOWN when the input is invalid
-       }
-   }
+    public static FlatType parseFlatType(String flatTypeString) {
+        
+        if (flatTypeString == null) return UNKNOWN;
+    
+        flatTypeString = flatTypeString.trim().toUpperCase().replace(" ", "_");
+    
+        if (flatTypeString.equals("2_ROOM") || flatTypeString.equals("2-ROOM") || flatTypeString.equals("TWO ROOM")) {
+            flatTypeString = "TWO_ROOM";
+        } else if (flatTypeString.equals("3_ROOM") || flatTypeString.equals("3-ROOM") || flatTypeString.equals("THREE ROOM")) {
+            flatTypeString = "THREE_ROOM";
+        }
+    
+        try {
+            return FlatType.valueOf(flatTypeString);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid FlatType: " + flatTypeString);
+            return UNKNOWN;
+        }
+    }
+        
 }
