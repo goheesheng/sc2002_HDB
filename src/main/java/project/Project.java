@@ -340,7 +340,6 @@ public class Project {
         }
     
         return 
-                "\n----------------------------------------" +
                 "Project ID: " + projectId + "\n" +
                 "Project Name: " + projectName + "\n" +
                 "Neighborhood: " + neighborhood + "\n" +
@@ -349,6 +348,7 @@ public class Project {
                 "Application Closing Date: " + applicationClosingDate + "\n" +
                 "Manager In Charge: " + managerInCharge.getName() + "\n" + 
                 "Available Officer Slots: " + availableOfficerSlots + "\n" +
-                "Visibility: " + (visibility ? "Visible" : "Not Visible");
+                "Visibility: " + (visibility ? "Visible" : "Not Visible" +
+                "\n----------------------------------------\n");
     }
 }

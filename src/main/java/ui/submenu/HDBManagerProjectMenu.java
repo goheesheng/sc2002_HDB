@@ -45,7 +45,6 @@ public class HDBManagerProjectMenu extends ProjectMenu{
                     break;
 
                 case 3:
-                    System.out.println("Creating new project");
                     createProject(projects);
                     break;
 
@@ -78,6 +77,7 @@ public class HDBManagerProjectMenu extends ProjectMenu{
         for (Project project : projects) {
             if (project.getManagerInCharge().equals(this.user)) {
                 hasProjects = true;
+                System.out.println("\n----- Viewing Own Projects -----");
                 System.out.println("Project ID: " + project.getProjectId());
                 System.out.println("Project Name: " + project.getProjectName());
                 System.out.println("Neighborhood: " + project.getneighborhood());
@@ -94,6 +94,7 @@ public class HDBManagerProjectMenu extends ProjectMenu{
     }
 
     private void createProject(List<Project> projects) {
+        System.out.println("\n----- Creating new Project -----");
         System.out.print("Enter Project ID: ");
         String id = scanner.nextLine();
 
@@ -182,66 +183,71 @@ public class HDBManagerProjectMenu extends ProjectMenu{
             System.out.println("Project not found or you are not authorized to edit this project.");
             return false;
         }
+        int EditChoice;
+        do{
+            System.out.println("\nEditing Project: " + selectedProject.getProjectName());
+            System.out.println("1. Edit Name");
+            System.out.println("2. Edit Neighborhood");
+            System.out.println("3. Edit Flat Counts");
+            System.out.println("4. Edit Application Dates");
+            System.out.println("5. Finish editing");
+            System.out.print("Choose field to edit: ");
+            EditChoice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
 
+            switch (EditChoice) {
+                case 1:
+                    System.out.print("Enter new name: ");
+                    String newName = scanner.nextLine();
+                    selectedProject.setProjectName(newName);
+                    System.out.println("Project name updated.");
+                    break;
 
-        System.out.println("Editing Project: " + selectedProject.getProjectName());
-        System.out.println("1. Edit Name");
-        System.out.println("2. Edit Neighborhood");
-        System.out.println("3. Edit Flat Counts");
-        System.out.println("4. Edit Application Dates");
-        System.out.print("Choose field to edit: ");
-        int EditChoice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
+                case 2:
+                    System.out.print("Enter new neighborhood: ");
+                    String newNeighborhood = scanner.nextLine();
+                    selectedProject.setNeighborhood(newNeighborhood);
+                    System.out.println("Neighborhood updated.");
+                    break;
 
-        switch (EditChoice) {
-            case 1:
-                System.out.print("Enter new name: ");
-                String newName = scanner.nextLine();
-                selectedProject.setProjectName(newName);
-                System.out.println("Project name updated.");
-                break;
+                case 3:
+                    Map<FlatType, Integer> flatTypes = selectedProject.getFlatTypes();
+                    for (FlatType type : flatTypes.keySet()) {
+                        System.out.print("Enter new count for " + type + ": ");
+                        int newCount = scanner.nextInt();
+                        selectedProject.updateFlatCount(type, newCount);
+                    }
+                    scanner.nextLine(); // consume newline
+                    System.out.println("Flat counts updated.");
+                    break;
 
-            case 2:
-                System.out.print("Enter new neighborhood: ");
-                String newNeighborhood = scanner.nextLine();
-                selectedProject.setNeighborhood(newNeighborhood);
-                System.out.println("Neighborhood updated.");
-                break;
+                case 4:
+                    try {
+                        System.out.print("Enter new opening date (yyyy-MM-dd): ");
+                        String openStr = scanner.nextLine();
+                        System.out.print("Enter new closing date (yyyy-MM-dd): ");
+                        String closeStr = scanner.nextLine();
 
-            case 3:
-                Map<FlatType, Integer> flatTypes = selectedProject.getFlatTypes();
-                for (FlatType type : flatTypes.keySet()) {
-                    System.out.print("Enter new count for " + type + ": ");
-                    int newCount = scanner.nextInt();
-                    selectedProject.updateFlatCount(type, newCount);
+                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        Date openDate = df.parse(openStr);
+                        Date closeDate = df.parse(closeStr);
+
+                        selectedProject.setApplicationOpeningDate(openDate);
+                        selectedProject.setApplicationClosingDate(closeDate);
+                        System.out.println("Application dates updated.");
+                    } catch (ParseException e) {
+                        System.out.println("Invalid date format.");
+                    }
+                    break;
+
+                case 5:
+                    break;
+
+                default:
+                    System.out.println("Invalid choice.");
+                    return false;
                 }
-                scanner.nextLine(); // consume newline
-                System.out.println("Flat counts updated.");
-                break;
-
-            case 4:
-                try {
-                    System.out.print("Enter new opening date (yyyy-MM-dd): ");
-                    String openStr = scanner.nextLine();
-                    System.out.print("Enter new closing date (yyyy-MM-dd): ");
-                    String closeStr = scanner.nextLine();
-
-                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                    Date openDate = df.parse(openStr);
-                    Date closeDate = df.parse(closeStr);
-
-                    selectedProject.setApplicationOpeningDate(openDate);
-                    selectedProject.setApplicationClosingDate(closeDate);
-                    System.out.println("Application dates updated.");
-                } catch (ParseException e) {
-                    System.out.println("Invalid date format.");
-                }
-                break;
-
-            default:
-                System.out.println("Invalid choice.");
-                return false;
-        }
+            }while (EditChoice !=5);
         PersistenceUtils.saveProjects(projects);
         return true;
     }
