@@ -6,6 +6,7 @@ import project.Application;
 import admin.Registration;
 import admin.Report;
 import status.ApplicationStatus;
+import status.RegistrationStatus;
 import project.FlatType;
 import utility.BTODataStore;
 
@@ -254,7 +255,7 @@ public class HDBManager extends User {
      */
     public List<Registration> viewOfficerRegistrations(Project project) {
         // Get the registrations from the central data store
-        return BTODataStore.getInstance().getPendingRegistrations().stream()
+        return BTODataStore.getInstance().getAllRegistrations().stream()
                 .filter(r -> r.getProject().equals(project))
                 .collect(Collectors.toList());
     }
@@ -270,6 +271,9 @@ public class HDBManager extends User {
             // Add the officer to the project's officer list
             Project project = registration.getProject();
             HDBOfficer officer = registration.getOfficer();
+            
+            //update officer registration status to approved
+            officer.setRegistrationStatus(RegistrationStatus.APPROVED);
             
             // Add officer to the project using proper method instead of directly modifying list
             project.addOfficer(officer);

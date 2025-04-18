@@ -27,12 +27,12 @@ public class Registration {
      * @param officer The HDB Officer requesting registration
      * @param project The project the officer is registering for
      */
-    public Registration(String registrationId, HDBOfficer officer, Project project) {
+    public Registration(String registrationId, HDBOfficer officer, Project project, RegistrationStatus status) {
         this.registrationId = registrationId;
         this.officer = officer;
         this.project = project;
         this.registrationDate = new Date();
-        this.status = RegistrationStatus.PENDING;
+        this.status = status;
     }
 
     /**

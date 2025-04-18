@@ -28,7 +28,7 @@ public class loginHandler {
             User user = userOpt.get();
             if (user.login(nric, password)) {
                 // Save to Excel file after successful login
-                saveUserDataToExcel();
+                //saveUserDataToExcel();
                 return user;
             }
         }

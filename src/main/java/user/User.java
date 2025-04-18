@@ -181,4 +181,26 @@ public abstract class User {
     public String toCsvRow() {
         return name + "," + nric + "," + password + "," + age + "," + maritalStatus + "," + getClass().getSimpleName();
     }
+
+    public static User fromCSV(String csv) {
+        String[] parts = csv.split(",");
+
+        String name = parts[0];
+        String nric = parts[1];
+        String password = parts[2];
+        int age = Integer.parseInt(parts[3]);
+        String maritalStatus = parts[4];
+        String userType = parts[5];
+
+        switch (userType) {
+            case "Applicant":
+                return new Applicant(name, nric, password, age, maritalStatus);
+            case "HDBManager":
+                return new HDBManager(name, nric, password, age, maritalStatus);
+            case "HDBOfficer":
+                return new HDBOfficer(name, nric, password, age, maritalStatus);
+            default:
+            throw new IllegalArgumentException("Unknown user type: " + userType);
+        }
+    }
 }

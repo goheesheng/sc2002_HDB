@@ -162,7 +162,7 @@ public class Main {
         }    
         // Now save to CSVs
         dataStore.saveAllData();
-        System.out.println("All users saved to CSV files.");
+        System.out.println("All excel saved to CSV files.");
     }
 
     public static void runTestCases() {

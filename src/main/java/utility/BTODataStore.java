@@ -21,7 +21,7 @@ public class BTODataStore {
     private List<Project> allProjects;
     private List<Application> allApplications;
     private List<Enquiry> allEnquiries;
-    private List<Registration> pendingRegistrations; // Or all registrations
+    private List<Registration> allRegistrations;
 
     // Private constructor for Singleton
     private BTODataStore() {
@@ -29,7 +29,7 @@ public class BTODataStore {
         allProjects = new ArrayList<>();
         allApplications = new ArrayList<>();
         allEnquiries = new ArrayList<>();
-        pendingRegistrations = new ArrayList<>();
+        allRegistrations = new ArrayList<>();
     }
 
     // Public method to get the instance
@@ -57,8 +57,18 @@ public class BTODataStore {
         return new ArrayList<>(allEnquiries);
     }
 
-     public List<Registration> getPendingRegistrations() {
-        return new ArrayList<>(pendingRegistrations);
+    public List<Registration> getAllRegistrations() {
+        return new ArrayList<>(allRegistrations);
+    }
+
+    public List<Registration> getRegistrationsForOfficer(HDBOfficer officer) {
+        List<Registration> officerRegistrations = new ArrayList<>();
+        for (Registration registration : allRegistrations) {
+            if (registration.getOfficer().equals(officer)) {
+                officerRegistrations.add(registration);
+            }
+        }
+        return officerRegistrations;
     }
 
      // --- Method to get the manager map ---
@@ -111,7 +121,8 @@ public class BTODataStore {
 
      public void addRegistration(Registration registration) {
          if (findRegistrationById(registration.getRegistrationId()).isEmpty()) {
-            this.pendingRegistrations.add(registration);
+            this.allRegistrations.add(registration);
+            saveAllData();
         }
      }
 
@@ -133,7 +144,7 @@ public class BTODataStore {
      }
 
      public Optional<Registration> findRegistrationById(String registrationId) {
-         return pendingRegistrations.stream().filter(r -> r.getRegistrationId().equalsIgnoreCase(registrationId)).findFirst();
+         return allRegistrations.stream().filter(r -> r.getRegistrationId().equalsIgnoreCase(registrationId)).findFirst();
      }
 
      // --- Methods to Update data (Example: Change Password) ---
@@ -197,11 +208,11 @@ public class BTODataStore {
                 allEnquiries.removeAll(relatedEnquiries);
                 
                 // Clean up any related registrations
-                List<Registration> relatedRegistrations = pendingRegistrations.stream()
+                List<Registration> relatedRegistrations = allRegistrations.stream()
                         .filter(reg -> reg.getProject().equals(project))
                         .collect(Collectors.toList());
                 
-                pendingRegistrations.removeAll(relatedRegistrations);
+                allRegistrations.removeAll(relatedRegistrations);
             }
             
             return removed;
@@ -242,7 +253,7 @@ public class BTODataStore {
         PersistenceUtils.saveProjects(this.allProjects);
         PersistenceUtils.saveApplications(this.allApplications);
         PersistenceUtils.saveEnquiries(this.allEnquiries);
-        PersistenceUtils.saveRegistrations(this.pendingRegistrations);
+        PersistenceUtils.saveRegistrations(this.allRegistrations);
         System.out.println("Data saved."); // Placeholder
     }
 }

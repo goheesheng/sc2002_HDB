@@ -51,7 +51,7 @@ public class LoginInterface {
 
         } else {
             System.out.println("Invalid NRIC or password.");
-            System.out.println("----------------------------------------\n");
+            System.out.println("----------------------------------------");
         }
     }
 }

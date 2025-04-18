@@ -7,20 +7,22 @@ import admin.Registration;
 import project.Project;
 import status.RegistrationStatus;
 import user.HDBManager;
+import utility.BTODataStore;
+import utility.PersistenceUtils;
 
 public class OfficerRegistrationMenu {
     private HDBManager manager;
     private Scanner scanner = new Scanner(System.in);
     private Project project;
 
-
     /**
     * Constructs the menu with the given HDB Manager.
     *
     * @param manager The HDB Manager using this menu
     */
-    public OfficerRegistrationMenu(HDBManager manager) {
+    public OfficerRegistrationMenu(HDBManager manager, Project project) {
         this.manager = manager;
+        this.project = project;
     }
 
     /**
@@ -70,6 +72,7 @@ public class OfficerRegistrationMenu {
             for (Registration reg : registrations) {
                 System.out.println("Registration ID: " + reg.getRegistrationId());
                 System.out.println("Officer: " + reg.getOfficer().getNric());
+                System.out.println("Project: " + reg.getProject().getProjectId());  // Display project ID
                 System.out.println("Status: " + reg.getStatus());
                 System.out.println("Date: " + reg.getregistrationDate());
                 System.out.println();
@@ -95,8 +98,11 @@ public class OfficerRegistrationMenu {
             if (registration.getStatus() == RegistrationStatus.PENDING) {
 
                 // Approve the registration
+                System.out.println("Before approval: " + registration.getStatus());
                 if (registration.approve()) {
-
+                        BTODataStore.getInstance().saveAllData();
+                        System.out.println("After approval: " + registration.getStatus());
+                        
                     // Try adding the officer to the project
                     boolean added = project.addOfficer(registration.getOfficer());
                 

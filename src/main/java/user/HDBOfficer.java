@@ -9,6 +9,9 @@ import admin.Registration;
 import status.ApplicationStatus;
 import status.RegistrationStatus;
 import utility.BTODataStore;
+
+import java.util.ArrayList;
+import java.util.List;
 /**
  * Represents an HDB Officer who can handle BTO projects.
  * Officers can register for projects, update application statuses, and generate receipts.
@@ -20,6 +23,7 @@ import utility.BTODataStore;
 public class HDBOfficer extends Applicant {
     private Project handlingProject;
     private RegistrationStatus registrationStatus;
+    private List<Registration> registrations;
 
     /**
      * Creates a new HDB Officer with the specified details.
@@ -32,6 +36,7 @@ public class HDBOfficer extends Applicant {
     public HDBOfficer(String name, String nric, String password, int age, String maritalStatus) {
         super(name, nric, password, age, maritalStatus);
         this.registrationStatus = RegistrationStatus.PENDING;
+        this.registrations = new ArrayList<>();
     }
     /**
      * Registers this officer to handle a specific project.
@@ -44,11 +49,11 @@ public class HDBOfficer extends Applicant {
         if (handlingProject == null && !hasAppliedForProject(project)) {
             // Create a registration object and add it to the central data store
             String regId = "REG" + System.currentTimeMillis();
-            Registration registration = new Registration(regId, this, project);
+            Registration registration = new Registration(regId, this, project, RegistrationStatus.PENDING);
+            registrations.add(registration);
             BTODataStore.getInstance().addRegistration(registration);
             
-            registrationStatus = RegistrationStatus.PENDING;
-            return true;
+            this.registrationStatus = RegistrationStatus.PENDING;            return true;
         }
         return false;
     }
@@ -60,6 +65,16 @@ public class HDBOfficer extends Applicant {
      */
     public RegistrationStatus viewRegistrationStatus() {
         return registrationStatus;
+    }
+
+    public void viewAllRegistrationStatuses() {
+        if (registrations.isEmpty()) {
+            System.out.println("You have not registered for any project.");
+        } else {
+            for (Registration reg : registrations) {
+                System.out.println("Project: " + reg.getProject().getProjectName() + " - Status: " + reg.getStatus());
+            }
+        }
     }
 
     /**

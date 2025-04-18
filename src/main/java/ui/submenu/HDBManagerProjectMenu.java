@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import user.HDBManager;
+import utility.PersistenceUtils;
 import project.Project;
 import project.FlatType;
 
@@ -59,7 +60,6 @@ public class HDBManagerProjectMenu extends ProjectMenu{
                     break;
 
                 case 6:
-                    System.out.println("Toggling project visibility");
                     toggleProjectVisibility(projects);
                     break;
 
@@ -87,15 +87,23 @@ public class HDBManagerProjectMenu extends ProjectMenu{
                 System.out.println("Officer Slots: " + project.getavailableOfficerSlots());
                 System.out.println("--------------------------");
             }
-            if (!hasProjects) {
-                System.out.println("You have not created any projects.");
-            }
+        }
+        if (!hasProjects) {
+            System.out.println("You have not created any projects.");
         }
     }
 
     private void createProject(List<Project> projects) {
         System.out.print("Enter Project ID: ");
         String id = scanner.nextLine();
+
+        //checks for duplicate ID
+        for (Project p : projects) {
+            if (p.getProjectId().equals(id)) {
+                System.out.println("Project ID already exists. Please use a unique ID.");
+                return;
+            }
+        }
 
         System.out.print("Enter Project Name: ");
         String name = scanner.nextLine();
@@ -105,25 +113,34 @@ public class HDBManagerProjectMenu extends ProjectMenu{
 
         Map<FlatType, Integer> flatTypes = new HashMap<>();
         for (FlatType type : FlatType.values()) {
-            System.out.print("Enter number of " + type + " flats: ");
-            int count = Integer.parseInt(scanner.nextLine());
-            flatTypes.put(type, count);
+            while (true) {
+                try {
+                    System.out.print("Enter number of " + type + " flats: ");
+                    int count = Integer.parseInt(scanner.nextLine());
+                    if (count < 0) throw new NumberFormatException();
+                    flatTypes.put(type, count);
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid number. Please enter a non-negative integer.");
+                }
+            }
         }
+
         Date applicationOpeningDate = null;
         Date applicationClosingDate = null;
 
-        try{
-        System.out.print("Enter application opening date (yyyy-mm-dd): ");
-        String openDateStr = scanner.nextLine();
-        applicationOpeningDate = new SimpleDateFormat("yyyy-MM-dd").parse(openDateStr);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        System.out.print("Enter application closing date (yyyy-mm-dd): ");
-        String closeDateStr = scanner.nextLine();
-        applicationClosingDate = new SimpleDateFormat("yyyy-MM-dd").parse(closeDateStr);
-
-        } catch (ParseException e) {
-        System.out.println("Invalid date format. Project creation aborted.");
-        return;
+        while (true) {
+            try {
+                System.out.print("Enter application opening date (yyyy-mm-dd): ");
+                applicationOpeningDate = sdf.parse(scanner.nextLine());
+                System.out.print("Enter application closing date (yyyy-mm-dd): ");
+                applicationClosingDate = sdf.parse(scanner.nextLine());
+                break;
+            } catch (ParseException e) {
+                System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+            }
         }
 
         System.out.print("Enter available officer slots: ");
@@ -134,6 +151,7 @@ public class HDBManagerProjectMenu extends ProjectMenu{
             (HDBManager) this.user, officerSlots);
 
             projects.add(newProject);
+            PersistenceUtils.saveProjects(projects);
             System.out.println("Project created successfully!");
     }
 
@@ -224,6 +242,7 @@ public class HDBManagerProjectMenu extends ProjectMenu{
                 System.out.println("Invalid choice.");
                 return false;
         }
+        PersistenceUtils.saveProjects(projects);
         return true;
     }
 
@@ -253,6 +272,7 @@ public class HDBManagerProjectMenu extends ProjectMenu{
     
         if (confirmation.equals("yes")) {
             projects.remove(projectToDelete);
+            PersistenceUtils.saveProjects(projects);
             System.out.println("Project successfully deleted.");
             return true;
         } else {
@@ -285,6 +305,8 @@ public class HDBManagerProjectMenu extends ProjectMenu{
         boolean currentVisibility = projectToToggle.isVisible();
         projectToToggle.setVisibility(!currentVisibility);
     
+        PersistenceUtils.saveProjects(projects);
+        
         // Print confirmation message
         if (!currentVisibility) {
             System.out.println("The project is now visible to applicants.");

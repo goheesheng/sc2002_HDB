@@ -9,6 +9,7 @@ import ui.submenu.EnquiryMenu;
 
 import admin.Report;
 import project.FlatType;
+import project.Project;
 import project.Application;
 
 import java.util.Map;
@@ -19,14 +20,14 @@ public class HDBManagerMenu extends UserMenu{
     private OfficerRegistrationMenu officerRegistrationMenu;
     private EnquiryMenu enquiryMenu;
     private ApplicationManagerMenu applicationManagerMenu;
-
+    private Project selectedProject;
 
     public HDBManagerMenu (HDBManager manager){
         super(manager);
         this.projectMenu = new HDBManagerProjectMenu(manager);
-        this.officerRegistrationMenu = new OfficerRegistrationMenu(manager);
         this.enquiryMenu = new EnquiryMenu();
         this.applicationManagerMenu = new ApplicationManagerMenu(manager);
+        this.selectedProject = null;
     }
 
     public void displayMenu() {
@@ -49,6 +50,12 @@ public class HDBManagerMenu extends UserMenu{
                     projectMenu.displayMenu(((HDBManager)user).viewAllProjects());
                     break;
                 case 2:
+                    // Ensure a project is selected before accessing Officer Registration
+                    if (selectedProject == null) {
+                        selectProject();  // Prompt user to select a project
+                    }
+                    
+                    officerRegistrationMenu = new OfficerRegistrationMenu((HDBManager) user, selectedProject);
                     officerRegistrationMenu.displayMenu();
                     break;
                 case 3:
@@ -73,6 +80,32 @@ public class HDBManagerMenu extends UserMenu{
             }
         } while (choice != 7);
     }
+
+    private void selectProject() {
+        List<Project> allProjects = ((HDBManager) user).viewAllProjects(); // Get all projects from the manager
+
+        if (allProjects != null && !allProjects.isEmpty()) {
+            System.out.println("\nSelect a Project:");
+            for (int i = 0; i < allProjects.size(); i++) {
+                System.out.println((i + 1) + ". " + allProjects.get(i).getProjectName());
+            }
+
+            System.out.print("Enter the number of the project you want to select: ");
+            int projectChoice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
+
+            if (projectChoice > 0 && projectChoice <= allProjects.size()) {
+                selectedProject = allProjects.get(projectChoice - 1);  // Set the selected project
+                System.out.println("You have selected: " + selectedProject.getProjectName());
+            } else {
+                System.out.println("Invalid project choice. Please try again.");
+                selectProject();  // Prompt again if the choice is invalid
+            }
+        } else {
+            System.out.println("No projects available.");
+        }
+    }
+
 
     private void generateReport(){
         //Let the manager enter filters

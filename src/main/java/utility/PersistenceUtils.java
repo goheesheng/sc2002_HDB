@@ -366,7 +366,7 @@ public class PersistenceUtils {
 
     // File names for CSV persistence
     private static final String USER_FILE = "src/main/resources/users.csv";
-    private static final String PROJECT_FILE = "src/main/resources/projects.csv";
+    private static final String PROJECT_FILE = "src/main/resources/projectList.csv";
     private static final String APPLICATION_FILE = "src/main/resources/applications.csv";
     private static final String ENQUIRY_FILE = "src/main/resources/enquiries.csv";
     private static final String REGISTRATION_FILE = "src/main/resources/registrations.csv";
@@ -378,11 +378,10 @@ public class PersistenceUtils {
    //checked
     public static void saveUsers(List<User> users, String ExcelName) {
         String fileName = ExcelName.replace(".xlsx", "").toLowerCase();
-        String folderPath = "src/main/resources"; 
         
-        File dir = new File(folderPath);
-            if (!dir.exists()) {
-            dir.mkdirs();  // Creates the directory if it doesn't exist
+        File dir = new File("src/main/resources");
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
     
         try (PrintWriter writer = new PrintWriter(fileName)){
@@ -391,8 +390,6 @@ public class PersistenceUtils {
             for (User user : users) {
                 writer.println(user.toCsvRow());
             }
-
-                System.out.println("Data successfully saved to: " + fileName);
                 writer.close();
         } catch (IOException e) {
             System.err.println("Error saving users: " + e.getMessage());
@@ -459,6 +456,11 @@ public class PersistenceUtils {
     // --- Project Persistence ---
     //checked
     public static void saveProjects(List<Project> projects) {
+        File dir = new File("src/main/resources");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
         try (PrintWriter writer = new PrintWriter(new FileWriter(PROJECT_FILE))) {
             // Header
             writer.println("ID,Name,Neighborhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes");
@@ -568,6 +570,10 @@ public class PersistenceUtils {
 
     //unchecked
     public static void saveApplications(List<Application> applications) {
+        File dir = new File("src/main/resources");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
         try (PrintWriter writer = new PrintWriter(new FileWriter(APPLICATION_FILE))) {
             // Header: ID,ApplicantNRIC,ProjectID,FlatType
             writer.println("ID,ApplicantNRIC,ProjectID,FlatType");
@@ -600,9 +606,10 @@ public class PersistenceUtils {
                     try {
                         flatType = FlatType.valueOf(flatTypeStr);
                     } catch (IllegalArgumentException e) {
-                        System.err.println("Error parsing flat type for application " + id + ": " + e.getMessage());
-                        continue;
+                        System.err.println("Invalid flat type: " + flatTypeStr);
+                        flatType = FlatType.UNKNOWN;
                     }
+                    
                     Optional<User> applicantOpt = store.findUserByNric(applicantNric);
                     Optional<Project> projectOpt = store.findProjectById(projectId);
                     if (applicantOpt.isPresent() && projectOpt.isPresent() && applicantOpt.get() instanceof Applicant) {
@@ -623,6 +630,12 @@ public class PersistenceUtils {
 
     //unchecked
     public static void saveEnquiries(List<Enquiry> enquiries) {
+        
+        File dir = new File("src/main/resources");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
         try (PrintWriter writer = new PrintWriter(new FileWriter(ENQUIRY_FILE))) {
             // Header: ID,SenderNRIC,ProjectID,EnquiryText
             writer.println("ID,SenderNRIC,ProjectID,EnquiryText");
@@ -671,13 +684,20 @@ public class PersistenceUtils {
 
     //unchecked
     public static void saveRegistrations(List<Registration> registrations) {
+        
+        File dir = new File("src/main/resources");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        
         try (PrintWriter writer = new PrintWriter(new FileWriter(REGISTRATION_FILE))) {
-            // Header: ID,OfficerNRIC,ProjectID
-            writer.println("ID,OfficerNRIC,ProjectID");
+            // Header: ID,OfficerNRIC,ProjectID,Status
+            writer.println("ID,OfficerNRIC,ProjectID,Status");
             for (Registration r : registrations) {
                 writer.print(escapeCsv(r.getRegistrationId()) + ",");
                 writer.print(escapeCsv(r.getOfficer().getNric()) + ",");
-                writer.println(escapeCsv(r.getProject().getProjectId()));
+                writer.print(escapeCsv(r.getProject().getProjectId()) + ",");
+                writer.println(escapeCsv(r.getStatus().toString()));
             }
         } catch (IOException e) {
             System.err.println("Error saving registrations: " + e.getMessage());
@@ -688,19 +708,26 @@ public class PersistenceUtils {
     public static void loadRegistrations(BTODataStore store) {
         File file = new File(REGISTRATION_FILE);
         if (!file.exists()) return;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(REGISTRATION_FILE))) {
             String line;
             reader.readLine(); // Skip header
+
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 3) {
+                if (data.length == 4) {
                     String id = data[0];
                     String officerNric = data[1];
                     String projectId = data[2];
+                    String statusString = data[3];
+
+                    RegistrationStatus status = RegistrationStatus.valueOf(statusString.toUpperCase());  // Convert the string to the enum value
+
                     Optional<User> officerOpt = store.findUserByNric(officerNric);
                     Optional<Project> projectOpt = store.findProjectById(projectId);
+                    
                     if (officerOpt.isPresent() && projectOpt.isPresent() && officerOpt.get() instanceof HDBOfficer) {
-                        Registration registration = new Registration(id, (HDBOfficer) officerOpt.get(), projectOpt.get());
+                        Registration registration = new Registration(id, (HDBOfficer) officerOpt.get(), projectOpt.get(), status);
                         store.addRegistration(registration);
                     } else {
                         System.err.println("Error loading registration " + id + ": Officer or Project not found.");
@@ -716,7 +743,7 @@ public class PersistenceUtils {
     private static String escapeCsv(String value) {
         if (value == null) return "";
         String escaped = value.replace("\"", "\"\"");
-        if (escaped.contains(",") || escaped.contains("\"") || escaped.contains("\n")) {
+        if (escaped.contains(",") || escaped.contains("\"") || escaped.contains("\n") || escaped.contains("\r")) {
             return "\"" + escaped + "\"";
         }
         return escaped;

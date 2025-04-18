@@ -7,6 +7,7 @@ import project.Project;
 import status.RegistrationStatus;
 import user.HDBOfficer;
 import utility.BTODataStore;
+import utility.PersistenceUtils;
 
 public class ProjectRegisterMenu {
     private Scanner scanner = new Scanner(System.in);
@@ -54,7 +55,7 @@ public class ProjectRegisterMenu {
                         Project selectedProject = projects.get(projectIndex);
                         
                         // Officer registers to handle the selected project
-                        boolean registered = currentOfficer.registerForProject(selectedProject);
+                        boolean registered = currentOfficer.registerForProject(selectedProject);                                         
                         System.out.println(registered ? 
                             "Successfully registered! Awaiting approval." : 
                             "Registration failed. You may have already registered or applied for this project.");
@@ -67,15 +68,8 @@ public class ProjectRegisterMenu {
                     // View officer's registration status
                     RegistrationStatus status = currentOfficer.viewRegistrationStatus();
                     if (status != null) {
-                        System.out.println("Your current registration status: " + status);
-                        Project assignedProject = currentOfficer.getHandlingProject();
-                        if (assignedProject != null) {
-                            System.out.println("Assigned to handle project: " + assignedProject.getProjectName());
-                        } else {
-                            System.out.println("You have not been assigned a project yet.");
-                        }
-                    } else {
-                        System.out.println("You have not registered for any project.");
+                        System.out.println("\nViewing registration statuses for all projects:");
+                    currentOfficer.viewAllRegistrationStatuses();  // Displays all statuses for registered projects
                     }
                     break;
 
@@ -86,5 +80,4 @@ public class ProjectRegisterMenu {
             }
         } while (choice != 3);
     }
-
 }
