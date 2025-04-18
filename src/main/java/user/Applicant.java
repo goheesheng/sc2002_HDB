@@ -44,7 +44,7 @@ public class Applicant extends User {
             
             // Create and add application to project
             String applicationId = "APP" + System.currentTimeMillis();
-            FlatType flatType = getEligibleFlatType();
+            FlatType flatType = getEligibleFlatType(project);
             Application application = new Application(applicationId, this, project, flatType);
             project.addApplication(application);
             
@@ -110,12 +110,15 @@ public class Applicant extends User {
      * 
      * @return The eligible flat type
      */
-    private FlatType getEligibleFlatType() {
+    private FlatType getEligibleFlatType(Project project) {
         if (getMaritalStatus().equals("SINGLE")) {
             return FlatType.TWO_ROOM;
         } else {
-            // For married applicants, default to THREE_ROOM if available
-            return FlatType.THREE_ROOM;
+            if (project.getRemainingFlats(FlatType.THREE_ROOM) > 0) {
+                return FlatType.THREE_ROOM;
+            } else {
+                return FlatType.TWO_ROOM;
+            }
         }
     }
     public void setAppliedProject(Project project) {

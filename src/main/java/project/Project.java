@@ -56,7 +56,7 @@ public class Project {
         this.applicationClosingDate = applicationClosingDate;
         this.managerInCharge = managerInCharge;
         this.availableOfficerSlots = availableOfficerSlots;
-        this.visibility = false;
+        this.visibility = true;
         this.officers = new ArrayList<>();
         this.applications = new ArrayList<>();
         this.enquiries = new ArrayList<>();

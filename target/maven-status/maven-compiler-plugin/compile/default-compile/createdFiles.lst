@@ -1,5 +1,4 @@
 project/Application.class
-utility/UserFileHandler.class
 user/HDBManager.class
 utility/BTODataStore.class
 utility/loginHandler.class
@@ -22,7 +21,6 @@ project/FlatType.class
 user/Applicant.class
 ui/submenu/OfficerRegistrationMenu.class
 ui/submenu/ApplicationManagerMenu.class
-utility/fileReader.class
 project/Enquiry.class
 status/RegistrationStatus.class
 ui/mainmenu/UserMenu.class

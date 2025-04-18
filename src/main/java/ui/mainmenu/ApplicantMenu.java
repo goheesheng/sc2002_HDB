@@ -1,15 +1,15 @@
 package ui.mainmenu;
+
 import status.ApplicationStatus;
 import user.Applicant;
 import project.Project;
 import utility.BTODataStore; // Import the data store
-import project.FlatType;    // Import FlatType
+import project.FlatType; // Import FlatType
 import project.Application; // Import Application
 import project.Enquiry;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 public class ApplicantMenu extends UserMenu {
     // Removed projectMenu field, access projects via DataStore
@@ -38,12 +38,11 @@ public class ApplicantMenu extends UserMenu {
             System.out.print("Enter choice: ");
 
             try { // Basic input error handling
-                 choice = Integer.parseInt(scanner.nextLine());
+                choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
                 choice = 0; // Set choice to invalid value to loop again
             }
-
 
             switch (choice) {
                 case 1:
@@ -59,17 +58,18 @@ public class ApplicantMenu extends UserMenu {
                     requestWithdrawal(currentApplicant);
                     break;
                 case 5:
-                     submitEnquiry();
-                     break;
+                    submitEnquiry();
+                    break;
                 case 6:
                     changePassword();
-                     break;
+                    break;
                 case 7:
                     System.out.println("Logging out...");
                     // Save is handled by shutdown hook
                     return; // Exit this menu back to the main login loop
                 default:
-                    if(choice != 0) System.out.println("Invalid choice. Please try again.");
+                    if (choice != 0)
+                        System.out.println("Invalid choice. Please try again.");
             }
             System.out.println("\nPress Enter to continue...");
             scanner.nextLine(); // Pause for user
@@ -79,13 +79,15 @@ public class ApplicantMenu extends UserMenu {
 
     // --- Implementation for Menu Options ---
 
-    private void viewAvailableProjects(Applicant applicant) {
+    private void viewAvailableProjects(Applicant applicant) {A
         System.out.println("\n--- Available BTO Projects ---");
         List<Project> allProjects = dataStore.getAllProjects();
         List<Project> availableProjects = allProjects.stream()
                 .filter(Project::isVisible) // Check visibility flag
                 // Add filtering based on applicant eligibility (Single vs Married)
-                .filter(p -> applicant.getMaritalStatus().equals("SINGLE") ? p.getFlatTypes().containsKey(FlatType.TWO_ROOM) : true) // Simplified eligibility check
+                .filter(p -> applicant.getMaritalStatus().equals("SINGLE")
+                        ? p.getFlatTypes().containsKey(FlatType.TWO_ROOM)
+                        : true) // Simplified eligibility check
                 .collect(Collectors.toList());
 
         if (availableProjects.isEmpty()) {
@@ -93,197 +95,184 @@ public class ApplicantMenu extends UserMenu {
         } else {
             for (int i = 0; i < availableProjects.size(); i++) {
                 Project p = availableProjects.get(i);
-                 System.out.printf("%d. %s (%s) - Flats: %s%n",
+                System.out.printf("%d. %s (%s) - Flats: %s%n",
                         i + 1,
                         p.getProjectName(),
                         p.getneighborhood(),
                         p.getFlatTypes().entrySet().stream()
-                           .map(entry -> entry.getKey() + ": " + entry.getValue())
-                           .collect(Collectors.joining(", "))
-                 );
+                                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                                .collect(Collectors.joining(", ")));
             }
         }
     }
 
-     private void applyForProject(Applicant applicant) {
+    private void applyForProject(Applicant applicant) {
         System.out.println("\n--- Apply for Project ---");
-
-        // Check if already applied
+    
+        // 1) Block if already applied
         if (applicant.getAppliedProject() != null) {
-             System.out.println("You have already applied for project: " + applicant.getAppliedProject().getProjectName());
-             System.out.println("Your application status: " + applicant.getApplicationStatus());
-             return;
+            System.out.println("You have already applied for project: "
+                + applicant.getAppliedProject().getProjectName());
+            System.out.println("Your application status: "
+                + applicant.getApplicationStatus());
+            return;
         }
-
-        List<Project> allProjects = dataStore.getAllProjects();
-         List<Project> applicableProjects = allProjects.stream()
-                .filter(Project::isVisible)
-                // Filter based on eligibility - reuse logic from view or Applicant class
-                .filter(p -> applicant.getMaritalStatus().equalsIgnoreCase("SINGLE") ? p.getFlatTypes().containsKey(FlatType.TWO_ROOM) && p.getFlatTypes().get(FlatType.TWO_ROOM)>0 && applicant.getAge() >= 35: p.getFlatTypes().values().stream().anyMatch(count -> count > 0) && applicant.getAge()>=21)
-                .collect(Collectors.toList());
-
-
-        if (applicableProjects.isEmpty()) {
+    
+        // 2) Show all VISIBLE projects (no more manual eligibility filter)
+        List<Project> visibleProjects = dataStore.getAllProjects().stream()
+            .filter(Project::isVisible)
+            .collect(Collectors.toList());
+    
+        // 3) None at all?
+        if (visibleProjects.isEmpty()) {
             System.out.println("No projects available for you to apply for at the moment.");
             return;
         }
-
+    
+        // 4) Print the menu
         System.out.println("Available projects to apply for:");
-         for (int i = 0; i < applicableProjects.size(); i++) {
-             Project p = applicableProjects.get(i);
-             System.out.printf("%d. %s (%s)%n", i + 1, p.getProjectName(), p.getneighborhood());
-         }
-         System.out.print("Enter the number of the project you want to apply for (or 0 to cancel): ");
-
-         int projectChoice;
-         try {
-            projectChoice = Integer.parseInt(scanner.nextLine());
-         } catch (NumberFormatException e) {
-             System.out.println("Invalid input.");
-             return;
-         }
-
-
-         if (projectChoice > 0 && projectChoice <= applicableProjects.size()) {
-             Project selectedProject = applicableProjects.get(projectChoice - 1);
-
-             // Determine Flat Type (Simplified logic - assumes eligibility check passed)
-              FlatType chosenFlatType;
-              if (applicant.getMaritalStatus().equalsIgnoreCase("SINGLE")) {
-                  chosenFlatType = FlatType.TWO_ROOM;
-              } else {
-                   // Offer choice if both available? For now, default logic
-                   if (selectedProject.getFlatTypes().containsKey(FlatType.THREE_ROOM) && selectedProject.getFlatTypes().get(FlatType.THREE_ROOM) > 0) {
-                       chosenFlatType = FlatType.THREE_ROOM; // Prioritize? Or ask user?
-                   } else {
-                       chosenFlatType = FlatType.TWO_ROOM;
-                   }
-              }
-             System.out.println("Applying for " + chosenFlatType + " in " + selectedProject.getProjectName());
-
-              // Call the core logic in Applicant - NEEDS REFINEMENT
-              // The applicant.applyForProject needs to:
-              // 1. Check eligibility AGAIN maybe (or trust the filtering)
-              // 2. Check if already applied (already done above)
-              // 3. Create the Application object
-              // 4. Add the Application object to the BTODataStore
-              // 5. Update the applicant's state (appliedProject, status)
-
-              // --- Revised Application Process ---
-              if (applicant.getAppliedProject() == null && selectedProject.isEligibleForUser(applicant)) { // Double check
-                    String appId = "APP" + System.currentTimeMillis(); // Replace with better ID gen
-                    Application newApplication = new Application(appId, applicant, selectedProject, chosenFlatType);
-                    dataStore.addApplication(newApplication); // Add to central store
-
-                    // Update Applicant state
-                    applicant.setAppliedProject(selectedProject); // Need a setter or different logic
-                    applicant.setApplicationStatus(ApplicationStatus.PENDING);
-
-                    System.out.println("Application submitted successfully for project: " + selectedProject.getProjectName());
-              } else {
-                   System.out.println("Application failed. You might be ineligible or have already applied.");
-              }
-
-
-         } else if (projectChoice == 0) {
-             System.out.println("Application cancelled.");
-         } else {
-             System.out.println("Invalid project selection.");
-         }
+        for (int i = 0; i < visibleProjects.size(); i++) {
+            Project p = visibleProjects.get(i);
+            System.out.printf("%d. %s – TWO_ROOM: %d, THREE_ROOM: %d%n",
+                i + 1,
+                p.getProjectName(),
+                p.getRemainingFlats(FlatType.TWO_ROOM),
+                p.getRemainingFlats(FlatType.THREE_ROOM)
+            );
+        }
+    
+        // 5) Read user choice
+        System.out.print("Enter the number of the project you want to apply for (or 0 to cancel): ");
+        int choice;
+        try {
+            choice = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+    
+        // 6) Handle the choice
+        if (choice == 0) {
+            System.out.println("Application cancelled.");
+            return;
+        }
+        if (choice < 1 || choice > visibleProjects.size()) {
+            System.out.println("Invalid project selection.");
+            return;
+        }
+    
+        Project selected = visibleProjects.get(choice - 1);
+    
+        // 7) Delegate to your Applicant logic (which does the real eligibility + flat‐type pick)
+        boolean success = applicant.applyForProject(selected);
+        if (!success) {
+            System.out.println("Application failed. You might be ineligible or have already applied.");
+        } else {
+            // Persist the newly created Application
+            Application app = applicant.viewApplication();
+            dataStore.addApplication(app);
+    
+            System.out.println("Application submitted successfully!");
+            System.out.println("  Project:   " + selected.getProjectName());
+            System.out.println("  Flat Type: " + app.getFlatType());
+            System.out.println("  Status:    " + app.getStatus());
+        }
     }
+    
+    
 
     private void viewMyApplication(Applicant applicant) {
-         System.out.println("\n--- My Application Status ---");
-         Application myApp = applicant.viewApplication(); // Assumes viewApplication finds the app in the project's list
+        System.out.println("\n--- My Application Status ---");
+        Application myApp = applicant.viewApplication(); // Assumes viewApplication finds the app in the project's list
 
-         if (myApp != null) {
-              System.out.println("Project: " + myApp.getProject().getProjectName());
-              System.out.println("Flat Type Applied: " + myApp.getFlatType());
-              System.out.println("Status: " + myApp.getStatus());
-              if (myApp.isWithdrawalRequested()) {
-                  System.out.println("Withdrawal Request: PENDING MANAGER APPROVAL");
-              }
-         } else if (applicant.getAppliedProject() != null) {
-             // Data inconsistency? Applicant thinks they applied, but no Application object found?
-             System.out.println("Applied Project: " + applicant.getAppliedProject().getProjectName());
-             System.out.println("Status (Applicant record): " + applicant.getApplicationStatus());
-             System.out.println("Warning: Could not find detailed application object.");
-         }
-         else {
-             System.out.println("You have not submitted any application.");
-         }
+        if (myApp != null) {
+            System.out.println("Project: " + myApp.getProject().getProjectName());
+            System.out.println("Flat Type Applied: " + myApp.getFlatType());
+            System.out.println("Status: " + myApp.getStatus());
+            if (myApp.isWithdrawalRequested()) {
+                System.out.println("Withdrawal Request: PENDING MANAGER APPROVAL");
+            }
+        } else if (applicant.getAppliedProject() != null) {
+            // Data inconsistency? Applicant thinks they applied, but no Application object
+            // found?
+            System.out.println("Applied Project: " + applicant.getAppliedProject().getProjectName());
+            System.out.println("Status (Applicant record): " + applicant.getApplicationStatus());
+            System.out.println("Warning: Could not find detailed application object.");
+        } else {
+            System.out.println("You have not submitted any application.");
+        }
     }
 
-     private void requestWithdrawal(Applicant applicant) {
+    private void requestWithdrawal(Applicant applicant) {
         System.out.println("\n--- Request Application Withdrawal ---");
         Application myApp = applicant.viewApplication();
 
         if (myApp != null && myApp.getStatus() != ApplicationStatus.BOOKED && !myApp.isWithdrawalRequested()) {
             System.out.print("Are you sure you want to request withdrawal for project "
-                             + myApp.getProject().getProjectName() + "? (Y/N): ");
+                    + myApp.getProject().getProjectName() + "? (Y/N): ");
             String confirm = scanner.nextLine();
             if (confirm.equalsIgnoreCase("Y")) {
-                 if(myApp.requestWithdrawal()) { // This just sets the flag in Application
-                     System.out.println("Withdrawal request submitted. Waiting for HDB Manager approval.");
-                     // Persistence will save the Application object's new withdrawalRequest state.
-                 } else {
-                      System.out.println("Failed to submit withdrawal request.");
-                 }
+                if (myApp.requestWithdrawal()) { // This just sets the flag in Application
+                    System.out.println("Withdrawal request submitted. Waiting for HDB Manager approval.");
+                    // Persistence will save the Application object's new withdrawalRequest state.
+                } else {
+                    System.out.println("Failed to submit withdrawal request.");
+                }
             } else {
-                 System.out.println("Withdrawal request cancelled.");
+                System.out.println("Withdrawal request cancelled.");
             }
-        } else if (myApp != null && myApp.isWithdrawalRequested()){
-             System.out.println("You have already requested withdrawal for this application.");
+        } else if (myApp != null && myApp.isWithdrawalRequested()) {
+            System.out.println("You have already requested withdrawal for this application.");
         } else if (myApp != null && myApp.getStatus() == ApplicationStatus.BOOKED) {
             System.out.println("Cannot request withdrawal after a flat has been booked.");
+        } else {
+            System.out.println("No active application found to withdraw from.");
         }
-        else {
-             System.out.println("No active application found to withdraw from.");
-        }
-     }
-
-     private void submitEnquiry() {
-         System.out.println("\n--- Submit Enquiry ---");
-         List<Project> projects = dataStore.getAllProjects();
-         if (projects.isEmpty()) {
-             System.out.println("No projects available to enquire about.");
-             return;
-         }
-         System.out.println("Select a project to enquire about (or 0 for general enquiry):");
-         for (int i = 0; i < projects.size(); i++) {
-            System.out.printf("%d. %s%n", i + 1, projects.get(i).getProjectName());
-         }
-          System.out.print("Enter project number: ");
-          int projChoice;
-          try {
-            projChoice = Integer.parseInt(scanner.nextLine());
-          } catch (NumberFormatException e) {
-              System.out.println("Invalid input.");
-              return;
-          }
-
-          Project targetProject = null;
-          if (projChoice > 0 && projChoice <= projects.size()) {
-              targetProject = projects.get(projChoice - 1);
-          } else if (projChoice != 0) {
-              System.out.println("Invalid selection.");
-              return;
-          }
-
-         System.out.print("Enter your enquiry text: ");
-         String text = scanner.nextLine();
-
-         if (text.trim().isEmpty()) {
-             System.out.println("Enquiry cannot be empty.");
-             return;
-         }
-
-         // Use the method in the User class
-         Enquiry newEnquiry = user.submitEnquiry(targetProject, text);
-         // The submitEnquiry method should ideally add the enquiry to the DataStore as well
-         // For now, let's assume it does or add it manually:
-         // dataStore.addEnquiry(newEnquiry); // Ensure no duplicates
-
-         System.out.println("Enquiry submitted successfully (ID: " + newEnquiry.getEnquiryId() + ")");
-     }
     }
+
+    private void submitEnquiry() {
+        System.out.println("\n--- Submit Enquiry ---");
+        List<Project> projects = dataStore.getAllProjects();
+        if (projects.isEmpty()) {
+            System.out.println("No projects available to enquire about.");
+            return;
+        }
+        System.out.println("Select a project to enquire about (or 0 for general enquiry):");
+        for (int i = 0; i < projects.size(); i++) {
+            System.out.printf("%d. %s%n", i + 1, projects.get(i).getProjectName());
+        }
+        System.out.print("Enter project number: ");
+        int projChoice;
+        try {
+            projChoice = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        Project targetProject = null;
+        if (projChoice > 0 && projChoice <= projects.size()) {
+            targetProject = projects.get(projChoice - 1);
+        } else if (projChoice != 0) {
+            System.out.println("Invalid selection.");
+            return;
+        }
+
+        System.out.print("Enter your enquiry text: ");
+        String text = scanner.nextLine();
+
+        if (text.trim().isEmpty()) {
+            System.out.println("Enquiry cannot be empty.");
+            return;
+        }
+
+        // Use the method in the User class
+        Enquiry newEnquiry = user.submitEnquiry(targetProject, text);
+        // The submitEnquiry method should ideally add the enquiry to the DataStore as
+        // well
+        // For now, let's assume it does or add it manually:
+        // dataStore.addEnquiry(newEnquiry); // Ensure no duplicates
+
+        System.out.println("Enquiry submitted successfully (ID: " + newEnquiry.getEnquiryId() + ")");
+    }
+}

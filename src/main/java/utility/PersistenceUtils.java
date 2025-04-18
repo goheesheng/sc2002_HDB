@@ -552,7 +552,7 @@ public class PersistenceUtils {
                     if (managerOpt.isPresent() && managerOpt.get() instanceof HDBManager) {
                         HDBManager manager = (HDBManager) managerOpt.get();
                         Project project = new Project(id, name, neighborhood, flatTypesMap, openDate, closeDate, manager, slots);
-                        project.setVisibility(visibility);
+                        project.setVisibility(true);
                         store.addProject(project);
                     } else {
                         System.err.println("Could not find Manager " + managerNric + " for project " + id);
