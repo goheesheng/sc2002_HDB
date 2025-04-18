@@ -339,14 +339,16 @@ public class Project {
             flatTypesString.append(entry.getKey()).append(": ").append(entry.getValue()).append(" flats\n");
         }
     
-        return "Project ID: " + projectId + "\n" +
-               "Project Name: " + projectName + "\n" +
-               "Neighborhood: " + neighborhood + "\n" +
-               "Flat Types: \n" + flatTypesString.toString() + 
-               "Application Opening Date: " + applicationOpeningDate + "\n" +
-               "Application Closing Date: " + applicationClosingDate + "\n" +
-               "Manager In Charge: " + managerInCharge.getName() + "\n" + 
-               "Available Officer Slots: " + availableOfficerSlots + "\n" +
-               "Visibility: " + (visibility ? "Visible" : "Not Visible");
+        return 
+                "\n----------------------------------------" +
+                "Project ID: " + projectId + "\n" +
+                "Project Name: " + projectName + "\n" +
+                "Neighborhood: " + neighborhood + "\n" +
+                "Flat Types: \n" + flatTypesString.toString() + 
+                "Application Opening Date: " + applicationOpeningDate + "\n" +
+                "Application Closing Date: " + applicationClosingDate + "\n" +
+                "Manager In Charge: " + managerInCharge.getName() + "\n" + 
+                "Available Officer Slots: " + availableOfficerSlots + "\n" +
+                "Visibility: " + (visibility ? "Visible" : "Not Visible");
     }
 }
