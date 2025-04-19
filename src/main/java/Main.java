@@ -1,4 +1,7 @@
-// TestCases
+/**
+ * Main class for the Build-To-Order (BTO) Management System.
+ * Provides a menu-driven interface for users to interact with the system.
+ */
 import admin.Receipt;
 import admin.Report;
 import admin.Registration;
@@ -25,7 +28,12 @@ import utility.excelReader;
 import utility.excelWriter;
 
 public class Main {
-    // Unit Test Case
+    /**
+     * Main method to start the BTO Management System.
+     * Displays a menu for user interaction and handles user input.
+     *
+     * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
     // menu screen
         Scanner scanner = new Scanner(System.in);
@@ -105,6 +113,12 @@ public class Main {
         scanner.close();
         }
     
+    /**
+     * Processes Excel files and exports data to CSV.
+     * Reads user and project data from Excel files and stores them in the data store.
+     *
+     * Handles missing files and logs errors during processing.
+     */
     private static void processExcelFilesAndExportCSV() {
         BTODataStore dataStore = BTODataStore.getInstance();
         String[] userExcelPaths = {
@@ -165,6 +179,10 @@ public class Main {
         System.out.println("All users saved to CSV files.");
     }
 
+    /**
+     * Runs predefined test cases for the BTO Management System.
+     * Outputs the results of each test case to the console.
+     */
     public static void runTestCases() {
 
         System.out.println("Running BTO Management System Test Cases");

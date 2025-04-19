@@ -8,8 +8,17 @@ import java.io.IOException;
 import java.util.List;
 import user.User;
 
+/**
+ * Utility class for writing user data to an Excel file.
+ */
 public class excelWriter {
 
+    /**
+     * Writes all user data from the data store to an Excel file at the specified file path.
+     * If no users are present, a sample user is added for testing purposes.
+     *
+     * @param filePath The path where the Excel file will be saved.
+     */
     public static void writeToExcel(String filePath) {
         // Get all users from the central data store
         BTODataStore dataStore = BTODataStore.getInstance();

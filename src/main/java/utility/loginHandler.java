@@ -7,7 +7,7 @@ import java.io.File;
  * Handles user login operations including authentication.
  * This class provides static methods for logging in and validating credentials.
  */
-public class loginHandler {
+public class LoginHandler {
     
     // Path to the Excel file for user data
     private static final String EXCEL_FILE_PATH = "test/ApplicantsList.xlsx";
@@ -53,5 +53,4 @@ public class loginHandler {
             System.err.println("Error saving user data to Excel: " + e.getMessage());
         }
     }
-}
-
+} 
