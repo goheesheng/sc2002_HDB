@@ -24,8 +24,8 @@ import java.util.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
-import utility.excelReader;
-import utility.excelWriter;
+import utility.ExcelReader;
+import utility.ExcelWriter;
 
 public class Main {
     /**
@@ -137,7 +137,7 @@ public class Main {
             System.out.println("Processing user data from: " + excelPath);
     
             try {
-                List<User> users = excelReader.readUsersFromExcel(excelPath);
+                List<User> users = ExcelReader.readUsersFromExcel(excelPath);
                 for (User user : users) {
                     dataStore.addUser(user);
                 }
@@ -162,7 +162,7 @@ public class Main {
             try {
                 // Assuming managerMap is already populated at this point
                 Map<String, HDBManager> managerMap = dataStore.getManagerMap(); // Ensure this method exists to get all managers
-                List<Project> projects = excelReader.readProjectsFromExcel(projectExcelPath, managerMap);
+                List<Project> projects = ExcelReader.readProjectsFromExcel(projectExcelPath, managerMap);
                 for (Project project : projects) {
                     dataStore.addProject(project); // Assuming you have an addProject method in your data store
                 }

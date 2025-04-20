@@ -10,8 +10,12 @@ import user.User;
 
 /**
  * Utility class for writing user data to an Excel file.
+ * Provides methods to export user information to Excel format.
+ * 
+ * @author HDB BTO Management System Team
+ * @version 1.0
  */
-public class excelWriter {
+public class ExcelWriter {
 
     /**
      * Writes all user data from the data store to an Excel file at the specified file path.

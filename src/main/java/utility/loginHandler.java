@@ -48,7 +48,7 @@ public class LoginHandler {
             }
             
             // Write all user data to Excel
-            excelWriter.writeToExcel(EXCEL_FILE_PATH);
+            ExcelWriter.writeToExcel(EXCEL_FILE_PATH);
         } catch (Exception e) {
             System.err.println("Error saving user data to Excel: " + e.getMessage());
         }
