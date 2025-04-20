@@ -57,28 +57,11 @@ The following external libraries are required for the project:
 ## Setup and Installation
 
 1. Clone the repository
-2. Ensure JDK is installed on your system (JDK 8 or later recommended)
-3. Download and set up the required external libraries:
-   - Create a `lib` directory in the project root
-   - Download and extract the required JAR files mentioned above to the `lib` directory
-4. Compile the project using Javac with the external libraries in the classpath:
-   ```
-   mkdir -p bin
-   javac -d bin -cp "lib/*" src/main/java/Main.java src/main/java/**/*.java
-   ```
-5. Run the application:
-   ```
-   java -cp "bin;lib/*" Main
-   ```
-   Note: Use `:` instead of `;` on Unix/Linux/Mac systems:
-   ```
-   java -cp "bin:lib/*" Main
-   ```
-
-6. If you encounter any class path issues, try the more explicit command:
-   ```
-   java -cp "bin;lib/*;src/main/resources" Main
-   ```
+2. Install Java dependencies using Maven: mvn install
+3. Execute "mvn clean compile" To ensure all dependencies are loaded successfully.
+4. Execute "mvn compile exec:java -Dexec.mainClass="Main"" to run the application.
+5. On seeing the menu Select Option 2(Load all Sheets) to access the database.
+6. Your Setup and Installation is complete
 
 ## Data Files
 
