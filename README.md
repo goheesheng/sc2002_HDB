@@ -58,8 +58,8 @@ The following external libraries are required for the project:
 
 1. Clone the repository
 2. Install Java dependencies using Maven: mvn install
-3. Execute "mvn clean compile" To ensure all dependencies are loaded successfully.
-4. Execute "mvn compile exec:java -Dexec.mainClass="Main"" to run the application.
+3. Execute `mvn clean compile` To ensure all dependencies are loaded successfully.
+4. Execute `mvn compile exec:java -Dexec.mainClass="Main"` to run the application.
 5. On seeing the menu Select Option 2(Load all Sheets) to access the database.
 6. Your Setup and Installation is complete
 
