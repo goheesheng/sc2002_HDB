@@ -25,15 +25,21 @@ The HDB BTO Management System facilitates the following key activities:
 
 ## Technologies
 
-- Java-based backend (Maven project)
-- Python scripts for data processing and analysis
+- Java-based backend
 - Object-oriented design following SOLID principles
 
 ## Setup and Installation
 
 1. Clone the repository
-2. Install Java dependencies using Maven: `mvn install`
-3. For Python components: `pip install -r requirements.txt`
+2. Ensure JDK is installed on your system
+3. Compile the project using Javac:
+   ```
+   javac -d ./bin -cp ./lib/*:./src src/main/java/**/*.java
+   ```
+4. Run the application:
+   ```
+   java -cp ./bin:./lib/* Main
+   ```
 
 ## Test Login Credentials
 
@@ -48,6 +54,13 @@ You can use the following credentials to test the system:
 ## Documentation
 
 Additional documentation can be found in the `doc/` directory.
+
+## Javadoc Generation
+
+Generate Javadoc for the project using:
+```
+javadoc -d ./html -author -private -noqualifier all -version -sourcepath src/main/java utility user ui status project admin
+```
 
 ## UML Diagram
 
