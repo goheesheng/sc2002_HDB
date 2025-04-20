@@ -1,5 +1,5 @@
 Name,NRIC,Password,Age,MaritalStatus,UserType
-John,S1234567A,password,35,Single,Applicant
+solomon,S1234567A,newpassword,35,SINGLE,Applicant
 Sarah,T7654321B,password,40,Married,Applicant
 Grace,S9876543C,password,37,Married,Applicant
 James,T2345678D,password,30,Married,Applicant
