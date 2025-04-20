@@ -30,19 +30,46 @@ The HDB BTO Management System facilitates the following key activities:
 - Apache POI for Excel file processing
 - CSV data storage for persistence
 
+## External Libraries
+
+The following external libraries are required for the project:
+
+1. **Apache POI (5.2.3 or later)**
+   - Required for Excel file operations (.xlsx files)
+   - Download from: https://poi.apache.org/download.html
+   - Required JARs:
+     - poi-5.2.3.jar (Main POI library)
+     - poi-ooxml-5.2.3.jar (For XLSX file support)
+     - poi-ooxml-lite-5.2.3.jar
+     - commons-collections4-4.4.jar
+     - commons-io-2.11.0.jar
+     - commons-math3-3.6.1.jar
+     - log4j-api-2.18.0.jar
+     - xmlbeans-5.1.1.jar
+
+2. **Log4j2 (2.18.0 or later)**
+   - Used for logging
+   - Download from: https://logging.apache.org/log4j/2.x/download.html
+   - Required JARs:
+     - log4j-api-2.18.0.jar
+     - log4j-core-2.18.0.jar
+
 ## Setup and Installation
 
 1. Clone the repository
 2. Ensure JDK is installed on your system (JDK 8 or later recommended)
-3. Download Apache POI from https://poi.apache.org/download.html and add the JAR files to your classpath
-4. Compile the project using Javac:
+3. Download and set up the required external libraries:
+   - Create a `lib` directory in the project root
+   - Download and extract the required JAR files mentioned above to the `lib` directory
+4. Compile the project using Javac with the external libraries in the classpath:
    ```
-   javac -d ./bin -sourcepath src/main/java src/main/java/**/*.java
+   javac -d ./bin -cp "lib/*" -sourcepath src/main/java src/main/java/**/*.java
    ```
 5. Run the application:
    ```
-   java -cp ./bin Main
+   java -cp "bin;lib/*" Main
    ```
+   Note: Use `:` instead of `;` on Unix/Linux/Mac systems.
 
 ## Data Files
 
