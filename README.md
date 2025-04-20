@@ -63,13 +63,22 @@ The following external libraries are required for the project:
    - Download and extract the required JAR files mentioned above to the `lib` directory
 4. Compile the project using Javac with the external libraries in the classpath:
    ```
-   javac -d ./bin -cp "lib/*" -sourcepath src/main/java src/main/java/**/*.java
+   mkdir -p bin
+   javac -d bin -cp "lib/*" src/main/java/Main.java src/main/java/**/*.java
    ```
 5. Run the application:
    ```
    java -cp "bin;lib/*" Main
    ```
-   Note: Use `:` instead of `;` on Unix/Linux/Mac systems.
+   Note: Use `:` instead of `;` on Unix/Linux/Mac systems:
+   ```
+   java -cp "bin:lib/*" Main
+   ```
+
+6. If you encounter any class path issues, try the more explicit command:
+   ```
+   java -cp "bin;lib/*;src/main/resources" Main
+   ```
 
 ## Data Files
 
