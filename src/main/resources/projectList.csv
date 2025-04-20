@@ -1,7 +1,3 @@
 ID,Name,Neighborhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes
-P001,Tampines GreenView (Updated),Tampines,2025-03-01,2025-04-30,S9876543B,4,false,TWO_ROOM:50;THREE_ROOM:29
-P002,Woodlands Harmony,Woodlands,2025-05-01,2025-06-30,S9876543B,5,true,TWO_ROOM:50;THREE_ROOM:29
-TP001,First Test Project,Tampines,2027-01-15,2027-02-15,S8888888A,5,true,TWO_ROOM:50;THREE_ROOM:29
-TP003,No Overlap Test Project,Woodlands,2027-03-01,2027-04-30,S8888888A,3,true,TWO_ROOM:50;THREE_ROOM:29
-TP004,Different Manager Project,Tampines,2027-01-15,2027-02-15,S9999999C,5,true,TWO_ROOM:50;THREE_ROOM:29
 P10000,Acacia Breeze,Yishun,2025-02-15,2025-03-20,S5678901G,3,true,TWO_ROOM:2;THREE_ROOM:3
+P10001,Acacia Breeze,Yishun,2025-02-15,2025-03-20,S5678901G,3,true,TWO_ROOM:2;THREE_ROOM:3
