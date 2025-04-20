@@ -27,19 +27,28 @@ The HDB BTO Management System facilitates the following key activities:
 
 - Java-based backend
 - Object-oriented design following SOLID principles
+- Apache POI for Excel file processing
+- CSV data storage for persistence
 
 ## Setup and Installation
 
 1. Clone the repository
-2. Ensure JDK is installed on your system
-3. Compile the project using Javac:
+2. Ensure JDK is installed on your system (JDK 8 or later recommended)
+3. Download Apache POI from https://poi.apache.org/download.html and add the JAR files to your classpath
+4. Compile the project using Javac:
    ```
-   javac -d ./bin -cp ./lib/*:./src src/main/java/**/*.java
+   javac -d ./bin -sourcepath src/main/java src/main/java/**/*.java
    ```
-4. Run the application:
+5. Run the application:
    ```
-   java -cp ./bin:./lib/* Main
+   java -cp ./bin Main
    ```
+
+## Data Files
+
+The application uses the following data files in the `src/main/resources` directory:
+- Excel files (ApplicantList.xlsx, ManagerList.xlsx, OfficerList.xlsx, ProjectList.xlsx) for importing data
+- CSV files (applications.csv, applicantlist.csv, managerlist.csv, officerlist.csv, projects.csv, registrations.csv, enquiries.csv) for data persistence
 
 ## Test Login Credentials
 
@@ -57,10 +66,12 @@ Additional documentation can be found in the `doc/` directory.
 
 ## Javadoc Generation
 
-Generate Javadoc for the project using:
+Generate Javadoc for the project using the full path to the javadoc executable:
 ```
-javadoc -d ./html -author -private -noqualifier all -version -sourcepath src/main/java utility user ui status project admin
+"C:\Program Files\Java\jdk-XX\bin\javadoc.exe" -d ./html -author -private -noqualifier all -version -sourcepath src/main/java utility user ui status project admin
 ```
+
+Note: Replace `jdk-XX` with your installed JDK version (e.g., `jdk-17`, `jdk-24`). Using the full binary path is necessary if javadoc is not in your system's PATH.
 
 ## UML Diagram
 
