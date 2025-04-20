@@ -25,15 +25,49 @@ The HDB BTO Management System facilitates the following key activities:
 
 ## Technologies
 
-- Java-based backend (Maven project)
-- Python scripts for data processing and analysis
+- Java-based backend
 - Object-oriented design following SOLID principles
+- Apache POI for Excel file processing
+- CSV data storage for persistence
+
+## External Libraries
+
+The following external libraries are required for the project:
+
+1. **Apache POI (5.2.3 or later)**
+   - Required for Excel file operations (.xlsx files)
+   - Download from: https://poi.apache.org/download.html
+   - Required JARs:
+     - poi-5.2.3.jar (Main POI library)
+     - poi-ooxml-5.2.3.jar (For XLSX file support)
+     - poi-ooxml-lite-5.2.3.jar
+     - commons-collections4-4.4.jar
+     - commons-io-2.11.0.jar
+     - commons-math3-3.6.1.jar
+     - log4j-api-2.18.0.jar
+     - xmlbeans-5.1.1.jar
+
+2. **Log4j2 (2.18.0 or later)**
+   - Used for logging
+   - Download from: https://logging.apache.org/log4j/2.x/download.html
+   - Required JARs:
+     - log4j-api-2.18.0.jar
+     - log4j-core-2.18.0.jar
 
 ## Setup and Installation
 
 1. Clone the repository
-2. Install Java dependencies using Maven: `mvn install`
-3. For Python components: `pip install -r requirements.txt`
+2. Install Java dependencies using Maven: mvn install
+3. Execute `mvn clean compile` To ensure all dependencies are loaded successfully.
+4. Execute `mvn compile exec:java -Dexec.mainClass="Main"` to run the application.
+5. On seeing the menu Select Option 2(Load all Sheets) to access the database.
+6. Your Setup and Installation is complete
+
+## Data Files
+
+The application uses the following data files in the `src/main/resources` directory:
+- Excel files (ApplicantList.xlsx, ManagerList.xlsx, OfficerList.xlsx, ProjectList.xlsx) for importing data
+- CSV files (applications.csv, applicantlist.csv, managerlist.csv, officerlist.csv, projects.csv, registrations.csv, enquiries.csv) for data persistence
 
 ## Test Login Credentials
 
@@ -48,6 +82,15 @@ You can use the following credentials to test the system:
 ## Documentation
 
 Additional documentation can be found in the `doc/` directory.
+
+## Javadoc Generation
+
+Generate Javadoc for the project using the full path to the javadoc executable:
+```
+"C:\Program Files\Java\jdk-XX\bin\javadoc.exe" -d ./html -author -private -noqualifier all -version -sourcepath src/main/java utility user ui status project admin
+```
+
+Note: Replace `jdk-XX` with your installed JDK version (e.g., `jdk-17`, `jdk-24`). Using the full binary path is necessary if javadoc is not in your system's PATH.
 
 ## UML Diagram
 

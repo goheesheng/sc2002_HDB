@@ -2,7 +2,7 @@ package ui;
 
 import java.util.Scanner;
 
-import utility.loginHandler;
+import utility.LoginHandler;
 
 import user.User;
 import user.Applicant;
@@ -15,7 +15,7 @@ import ui.mainmenu.ApplicantMenu;
 
 public class LoginInterface {
     private Scanner scanner = new Scanner(System.in);
-    private loginHandler loginHandler = new loginHandler(); 
+    private LoginHandler loginHandler = new LoginHandler(); 
 
     public void start() {
         String nric;

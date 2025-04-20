@@ -8,8 +8,21 @@ import java.io.IOException;
 import java.util.List;
 import user.User;
 
-public class excelWriter {
+/**
+ * Utility class for writing user data to an Excel file.
+ * Provides methods to export user information to Excel format.
+ * 
+ * @author HDB BTO Management System Team
+ * @version 1.0
+ */
+public class ExcelWriter {
 
+    /**
+     * Writes all user data from the data store to an Excel file at the specified file path.
+     * If no users are present, a sample user is added for testing purposes.
+     *
+     * @param filePath The path where the Excel file will be saved.
+     */
     public static void writeToExcel(String filePath) {
         // Get all users from the central data store
         BTODataStore dataStore = BTODataStore.getInstance();

@@ -1,7 +1,7 @@
 /*
 package utility;
 
-import utility.excelReader;
+import utility.ExcelReader;
 import utility.PersistenceUtils;
 import user.HDBManager;
 import user.User;
@@ -13,51 +13,49 @@ import java.util.Map;
 
 import project.Project;
 
+/**
+ * Utility class to convert Excel files to CSV format.
+ * This helps in data migration and compatibility with other systems.
+ * 
+ * @author HDB BTO Management System Team
+ * @version 1.0
+ */
 public class ExcelToCsv {
-
+    
+    /**
+     * Main method that coordinates the conversion of Excel files to CSV.
+     * Processes managers, projects, and other user types.
+     * 
+     * @param args Command line arguments (not used)
+     */
     public static void main(String[] args) {
-        File folder = new File("src/main/resources");
-
-        // select only xlsx files
-        File[] excelFiles = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".xlsx"));
-
-        if (excelFiles == null || excelFiles.length == 0) {
-            System.out.println("No Excel files found in directory.");
-            return;
-        }
-        BTODataStore store = BTODataStore.getInstance();
-
-        // Step 1: Load all managers first (once)
+        System.out.println("Converting Excel files to CSV...");
+        
+        // Process managers and build a manager map
         Map<String, HDBManager> managerMap = new HashMap<>();
-        for (User user : excelReader.readUsersFromExcel("src/main/resources/managers.xlsx")) {
+        for (User user : ExcelReader.readUsersFromExcel("src/main/resources/managers.xlsx")) {
             if (user instanceof HDBManager) {
-                managerMap.put(user.getNric(), (HDBManager) user);
+                HDBManager manager = (HDBManager) user;
+                managerMap.put(manager.getName(), manager);
             }
         }
-
-        // Step 2: Read and store projects
-        List<Project> projects = excelReader.readProjectsFromExcel("src/main/resources/projects.xlsx", managerMap);
-        for (Project project : projects) {
-            store.addProject(project);
-        }
-
-        // Step 3: Process each user Excel file
-        for (File excelFile : excelFiles) {
-            System.out.println("Processing: " + excelFile.getName());
-
-            List<User> users = excelReader.readUsersFromExcel(excelFile.getPath());
+        
+        // Process projects using the manager map
+        List<Project> projects = ExcelReader.readProjectsFromExcel("src/main/resources/projects.xlsx", managerMap);
+        
+        // Process other Excel files
+        File resourcesDir = new File("src/main/resources");
+        for (File excelFile : resourcesDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".xlsx"))) {
+            if (excelFile.getName().equalsIgnoreCase("projects.xlsx") || 
+                excelFile.getName().equalsIgnoreCase("managers.xlsx")) {
+                continue;  // Skip already processed files
+            }
             
-            for (User u : users) {
-                store.addUser(u);
-            }
-
-            // Step 2: Save users to CSV
-            PersistenceUtils.saveUsers(users, excelFile.getName());
-
-            System.out.println("Done: " + excelFile.getName() + "\n");
+            List<User> users = ExcelReader.readUsersFromExcel(excelFile.getPath());
+            System.out.println("Processed " + users.size() + " users from " + excelFile.getName());
         }
-
-        System.out.println("All files processed successfully!");
+        
+        System.out.println("Conversion complete!");
     }
 }
 */

@@ -20,7 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class excelReader {
+/**
+ * Utility class for reading user and project data from Excel files.
+ * Provides methods to import data into the BTO management system.
+ * 
+ * @author HDB BTO Management System Team
+ * @version 1.0
+ */
+public class ExcelReader {
     private static int projectCounter = 10000;
 
     /**
@@ -77,6 +84,14 @@ public class excelReader {
         return users;
     }
 
+    /**
+     * Reads project data from an Excel file and creates Project objects.
+     * Maps each project to its manager based on the provided manager map.
+     * 
+     * @param filePath Path to the Excel file containing project data
+     * @param managerMap Map of manager names to HDBManager objects
+     * @return List of Project objects
+     */
     public static List<Project> readProjectsFromExcel(String filePath, Map<String, HDBManager> managerMap) {
         List<Project> projects = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
@@ -166,6 +181,15 @@ public class excelReader {
         return projects;
     }
 
+    /**
+     * Parses a cell containing date information into a Date object.
+     * Handles different date formats and cell types.
+     * 
+     * @param cell The cell containing the date
+     * @param rowNum The row number for error reporting
+     * @param projectName The project name for error reporting
+     * @return The parsed Date object or null if parsing fails
+     */
     private static Date parseDateCell(Cell cell, int rowNum, String projectName) {
         try {
             if (cell == null) return null;
