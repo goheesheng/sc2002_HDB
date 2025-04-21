@@ -1,0 +1,5 @@
+ID,Name,Neighborhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes
+P10000,Acacia Breeze,Yishun,2025-02-15,2025-03-20,S5678901G,3,true,TWO_ROOM:2;THREE_ROOM:3
+P10001,Sandy Shores,West Coast,2025-02-15,2025-06-20,T8765432F,4,true,TWO_ROOM:4;THREE_ROOM:4
+P001,Manager's Update,Tampines,2025-03-01,2025-04-30,S9876543B,5,false,TWO_ROOM:50;THREE_ROOM:30
+P002,Woodlands Harmony,Woodlands,2025-05-01,2025-06-30,S9876543B,5,true,TWO_ROOM:50;THREE_ROOM:30
