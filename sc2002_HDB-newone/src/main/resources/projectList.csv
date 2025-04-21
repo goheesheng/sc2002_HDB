@@ -1,0 +1,3 @@
+ID,Name,Neighborhood,OpenDate,CloseDate,ManagerNRIC,OfficerSlots,Visibility,FlatTypes
+P10000,Acacia Breeze,Yishun,2025-02-15,2025-03-20,S5678901G,3,true,TWO_ROOM:2;THREE_ROOM:3
+P10001,Sandy Shores,West Coast,2025-02-15,2025-06-20,T8765432F,4,true,TWO_ROOM:4;THREE_ROOM:4
